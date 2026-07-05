@@ -116,3 +116,23 @@ Relationships:
 Notes:
 - Customer is a domain concept and is independent from authentication/authorization system.
 - Roles such as Administrator or Owner are not part of this entity and belong to system infrastructure.
+
+
+
+Customer
+   │
+   ├──────── owns ───────► Cart
+   │                         │
+   │                         ▼
+   │                     CartItem ─────► Product
+   │                                        ▲
+   │                                        │
+   └──────── places ─────► Order            │
+                              │             │
+                              ▼             │
+                         OrderItem ─────────┘
+
+Category
+    │
+    ▼
+Product

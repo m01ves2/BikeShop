@@ -12,30 +12,33 @@ BN-4. The store owner needs a web application to present products and receive cu
 
 ---
 
+
 ## Customer Requirements
 
 ### URS-1 Browse Catalog
-The customer wants to browse the product catalog organized by categories.
+Customer can browse the product catalog organized by categories.
 
-### URS-2 View Product Information
-The customer wants to view detailed information about a selected product before making a purchase.
+### URS-2 Product Discovery
+Customer can search, filter and sort products to quickly find items.
 
-### URS-3 User Registration
-The customer wants to create a personal account.
+### URS-3 View Product Information
+Customer can view detailed product information.
 
-### URS-4 User Authentication
-The customer wants to sign in to access personal features.
+### URS-4 Customer Accounts
+Customer can create and manage an account and authenticate.
 
 ### URS-5 Shopping Cart
-The customer wants to collect selected products before completing the purchase.
+Customer can collect products before purchase.
 
 ### URS-6 Checkout
-The customer wants to place an order using the products stored in the shopping cart.
+Customer can place an order from shopping cart.
 
-### URS-7 Order History
-The customer wants to view previously placed orders.
+### URS-7 Orders
+Customer can view and manage their orders.
 
----
+### URS-8 Administration
+The administrator wants to manage products, categories, orders, and customers.
+
 
 
 ## Store Owner Requirements
