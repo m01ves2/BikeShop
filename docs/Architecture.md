@@ -17,6 +17,14 @@ The application is designed as a portfolio-quality project demonstrating clean l
 - Domain Layer contains core business logic and entities such as Product, Cart, and Order.
 - Infrastructure Layer provides implementation details such as database access (EF Core), external services, and file storage.
 
+```mermaid
+flowchart TD
+
+Presentation --> Application
+Application --> Infrastructure
+Infrastructure --> Database
+```
+
 # 4. Key Modules
 <!-- - Catalog
 - Product Discovery
@@ -35,8 +43,6 @@ The application is designed as a portfolio-quality project demonstrating clean l
 - Admin provides administrative access to manage products, categories, orders, and customers.
 
 # 5. Data Flow
-<!-- - Request lifecycle
-- How request moves through layers -->
 The system follows a standard request lifecycle based on a layered architecture.
 
 1. A user interacts with the Web UI (browser or client application).
@@ -49,9 +55,18 @@ The system follows a standard request lifecycle based on a layered architecture.
 8. The Infrastructure Layer handles database access and external services (e.g., EF Core, email services).
 9. The response is returned back through API Layer to the Web UI.
 
+```mermaid
+flowchart TD
+
+Browser --> BlazorServer
+BlazorServer --> Services
+Services --> Repositories
+Repositories --> EFCore
+EFCore --> SQLServer
+```
+
+
 # 6. External Systems (future)
-<!-- - Payments
-- Email -->
 The system is designed to be extensible and may integrate with external systems in the future.
 
 Planned integrations include:

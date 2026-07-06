@@ -118,21 +118,15 @@ Notes:
 - Roles such as Administrator or Owner are not part of this entity and belong to system infrastructure.
 
 
+```Mermaid
+flowchart TD
 
-Customer
-   │
-   ├──────── owns ───────► Cart
-   │                         │
-   │                         ▼
-   │                     CartItem ─────► Product
-   │                                        ▲
-   │                                        │
-   └──────── places ─────► Order            │
-                              │             │
-                              ▼             │
-                         OrderItem ─────────┘
+Customer -->|owns| Cart
+Cart --> CartItem
+CartItem -->|for| Product
 
-Category
-    │
-    ▼
-Product
+Category --> Product
+Customer -->|places| Order
+Order --> OrderItem
+OrderItem --> Product
+```

@@ -78,29 +78,19 @@ Note:
 ProductPrice stores the price at the moment of purchase.
 
 ## 3. Relationships
-Category
-    1
-    |
-    *
-Product
 
-Customer
-    1
-    |
-    1
-Cart
+```Mermaid
+erDiagram
 
-Cart
-   1
-   |
-   *
-CartItem
+Category ||--o{ Product : contains
 
-Order
-   1
-   |
-   *
-OrderItem
+Customer ||--o{ Order : places
+Order ||--|{ OrderItem : contains
+Product ||--o{ OrderItem : referenced_by
+
+Customer ||--o{ CartItem : has
+Product ||--o{ CartItem : added_as
+```
 
 ## 4. Primary Keys
 - All tables use a single-column primary key named Id.
