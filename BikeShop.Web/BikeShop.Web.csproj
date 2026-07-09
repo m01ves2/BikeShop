@@ -6,4 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BikeShop.Application\BikeShop.Application.csproj" />
+    <ProjectReference Include="..\BikeShop.Domain\BikeShop.Domain.csproj" />
+    <ProjectReference Include="..\BikeShop.Infrastructure\BikeShop.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

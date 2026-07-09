@@ -50,9 +50,13 @@ Represents customer's shopping cart.
 
 Implementation details are subject to further refinement.
 
+### 2.4 CartItem
+Purpose:
+Represents customer's shopping cart item.
 
+Implementation details are subject to further refinement.
 
-### 2.5 Orders
+### 2.6 Orders
 Purpose:
 
 Fields:
@@ -64,7 +68,7 @@ Fields:
 
 
 
-### 2.6 OrderItems
+### 2.7 OrderItems
 Purpose:
 
 Fields:

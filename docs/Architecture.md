@@ -74,3 +74,9 @@ Planned integrations include:
 - Payment providers (e.g., Stripe, PayPal)
 - Email delivery services for notifications (order confirmation, password reset)
 - Possibly third-party analytics or monitoring tools
+
+
+# 7. Future Considerations
+
+- Order may contain shipping information snapshot.
+- Order should preserve customer and product information at the moment of purchase.
