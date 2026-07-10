@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using BikeShop.Application.Categories.GetCategories;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BikeShop.Application
 {
@@ -10,6 +11,7 @@ namespace BikeShop.Application
             // FluentValidation
             // AutoMapper/Mapster
             // Behaviors
+            services.AddScoped<GetCategoriesQueryHandler>();
 
             return services;
         }
