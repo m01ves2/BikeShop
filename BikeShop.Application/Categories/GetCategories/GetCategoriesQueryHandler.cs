@@ -13,7 +13,7 @@ namespace BikeShop.Application.Categories.GetCategories
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<Result<IReadOnlyList<CategoryDto>>> Handle(GetCategoriesQuery query, CancellationToken cancellationToken)
+        public async Task<Result<IReadOnlyList<CategoryDto>>> Handle(GetCategoriesQuery query, CancellationToken cancellationToken) //GetCategoriesQuery query -"намерение выполнить этот сценарий"
         {
             var categories = await _categoryRepository.GetAllAsync(cancellationToken);
 

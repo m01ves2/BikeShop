@@ -8,12 +8,9 @@
 
   <ItemGroup>
     <Folder Include="Abstractions\Services\" />
-    <Folder Include="Abstractions\Persistence\" />
     <Folder Include="Behaviors\" />
     <Folder Include="Common\Exceptions\" />
     <Folder Include="Common\Mapping\" />
-    <Folder Include="Common\Models\" />
-    <Folder Include="Categories\" />
     <Folder Include="Customers\" />
     <Folder Include="Cart\" />
     <Folder Include="Orders\" />
@@ -21,6 +18,14 @@
     <Folder Include="Products\DTOs\" />
     <Folder Include="Products\Validators\" />
     <Folder Include="Products\Queries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BikeShop.Domain\BikeShop.Domain.csproj" />
   </ItemGroup>
 
 </Project>

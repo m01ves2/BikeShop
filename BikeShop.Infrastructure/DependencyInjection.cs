@@ -1,17 +1,28 @@
-﻿namespace BikeShop.Infrastructure
-{
-    //public static class DependencyInjection
-    //{
-    //    public static IServiceCollection AddInfrastructure(
-    //        this IServiceCollection services,
-    //        IConfiguration configuration)
-    //    {
-    //        // DbContext
-    //        // Repositories
-    //        // Email
-    //        // DateTimeProvider
+﻿using BikeShop.Application.Abstractions.Persistence;
+using BikeShop.Infrastructure.Persistence;
+using BikeShop.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-    //        return services;
-    //    }
-    //}
+namespace BikeShop.Infrastructure
+{
+    public static class DependencyInjection
+    {
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        {
+            // DbContext
+            services.AddDbContext<BikeShopDbContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+            // Repositories
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+            // Email
+            
+            // DateTimeProvider
+            
+            return services;
+        }
+    }
 }
