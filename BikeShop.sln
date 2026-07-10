@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36811.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeShop.Web", "BikeShop.Web\BikeShop.Web.csproj", "{47077A5B-5826-40CF-9C14-4CF304526D0B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeShop.Domain", "BikeShop.Domain\BikeShop.Domain.csproj", "{51A8BE85-3A3E-4094-9DFB-A5DACDB75175}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeShop.Application", "BikeShop.Application\BikeShop.Application.csproj", "{E4FB19F4-B2A2-40A2-AAAC-4ADAE7ED44A4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeShop.Infrastructure", "BikeShop.Infrastructure\BikeShop.Infrastructure.csproj", "{77B69927-FFA7-4547-A8FA-3B3E39E5F92C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeShop.Blazor", "BikeShop.Blazor\BikeShop.Blazor.csproj", "{0F2CD424-5D72-4AFD-9A2D-0288C5A11287}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeShop.API", "BikeShop.API\BikeShop.API.csproj", "{6BAF1228-AB30-4A0B-8694-8E9FFE54F307}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{47077A5B-5826-40CF-9C14-4CF304526D0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{47077A5B-5826-40CF-9C14-4CF304526D0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{47077A5B-5826-40CF-9C14-4CF304526D0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{47077A5B-5826-40CF-9C14-4CF304526D0B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{51A8BE85-3A3E-4094-9DFB-A5DACDB75175}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{51A8BE85-3A3E-4094-9DFB-A5DACDB75175}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51A8BE85-3A3E-4094-9DFB-A5DACDB75175}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +31,14 @@ Global
 		{77B69927-FFA7-4547-A8FA-3B3E39E5F92C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77B69927-FFA7-4547-A8FA-3B3E39E5F92C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77B69927-FFA7-4547-A8FA-3B3E39E5F92C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F2CD424-5D72-4AFD-9A2D-0288C5A11287}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F2CD424-5D72-4AFD-9A2D-0288C5A11287}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F2CD424-5D72-4AFD-9A2D-0288C5A11287}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F2CD424-5D72-4AFD-9A2D-0288C5A11287}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BAF1228-AB30-4A0B-8694-8E9FFE54F307}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BAF1228-AB30-4A0B-8694-8E9FFE54F307}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BAF1228-AB30-4A0B-8694-8E9FFE54F307}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BAF1228-AB30-4A0B-8694-8E9FFE54F307}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

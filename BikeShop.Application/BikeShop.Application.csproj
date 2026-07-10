@@ -6,4 +6,21 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Abstractions\Services\" />
+    <Folder Include="Abstractions\Persistence\" />
+    <Folder Include="Behaviors\" />
+    <Folder Include="Common\Exceptions\" />
+    <Folder Include="Common\Mapping\" />
+    <Folder Include="Common\Models\" />
+    <Folder Include="Categories\" />
+    <Folder Include="Customers\" />
+    <Folder Include="Cart\" />
+    <Folder Include="Orders\" />
+    <Folder Include="Products\Commands\" />
+    <Folder Include="Products\DTOs\" />
+    <Folder Include="Products\Validators\" />
+    <Folder Include="Products\Queries\" />
+  </ItemGroup>
+
 </Project>
