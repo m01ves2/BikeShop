@@ -1,6 +1,4 @@
 ﻿namespace BikeShop.Application.Categories.GetCategories
 {
-    public class CategoryDto
-    {
-    }
+    public sealed record CategoryDto(int Id, string Name);
 }

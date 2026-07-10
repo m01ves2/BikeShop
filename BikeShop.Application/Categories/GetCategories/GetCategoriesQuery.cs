@@ -1,6 +1,7 @@
-﻿namespace BikeShop.Application.Categories.GetCategories
+﻿using BikeShop.Application.Abstractions.Messaging;
+using BikeShop.Application.Common.Models;
+
+namespace BikeShop.Application.Categories.GetCategories
 {
-    public class GetCategoriesQuery
-    {
-    }
+    public sealed record GetCategoriesQuery : IQuery<Result<IReadOnlyList<CategoryDto>>>;
 }
