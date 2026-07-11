@@ -15,12 +15,9 @@ namespace BikeShop.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(
-            CancellationToken cancellationToken)
+        public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
-            var result = await _handler.Handle(
-                new GetCategoriesQuery(),
-                cancellationToken);
+            var result = await _handler.Handle(new GetCategoriesQuery(), cancellationToken);
 
             if (result.IsFailure)
                 return BadRequest(result.Error);

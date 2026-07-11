@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dirs=("BikeShop.Domain" "BikeShop.Infrastructure" "BikeShop.Application" "BikeShop.Web")
+dirs=("BikeShop.Domain" "BikeShop.Infrastructure" "BikeShop.Application" "BikeShop.API" "BikeShop.Blazor")
 output="result.txt"
 
 # очищаем файл

@@ -1,6 +1,7 @@
 ﻿namespace BikeShop.Application.Abstractions.Persistence
 {
-    internal interface IUnitOfWork
+    public interface IUnitOfWork
     {
+        Task SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

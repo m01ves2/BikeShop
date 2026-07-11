@@ -14,11 +14,16 @@ namespace BikeShop.Infrastructure.Repositories
             _context = context;
         }
 
+
         public async Task<IReadOnlyList<Category>> GetAllAsync( CancellationToken cancellationToken)
         {
             return await _context.Categories.AsNoTracking().ToListAsync(cancellationToken); //тут только читаем, поэтому AsNoTracking. EF не должен отслеживать изменения.
             //Для Query: 
             //    GetCategories, GetProducts, GetOrdersHistory
+        }
+        public async Task AddAsync(Category category, CancellationToken cancellationToken)
+        {
+            await _context.Categories.AddAsync(category, cancellationToken);
         }
     }
 }

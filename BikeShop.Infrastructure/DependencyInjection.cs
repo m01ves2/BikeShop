@@ -12,16 +12,15 @@ namespace BikeShop.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             // DbContext
-            services.AddDbContext<BikeShopDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<BikeShopDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IUnitOfWork>(options => options.GetRequiredService<BikeShopDbContext>());
 
             // Repositories
             services.AddScoped<ICategoryRepository, CategoryRepository>();
-
             // Email
-            
+
             // DateTimeProvider
-            
+
             return services;
         }
     }
