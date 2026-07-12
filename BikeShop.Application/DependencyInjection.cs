@@ -1,4 +1,5 @@
-﻿using BikeShop.Application.Categories.GetCategories;
+﻿using BikeShop.Application.Categories.CreateCategory;
+using BikeShop.Application.Categories.GetCategories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BikeShop.Application
@@ -12,7 +13,7 @@ namespace BikeShop.Application
             // AutoMapper/Mapster
             // Behaviors
             services.AddScoped<GetCategoriesQueryHandler>();
-
+            services.AddScoped<CreateCategoryCommandHandler>();
             return services;
         }
     }

@@ -1,10 +1,11 @@
-﻿using BikeShop.Application.Abstractions.Persistence;
+﻿using BikeShop.Application.Abstractions.Messaging;
+using BikeShop.Application.Abstractions.Persistence;
 using BikeShop.Application.Common.Models;
 using BikeShop.Domain.Entities;
 
 namespace BikeShop.Application.Categories.CreateCategory
 {
-    public class CreateCategoryCommandHandler
+    public class CreateCategoryCommandHandler : ICommandHandler<CreateCategoryCommand, Result>
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUnitOfWork _unitOfWork;
