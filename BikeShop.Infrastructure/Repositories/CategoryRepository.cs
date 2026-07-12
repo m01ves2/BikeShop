@@ -21,9 +21,16 @@ namespace BikeShop.Infrastructure.Repositories
             //Для Query: 
             //    GetCategories, GetProducts, GetOrdersHistory
         }
+
+        public async Task<Category?> GetByIdAsync(int id, CancellationToken cancellationToken)
+        {
+            return await _context.Categories.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+        }
+        
         public async Task AddAsync(Category category, CancellationToken cancellationToken)
         {
             await _context.Categories.AddAsync(category, cancellationToken);
         }
+
     }
 }
