@@ -32,5 +32,9 @@ namespace BikeShop.Infrastructure.Repositories
             await _context.Categories.AddAsync(category, cancellationToken);
         }
 
+        public void Remove(Category category)
+        {
+            _context.Categories.Remove(category);
+        }
     }
 }

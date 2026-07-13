@@ -1,6 +1,6 @@
-﻿using System.Threading;
-using BikeShop.Application.Abstractions.Messaging;
+﻿using BikeShop.Application.Abstractions.Messaging;
 using BikeShop.Application.Categories.CreateCategory;
+using BikeShop.Application.Categories.DeleteCategory;
 using BikeShop.Application.Categories.GetCategories;
 using BikeShop.Application.Categories.UpdateCategory;
 using BikeShop.Application.Common.Models;
@@ -16,15 +16,18 @@ namespace BikeShop.API.Controllers
 
         private readonly ICommandHandler<CreateCategoryCommand, Result> _createCategoryCommandHandler;
         private readonly ICommandHandler<UpdateCategoryCommand, Result> _updateCategoryCommandHandler;
+        private readonly ICommandHandler<DeleteCategoryCommand, Result> _deleteCategoryCommandHandler;
 
         public CategoryController(
             IQueryHandler<GetCategoriesQuery, Result<IReadOnlyList<CategoryDto>>> getCategoriesQueryHandler, 
             ICommandHandler<CreateCategoryCommand, Result> createCategoryCommandHandler,
-            ICommandHandler<UpdateCategoryCommand, Result> updateCategoryCommandHandler)
+            ICommandHandler<UpdateCategoryCommand, Result> updateCategoryCommandHandler,
+            ICommandHandler<DeleteCategoryCommand, Result> deleteCategoryCommandHandler)
         {
             _getCategoriesQueryHandler = getCategoriesQueryHandler;
             _createCategoryCommandHandler = createCategoryCommandHandler;
             _updateCategoryCommandHandler = updateCategoryCommandHandler;
+            _deleteCategoryCommandHandler = deleteCategoryCommandHandler;
         }
 
         [HttpGet]
@@ -49,13 +52,33 @@ namespace BikeShop.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(UpdateCategoryCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update([FromRoute] int id, UpdateCategoryCommand command, CancellationToken cancellationToken)
         {
+            if (id != command.Id) {
+                return BadRequest("Route id does not match body id.");
+            }
+
             var result = await _updateCategoryCommandHandler.Handle(command, cancellationToken);
             if (result.IsFailure)
                 return BadRequest(result.Error);
 
             return NoContent();
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id, DeleteCategoryCommand command, CancellationToken cancellationToken)
+        {
+            if (id != command.Id) {
+                return BadRequest("Route id does not match body id.");
+            }
+
+            var result = await _deleteCategoryCommandHandler.Handle(command, cancellationToken);
+            if (result.IsFailure)
+                return BadRequest(result.Error);
+
+            return NoContent();
+        }
+
+
     }
 }
