@@ -3,5 +3,5 @@ using BikeShop.Application.Common.Models;
 
 namespace BikeShop.Application.Categories.GetCategories
 {
-    public sealed record GetCategoriesQuery : IQuery<Result<IReadOnlyList<CategoryDto>>>;
+    public sealed record GetCategoriesQuery : IQuery<Result<IReadOnlyList<CategoryListItemDto>>>;
 }

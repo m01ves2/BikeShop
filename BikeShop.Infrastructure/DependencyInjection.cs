@@ -17,6 +17,7 @@ namespace BikeShop.Infrastructure
 
             // Repositories
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
             // Email
 
             // DateTimeProvider

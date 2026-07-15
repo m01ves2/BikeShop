@@ -12,14 +12,14 @@ namespace BikeShop.API.Controllers
     [Route("api/[controller]")]
     public class CategoryController : ControllerBase
     {
-        private readonly IQueryHandler<GetCategoriesQuery, Result<IReadOnlyList<CategoryDto>>> _getCategoriesQueryHandler;
+        private readonly IQueryHandler<GetCategoriesQuery, Result<IReadOnlyList<CategoryListItemDto>>> _getCategoriesQueryHandler;
 
         private readonly ICommandHandler<CreateCategoryCommand, Result> _createCategoryCommandHandler;
         private readonly ICommandHandler<UpdateCategoryCommand, Result> _updateCategoryCommandHandler;
         private readonly ICommandHandler<DeleteCategoryCommand, Result> _deleteCategoryCommandHandler;
 
         public CategoryController(
-            IQueryHandler<GetCategoriesQuery, Result<IReadOnlyList<CategoryDto>>> getCategoriesQueryHandler, 
+            IQueryHandler<GetCategoriesQuery, Result<IReadOnlyList<CategoryListItemDto>>> getCategoriesQueryHandler, 
             ICommandHandler<CreateCategoryCommand, Result> createCategoryCommandHandler,
             ICommandHandler<UpdateCategoryCommand, Result> updateCategoryCommandHandler,
             ICommandHandler<DeleteCategoryCommand, Result> deleteCategoryCommandHandler)

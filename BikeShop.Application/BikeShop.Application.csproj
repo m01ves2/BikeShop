@@ -14,10 +14,6 @@
     <Folder Include="Customers\" />
     <Folder Include="Cart\" />
     <Folder Include="Orders\" />
-    <Folder Include="Products\Commands\" />
-    <Folder Include="Products\DTOs\" />
-    <Folder Include="Products\Validators\" />
-    <Folder Include="Products\Queries\" />
   </ItemGroup>
 
   <ItemGroup>

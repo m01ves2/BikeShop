@@ -199,6 +199,7 @@ Wireframe
 +------------------------------------------------------+
 | Logo | Search | Login | Cart                         |
 +------------------------------------------------------+
+|                       | Category                     |
 | Product Images        | Product Info                 |
 | [image]               | Name                         |
 | [image]               | Price                        |

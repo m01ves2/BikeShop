@@ -1,0 +1,25 @@
+﻿using BikeShop.Application.Abstractions.Messaging;
+using BikeShop.Application.Abstractions.Persistence;
+using BikeShop.Application.Common.Models;
+
+namespace BikeShop.Application.Products.GetProducts
+{
+    public class GetProductsQueryHandler : IQueryHandler<GetProductsQuery, Result<IReadOnlyList<ProductListItemDto>>>
+    {
+        private readonly IProductRepository _productRepository;
+
+        public GetProductsQueryHandler(IProductRepository productRepository)
+        {
+            _productRepository = productRepository;
+        }
+
+        public async Task<Result<IReadOnlyList<ProductListItemDto>>> Handle(GetProductsQuery query, CancellationToken cancellationToken)
+        {
+            var products = await _productRepository.GetAllAsync(cancellationToken);
+
+            var result = products.Select(x => new ProductListItemDto(x.Id, x.Name,  x.Price, x.Category.Name)).ToList();
+
+            return Result<IReadOnlyList<ProductListItemDto>>.Success(result);
+        }
+    }
+}
