@@ -1,5 +1,12 @@
-﻿<h3>CategoryMenu</h3>
+﻿@inject HttpClient Http
+
+<h3>CategoryMenu</h3>
 
 @code {
+    private List<CategoryDto> categories = [];
 
+    protected override async Task OnInitializedAsync()
+    {
+        
+    }
 }

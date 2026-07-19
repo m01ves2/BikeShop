@@ -1,6 +1,7 @@
 using BikeShop.Application;
 using BikeShop.Infrastructure;
 using BikeShop.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +18,9 @@ builder.Services.AddInfrastructure(builder.Configuration);
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope()) {
-    var db = scope.ServiceProvider
-        .GetRequiredService<BikeShopDbContext>();
+    var db = scope.ServiceProvider.GetRequiredService<BikeShopDbContext>();
 
+    await db.Database.MigrateAsync();
     await DbInitializer.InitializeAsync(db);
 }
 
