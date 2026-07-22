@@ -1,0 +1,33 @@
+﻿@page "/categories"
+@using BikeShop.Blazor.Models
+@using BikeShop.Blazor.Services
+
+@inject CategoryApiClient ApiClient
+
+<h1>Categories</h1>
+
+@if (categories == null) {
+    <p>Loading...</p>
+}
+else {
+    <ul>
+        @foreach (var category in categories) {
+            <li>
+                @category.Name
+            </li>
+        }
+    </ul>
+}
+
+
+@code {
+
+    private List<CategoryModel>? categories;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await ApiClient.GetCategoriesAsync();
+    }
+
+}

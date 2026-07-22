@@ -1,36 +1,38 @@
-﻿<header class="border-bottom py-3">
-    <div class="container">
+﻿<header class="sticky-top border-top border-bottom bg-white shadow-sm">
 
-        <div class="d-flex align-items-center">
-            <div class="header-left d-flex align-items-center gap-4">
-                <NavLink href="/" class="text-decoration-none">
+    <nav class="navbar container">
 
-                    <!-- Здесь позже будет logo -->
-                    @* <img src="images/logo.svg" alt="BikeShop" />
-                <img src="images/logo.png" alt="BikeShop" height="40" /> *@
-                    <strong>BikeShop</strong>
+        <NavLink class="navbar-brand fw-bold" href="/">
+            <i class="bi bi-bicycle"></i>
+            BikeShop
+        </NavLink>
 
-                </NavLink>
+        <div class="d-flex align-items-center gap-3">
 
-                <nav class="d-flex gap-3">
+            <NavLink class="text-dark text-decoration-none fs-5" href="/search">
+                <i class="bi bi-search"></i>
+            </NavLink>
 
-                    <NavLink class="text-decoration-none" href="/">Home</NavLink>
-                    <NavLink class="text-decoration-none" href="/products">Products</NavLink>
-                    <NavLink class="text-decoration-none" href="/categories">Categories</NavLink>
+            <NavLink class="text-dark text-decoration-none fs-5" href="/account">
+                <i class="bi bi-person"></i>
+            </NavLink>
 
-                </nav>
-            </div>
+            <NavLink class="cart-link text-dark text-decoration-none" href="/cart">
 
-            <div class="header-right d-flex align-items-center gap-3 ms-auto">
-                <div class="d-flex align-items-center gap-3">
-                    <input type="text" placeholder="Search..." class="form-control" />
-                    <NavLink class="text-decoration-none" href="/">Login</NavLink>
-                    <NavLink class="text-decoration-none" href="/">Cart(0)</NavLink>
-                </div>
-            </div>
+                <i class="bi bi-cart3 fs-5"></i>
+
+                <span class="cart-badge badge rounded-pill bg-danger">
+                    0
+                </span>
+
+            </NavLink>
+
         </div>
-    </div>
+
+    </nav>
+
 </header>
+
 
 @code {
 

@@ -11,7 +11,7 @@ namespace BikeShop.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductController : ControllerBase
+    public class ProductsController : ControllerBase
     {
         private readonly IQueryHandler<GetProductsQuery, Result<IReadOnlyList<ProductListItemDto>>> _getProductsQueryHandler;
         private readonly IQueryHandler<GetProductDetailsQuery, Result<ProductDetailsDto>> _getProductDetailsQueryHandler;
@@ -20,7 +20,7 @@ namespace BikeShop.API.Controllers
         private readonly ICommandHandler<UpdateProductCommand, Result> _updateProductCommandHandler;
         private readonly ICommandHandler<DeleteProductCommand, Result> _deleteProductCommandHandler;
 
-        public ProductController(
+        public ProductsController(
             IQueryHandler<GetProductsQuery, Result<IReadOnlyList<ProductListItemDto>>> getProductsQueryHandler,
             IQueryHandler<GetProductDetailsQuery, Result<ProductDetailsDto>> getProductDetailsQueryHandler,
             ICommandHandler<CreateProductCommand, Result> createProductCommandHandler,

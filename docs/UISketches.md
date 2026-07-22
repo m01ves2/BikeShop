@@ -137,9 +137,13 @@ Dashboard
 
 ## 0. Layout skeleton
 +------------------------------------------------------+
-| HEADER (Logo | Search | User | Cart)                |
+| HEADER (Logo | Search | User | Cart)                 |
 +------------------------------------------------------+
-| SIDEBAR (optional: categories / admin menu)         |
+| Category Navigation    / admin menu                  |
+| Mountain | Road | City | Accessories | Parts | ...   |  
++------------------------------------------------------+
+| Breadcrumbs                                          |
+| Home > Mountain Bikes > Trek Marlin 8                |
 +------------------------------------------------------+
 | MAIN CONTENT                                         |
 |                                                      |
@@ -165,7 +169,11 @@ Wireframe
 +------------------------------------------------------+
 | Logo | Search..................... | Login | Cart(2) |
 +------------------------------------------------------+
-| Categories                                         ▼ |
+| Category Navigation                                  |
+| Mountain | Road | City | Accessories | Parts | ...   |
++------------------------------------------------------+
+| Breadcrumbs                                          |
+| Home > Mountain Bikes > Trek Marlin 8                |
 +------------------------------------------------------+
 |                 Featured Products                    |
 |  +--------+  +--------+  +--------+                  |
@@ -182,7 +190,13 @@ Wireframe
  +------------------------------------------------------+
 | Logo | Search | Login | Cart                          |
 +-------------------------------------------------------+
-| Filters: Category | Price | Sort                      |
+| Category Navigation                                   |
+| Mountain | Road | City | Accessories | Parts | ...    |
++-------------------------------------------------------+
+| Breadcrumbs                                           |
+| Home > Mountain Bikes > Trek Marlin 8                 |
++-------------------------------------------------------+
+| Filters:  Price | Sort |....                          |
 +-------------------------------------------------------+
 |                 Product Grid                          |
 |  +--------+  +--------+  +--------+                   |
@@ -199,6 +213,12 @@ Wireframe
 +------------------------------------------------------+
 | Logo | Search | Login | Cart                         |
 +------------------------------------------------------+
+| Category Navigation                                  |
+| Mountain | Road | City | Accessories | Parts | ...   |
++------------------------------------------------------+
+| Breadcrumbs                                          |
+| Home > Mountain Bikes > Trek Marlin 8                |
++------------------------------------------------------+
 |                       | Category                     |
 | Product Images        | Product Info                 |
 | [image]               | Name                         |
@@ -213,6 +233,12 @@ Wireframe
 +------------------------------------------------------+
 | Logo | Search | Login | Cart                         |
 +------------------------------------------------------+
+| Category Navigation                                  |
+| Mountain | Road | City | Accessories | Parts | ...   |
++------------------------------------------------------+
+| Breadcrumbs                                          |
+| Home > Mountain Bikes > Trek Marlin 8                |
++------------------------------------------------------+
 | Cart Items                                           |
 | [Product] Qty [-][+] Remove                          |
 | [Product] Qty [-][+] Remove                          |
@@ -224,6 +250,12 @@ Wireframe
 ## 5. CHECKOUT
 +------------------------------------------------------+
 | Logo | Search | Login | Cart                         |
++------------------------------------------------------+
+| Category Navigation                                  |
+| Mountain | Road | City | Accessories | Parts | ...   |
++------------------------------------------------------+
+| Breadcrumbs                                          |
+| Home > Mountain Bikes > Trek Marlin 8                |
 +------------------------------------------------------+
 | Shipping Form                                        |
 | Name                                                 |
@@ -239,6 +271,12 @@ Wireframe
 ## 6. ORDERS
 +------------------------------------------------------+
 | Logo | Search | Login | Cart                         |
++------------------------------------------------------+
+| Category Navigation                                  |
+| Mountain | Road | City | Accessories | Parts | ...   |
++------------------------------------------------------+
+| Breadcrumbs                                          |
+| Home > Mountain Bikes > Trek Marlin 8                |
 +------------------------------------------------------+
 | Order List                                           |
 | #1234 | Date | Status | View                       |

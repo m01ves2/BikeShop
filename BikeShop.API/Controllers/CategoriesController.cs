@@ -10,7 +10,7 @@ namespace BikeShop.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CategoryController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
         private readonly IQueryHandler<GetCategoriesQuery, Result<IReadOnlyList<CategoryListItemDto>>> _getCategoriesQueryHandler;
 
@@ -18,7 +18,7 @@ namespace BikeShop.API.Controllers
         private readonly ICommandHandler<UpdateCategoryCommand, Result> _updateCategoryCommandHandler;
         private readonly ICommandHandler<DeleteCategoryCommand, Result> _deleteCategoryCommandHandler;
 
-        public CategoryController(
+        public CategoriesController(
             IQueryHandler<GetCategoriesQuery, Result<IReadOnlyList<CategoryListItemDto>>> getCategoriesQueryHandler, 
             ICommandHandler<CreateCategoryCommand, Result> createCategoryCommandHandler,
             ICommandHandler<UpdateCategoryCommand, Result> updateCategoryCommandHandler,

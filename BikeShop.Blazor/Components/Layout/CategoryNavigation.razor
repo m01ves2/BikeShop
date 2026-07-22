@@ -1,0 +1,36 @@
+﻿@using BikeShop.Blazor.Models
+@using BikeShop.Blazor.Services
+
+@inject CategoryApiClient ApiClient
+
+
+<nav class="border-bottom bg-light">
+
+    <div class="container">
+        @if (categories == null) {
+            <div class="py-2">
+                Loading...
+            </div>
+        }
+        else {
+            <ul class="nav justify-content-center">
+                @foreach (var category in categories) {
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="@($"/category/{category.Id}")">@category.Name</NavLink>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+
+</nav>
+
+
+@code {
+    private List<CategoryModel>? categories;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await ApiClient.GetCategoriesAsync();
+    }
+}

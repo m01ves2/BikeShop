@@ -50,3 +50,13 @@ h1:focus {
     border-color: #929292;
 }
 */
+
+.cart-link {
+    position: relative;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -12px;
+}
