@@ -2,6 +2,20 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+/*body {
+    background-color: pink !important;
+}*/
+
+/*.cart-link {
+    position: relative;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -12px;
+}*/
+
 /*a, .btn-link {
     color: #006bb7;
 }
@@ -50,13 +64,3 @@ h1:focus {
     border-color: #929292;
 }
 */
-
-.cart-link {
-    position: relative;
-}
-
-.cart-badge {
-    position: absolute;
-    top: -6px;
-    right: -12px;
-}

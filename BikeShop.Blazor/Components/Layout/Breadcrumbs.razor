@@ -1,0 +1,44 @@
+﻿@* @using BikeShop.Blazor.Models
+<nav aria-label="breadcrumb">
+
+    <div class="container">
+
+        <ol class="breadcrumb py-2 mb-0">
+
+            @foreach (var item in Items) {
+                <li class="breadcrumb-item">
+
+                    @if (item.Url != null) {
+                        <NavLink href="@item.Url">
+                            @item.Title
+                        </NavLink>
+                    }
+                    else {
+                        @item.Title
+                    }
+
+                </li>
+            }
+
+        </ol>
+
+    </div>
+
+</nav>
+
+
+@code {
+
+    [Parameter]
+    public List<BreadcrumbItem> Items { get; set; } = new();
+
+} *@
+<nav class="bg-light border-bottom">
+
+    <div class="container py-2">
+
+        Home
+
+    </div>
+
+</nav>
