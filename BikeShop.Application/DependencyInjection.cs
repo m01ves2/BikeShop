@@ -1,15 +1,18 @@
 ﻿using BikeShop.Application.Abstractions.Messaging;
-using BikeShop.Application.Common.Models;
 using BikeShop.Application.Categories.CreateCategory;
 using BikeShop.Application.Categories.DeleteCategory;
+using BikeShop.Application.Categories.DTOs;
 using BikeShop.Application.Categories.GetCategories;
 using BikeShop.Application.Categories.UpdateCategory;
+using BikeShop.Application.Common.Models;
 using BikeShop.Application.Products.CreateProduct;
 using BikeShop.Application.Products.DeleteProduct;
+using BikeShop.Application.Products.DTOs;
+using BikeShop.Application.Products.GetProductDetails;
 using BikeShop.Application.Products.GetProducts;
+using BikeShop.Application.Products.GetProductsByCategoryId;
 using BikeShop.Application.Products.UpdateProduct;
 using Microsoft.Extensions.DependencyInjection;
-using BikeShop.Application.Products.GetProductDetails;
 
 namespace BikeShop.Application
 {
@@ -28,6 +31,7 @@ namespace BikeShop.Application
             services.AddScoped<ICommandHandler<DeleteCategoryCommand, Result>, DeleteCategoryCommandHandler>();
 
             services.AddScoped<IQueryHandler<GetProductsQuery, Result<IReadOnlyList<ProductListItemDto>>>, GetProductsQueryHandler>();
+            services.AddScoped<IQueryHandler<GetProductsByCategoryIdQuery, Result<IReadOnlyList<ProductListItemDto>>>, GetProductsByCategoryIdQueryHandler>();
             services.AddScoped<IQueryHandler<GetProductDetailsQuery, Result<ProductDetailsDto>>, GetProductDetailsQueryHandler>();
             services.AddScoped<ICommandHandler<CreateProductCommand, Result>, CreateProductCommandHandler>();
             services.AddScoped<ICommandHandler<UpdateProductCommand, Result>, UpdateProductCommandHandler>();

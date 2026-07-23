@@ -2,6 +2,7 @@
 using BikeShop.Application.Common.Models;
 using BikeShop.Application.Products.CreateProduct;
 using BikeShop.Application.Products.DeleteProduct;
+using BikeShop.Application.Products.DTOs;
 using BikeShop.Application.Products.GetProductDetails;
 using BikeShop.Application.Products.GetProducts;
 using BikeShop.Application.Products.UpdateProduct;

@@ -7,6 +7,7 @@ namespace BikeShop.Application.Abstractions.Persistence
         Task<IReadOnlyList<Product>> GetAllAsync(CancellationToken cancellationToken);
         Task AddAsync(Product product, CancellationToken cancellationToken);
         Task<Product?> GetByIdAsync(int id, CancellationToken cancellationToken);
+        Task<IReadOnlyList<Product>> GetByCategoryIdAsync(int categoryId, CancellationToken cancellationToken);
         void Remove(Product product);
     }
 }

@@ -14,9 +14,12 @@ namespace BikeShop.Blazor.Services
         public async Task<List<ProductListItemModel>> GetProductsAsync()
         {
             var url = "api/products";
+            return await _http.GetFromJsonAsync<List<ProductListItemModel>>(url) ?? [];
+        }
 
-            Console.WriteLine($"Request: {_http.BaseAddress}{url}");
-
+        public async Task<List<ProductListItemModel>> GetProductsByCategoryAsync(int categoryId)
+        {
+            var url = $"api/categories/{categoryId}/products";
             return await _http.GetFromJsonAsync<List<ProductListItemModel>>(url) ?? [];
         }
     }

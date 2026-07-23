@@ -1,0 +1,33 @@
+﻿@using BikeShop.Blazor.Components.Sections.Product
+@using BikeShop.Blazor.Components.Shared
+@using BikeShop.Blazor.Models
+@using BikeShop.Blazor.Services
+
+@inject ProductApiClient ApiClient
+
+
+@if (products is null)
+{
+    <LoadingSpinner />
+}
+else
+{
+    <div class="container my-5">
+        <ProductGrid Products="products" />
+    </div>
+}
+
+
+@code {
+
+    [Parameter]
+    public int CategoryId { get; set; }
+
+    private IReadOnlyList<ProductListItemModel>? products;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        products = await ApiClient.GetProductsByCategoryAsync(CategoryId);
+    }
+
+}

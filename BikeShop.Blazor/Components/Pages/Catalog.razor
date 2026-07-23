@@ -1,0 +1,11 @@
+﻿@page "/category/{CategoryId:int}"
+@using BikeShop.Blazor.Components.Sections.Catalog
+
+<CatalogProductsSection CategoryId="CategoryId" />
+
+@code {
+
+    [Parameter]
+    public int CategoryId { get; set; }
+
+}

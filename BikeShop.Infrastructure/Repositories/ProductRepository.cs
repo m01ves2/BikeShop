@@ -20,6 +20,11 @@ namespace BikeShop.Infrastructure.Repositories
             return await _context.Products.Include(p => p.Category).AsNoTracking().ToListAsync(cancellationToken); //тут только читаем, поэтому AsNoTracking. EF не должен отслеживать изменения.
         }
 
+        public async Task<IReadOnlyList<Product>> GetByCategoryIdAsync(int categoryId, CancellationToken cancellationToken)
+        {
+            return await _context.Products.Include(p => p.Category).Where(p => p.CategoryId == categoryId).AsNoTracking().ToListAsync(cancellationToken); //тут только читаем, поэтому AsNoTracking. EF не должен отслеживать изменения.
+        }
+
         public async Task<Product?> GetByIdAsync(int id, CancellationToken cancellationToken)
         {
             return await _context.Products.Include(p => p.Category).FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
