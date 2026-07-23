@@ -7,6 +7,7 @@ namespace BikeShop.Blazor
         public static IServiceCollection AddBlazorServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<CategoryApiClient>();
+            services.AddScoped<ProductApiClient>();
 
             services.AddScoped<HttpClient>(sp =>
             {
@@ -22,6 +23,8 @@ namespace BikeShop.Blazor
             //{
             //    client.BaseAddress = new Uri(configuration["ApiSettings:BaseUrl"]!); //appsettings.json
             //});
+
+
 
             return services;
         }

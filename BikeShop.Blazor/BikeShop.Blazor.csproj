@@ -9,8 +9,6 @@
   <ItemGroup>
     <Folder Include="Components\Sections\Cart\" />
     <Folder Include="Components\Sections\Category\" />
-    <Folder Include="Components\Sections\Product\" />
-    <Folder Include="Components\Shared\" />
   </ItemGroup>
 
 </Project>

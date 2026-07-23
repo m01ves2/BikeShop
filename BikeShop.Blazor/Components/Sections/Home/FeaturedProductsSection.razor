@@ -1,7 +1,44 @@
-﻿<section>
-    <div class="container py-5">
+﻿@using BikeShop.Blazor.Components.Sections.Product
+@using BikeShop.Blazor.Components.Shared
+@using BikeShop.Blazor.Models
+@using BikeShop.Blazor.Services
 
-        <h2>Featured Products</h2>
+@inject ProductApiClient ApiClient
 
-    </div>
+<section class="container py-5">
+
+    <SectionTitle Title="Featured Products" />
+
+    @if (products is null)
+    {
+        <LoadingSpinner />
+    }
+    else
+    {
+        <div class="row g-4">
+
+            @foreach (var product in products)
+            {
+                <div class="col-lg-3 col-md-6">
+
+                    <ProductCard Product="product" />
+
+                </div>
+            }
+
+        </div>
+    }
+
 </section>
+
+@code 
+{
+    private IReadOnlyList<ProductListItemModel>? products;
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = (await ApiClient.GetProductsAsync())
+            .Take(4)
+            .ToList();
+    }
+}
