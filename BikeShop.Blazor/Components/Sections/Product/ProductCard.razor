@@ -1,5 +1,8 @@
 ﻿@using BikeShop.Blazor.Models
 @using System.Globalization
+@using BikeShop.Blazor.Services
+
+@inject CurrencyFormatter Currency
 
 <NavLink href=@($"/product/{Product.Id}") class="text-decoration-none text-dark">
     <div class="card h-100 shadow-sm">
@@ -15,7 +18,7 @@
 
         <div class="card-footer bg-white">
             <div class="d-flex justify-content-between align-items-center">
-                <strong>@Product.Price.ToString("N0", new CultureInfo("ru-RU")) ₽</strong>
+                <strong>@Currency.Format(Product.Price)</strong>
 
                 <NavLink class="btn btn-primary btn-sm" href="@($"/product/{Product.Id}")">
                     View

@@ -4,6 +4,8 @@
 @using System.Globalization
 
 @inject ProductApiClient ApiClient
+@inject CurrencyFormatter Currency
+
 @if (product is null)
 {
     <LoadingSpinner />
@@ -24,7 +26,7 @@ else
 
         <div class="col-lg-6">
             <h3 class="text-primary">
-                @product.Price.ToString("N0", new CultureInfo("ru-RU")) ₽
+                @Currency.Format(product.Price)
             </h3>
             <p>
                 @product.Description

@@ -1,6 +1,6 @@
 Localization & Formatting
 -------------------------
-[x] Currency formatting
+[ ] Currency formatting
 [ ] CultureInfo configuration
 [ ] Resource files (.resx)
 [ ] Language switcher

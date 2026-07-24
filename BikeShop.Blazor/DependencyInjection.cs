@@ -8,16 +8,15 @@ namespace BikeShop.Blazor
         {
             services.AddScoped<CategoryApiClient>();
             services.AddScoped<ProductApiClient>();
+            services.AddScoped<CurrencyFormatter>();
 
             services.AddScoped<HttpClient>(sp =>
             {
                 return new HttpClient
                 {
-                    BaseAddress = new Uri(
-                          "https://localhost:7263/")
+                    BaseAddress = new Uri("https://localhost:7263/")
                 };
             });
-
 
             //services.AddHttpClient<CategoryApiClient>(client =>
             //{
