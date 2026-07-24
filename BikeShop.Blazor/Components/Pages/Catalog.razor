@@ -1,5 +1,9 @@
 ﻿@page "/category/{CategoryId:int}"
 @using BikeShop.Blazor.Components.Sections.Catalog
+@using BikeShop.Blazor.Models
+@using BikeShop.Blazor.Services
+
+@inject CategoryApiClient ApiClient
 
 <CatalogProductsSection CategoryId="CategoryId" />
 
@@ -7,5 +11,12 @@
 
     [Parameter]
     public int CategoryId { get; set; }
+
+    private CategoryListItemModel? category;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        category = await ApiClient.GetCategoryByIdAsync(CategoryId);
+    }
 
 }

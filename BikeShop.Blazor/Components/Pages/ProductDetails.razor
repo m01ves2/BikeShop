@@ -1,0 +1,16 @@
+﻿@page "/product/{ProductId:int}"
+@using BikeShop.Blazor.Components.Sections.Product
+
+<PageTitle>Product</PageTitle>
+
+<div class="container my-5">
+
+    <ProductDetailsSection ProductId="ProductId" />
+
+</div>
+
+@code {
+
+    [Parameter]
+    public int ProductId { get; set; }
+}

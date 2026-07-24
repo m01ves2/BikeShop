@@ -1,0 +1,58 @@
+﻿@using BikeShop.Blazor.Components.Shared
+@using BikeShop.Blazor.Models
+@using BikeShop.Blazor.Services
+@using System.Globalization
+
+@inject ProductApiClient ApiClient
+@if (product is null)
+{
+    <LoadingSpinner />
+}
+else
+{
+    <SectionTitle Text="@product.Name" />
+
+    <div class="row">
+
+        <div class="col-lg-6">
+            <div class="border rounded bg-light d-flex justify-content-center align-items-center" style="height:350px;">
+                <span class="text-muted">
+                    Product Image
+                </span>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <h3 class="text-primary">
+                @product.Price.ToString("N0", new CultureInfo("ru-RU")) ₽
+            </h3>
+            <p>
+                @product.Description
+            </p>
+            <p>
+                <strong>In stock:</strong>
+                @product.StockQuantity
+            </p>
+            <button class="btn btn-primary btn-lg">
+                Add to Cart
+            </button>
+        </div>
+
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public int ProductId { get; set; }
+
+    private ProductDetailsModel? product;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        product = await ApiClient.GetProductDetailsAsync(ProductId);
+
+        Console.WriteLine(product == null ? "PRODUCT NULL"  : $"PRODUCT LOADED: {product.Name}");
+    }
+
+}
