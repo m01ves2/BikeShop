@@ -19,14 +19,9 @@
 
                 @foreach (var category in categories) {
                     <li class="nav-item">
-
-                        <NavLink class="nav-link"
-                                 href="@($"/category/{category.Id}")">
-
+                        <NavLink class="nav-link" href="@($"/category/{category.Id}")">
                             @category.Name
-
                         </NavLink>
-
                     </li>
                 }
 

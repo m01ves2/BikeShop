@@ -1,6 +1,5 @@
 ﻿using BikeShop.Application.Abstractions.Messaging;
 using BikeShop.Application.Abstractions.Persistence;
-using BikeShop.Application.Categories;
 using BikeShop.Application.Common.Models;
 using BikeShop.Application.Products.DTOs;
 

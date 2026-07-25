@@ -1,16 +1,56 @@
-﻿@page "/product/{ProductId:int}"
+﻿@page "/product/{Id:int}"
 @using BikeShop.Blazor.Components.Sections.Product
+@using BikeShop.Blazor.Components.Shared
+@using BikeShop.Blazor.Models
+@using BikeShop.Blazor.Services
 
-<PageTitle>Product</PageTitle>
+@inject ProductApiClient ApiClient
+@inject BreadcrumbService BreadcrumbService
 
-<div class="container my-5">
+@if (product is null) {
+    <PageTitle>BikeShop</PageTitle>
+    <LoadingSpinner />
+}
+else {
+    <PageTitle>@product.Name - BikeShop</PageTitle>
+    <PageHeader Text="@product.Name" />
 
-    <ProductDetailsSection ProductId="ProductId" />
+    <div class="container my-5">
 
-</div>
+        <ProductDetailsSection Product="@product" />
+
+    </div>
+}
 
 @code {
 
     [Parameter]
-    public int ProductId { get; set; }
+    public int Id { get; set; }
+
+    private ProductDetailsModel? product;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        product = await ApiClient.GetProductDetailsAsync(Id);
+
+        if (product is not null) {
+            BreadcrumbService.SetItems([
+                new()
+                {
+                    Text = "Home",
+                    Url = "/"
+                },
+                new()
+                {
+                    Text = product.CategoryName,
+                    Url = $"/category/{product.CategoryId}"
+                },
+                new()
+                {
+                    Text = product.Name
+                }
+            ]);
+        }
+    }
+
 }

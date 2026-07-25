@@ -3,17 +3,14 @@
 @using BikeShop.Blazor.Services
 @using System.Globalization
 
-@inject ProductApiClient ApiClient
 @inject CurrencyFormatter Currency
 
-@if (product is null)
+@if (Product is null)
 {
     <LoadingSpinner />
 }
 else
 {
-    <SectionTitle Text="@product.Name" />
-
     <div class="row">
 
         <div class="col-lg-6">
@@ -26,14 +23,14 @@ else
 
         <div class="col-lg-6">
             <h3 class="text-primary">
-                @Currency.Format(product.Price)
+                @Currency.Format(Product.Price)
             </h3>
             <p>
-                @product.Description
+                @Product.Description
             </p>
             <p>
                 <strong>In stock:</strong>
-                @product.StockQuantity
+                @Product.StockQuantity
             </p>
             <button class="btn btn-primary btn-lg">
                 Add to Cart
@@ -46,15 +43,6 @@ else
 @code {
 
     [Parameter]
-    public int ProductId { get; set; }
-
-    private ProductDetailsModel? product;
-
-    protected override async Task OnParametersSetAsync()
-    {
-        product = await ApiClient.GetProductDetailsAsync(ProductId);
-
-        Console.WriteLine(product == null ? "PRODUCT NULL"  : $"PRODUCT LOADED: {product.Name}");
-    }
+    public ProductDetailsModel? Product { get; set; }
 
 }

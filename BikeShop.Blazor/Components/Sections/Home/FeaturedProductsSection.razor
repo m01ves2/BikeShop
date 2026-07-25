@@ -37,8 +37,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        products = (await ApiClient.GetProductsAsync())
-            .Take(4)
-            .ToList();
+        products = (await ApiClient.GetProductsAsync()).Take(4).ToList();
     }
 }

@@ -1,0 +1,19 @@
+﻿<div class="border rounded bg-light overflow-hidden">
+
+    <img src="@ImageUrl" alt="@Alt" class="@CssClass"/>
+
+</div>
+
+@code {
+    [Parameter]
+    public required string ImageUrl { get; set; }
+
+    [Parameter]
+    public required string Alt { get; set; }
+
+    [Parameter]
+    public string CssClass { get; set; } = "";
+
+    [Parameter]
+    public string Height { get; set; } = "220px";
+}

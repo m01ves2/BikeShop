@@ -1,44 +1,32 @@
-﻿@* @using BikeShop.Blazor.Models
+﻿@using BikeShop.Blazor.Models
+
 <nav aria-label="breadcrumb">
-
     <div class="container">
-
-        <ol class="breadcrumb py-2 mb-0">
+        <ol class="breadcrumb">
 
             @foreach (var item in Items) {
                 <li class="breadcrumb-item">
 
-                    @if (item.Url != null) {
-                        <NavLink href="@item.Url">
-                            @item.Title
+                    @if (item.Url is not null) {
+                        <NavLink class="text-dark text-decoration-none"
+                                 href="@item.Url">
+                            @item.Text
                         </NavLink>
                     }
                     else {
-                        @item.Title
+                        <span aria-current="page">
+                            @item.Text
+                        </span>
                     }
 
                 </li>
             }
 
         </ol>
-
     </div>
-
 </nav>
-
 
 @code {
-
     [Parameter]
-    public List<BreadcrumbItem> Items { get; set; } = new();
-
-} *@
-<nav class="bg-light border-bottom">
-
-    <div class="container py-2">
-
-        Home
-
-    </div>
-
-</nav>
+    public IReadOnlyList<BreadcrumbItem> Items { get; set; } = Array.Empty<BreadcrumbItem>();
+}

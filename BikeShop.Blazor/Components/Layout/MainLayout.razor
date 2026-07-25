@@ -1,4 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿@using BikeShop.Blazor.Services
+@inherits LayoutComponentBase
+
+@inject BreadcrumbService BreadcrumbService
 
 <div class="layout">
 
@@ -6,7 +9,7 @@
 
     <CategoryNavigation />
 
-    <Breadcrumbs />
+    <Breadcrumbs Items ="@BreadcrumbService.Items" />
 
     <main class="content">
 
@@ -17,3 +20,10 @@
     <Footer />
 
 </div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        BreadcrumbService.Changed += StateHasChanged;
+    }
+}

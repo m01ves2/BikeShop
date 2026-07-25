@@ -1,11 +1,23 @@
 ﻿@page "/category/{CategoryId:int}"
 @using BikeShop.Blazor.Components.Sections.Catalog
+@using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Services
 
 @inject CategoryApiClient ApiClient
+@inject BreadcrumbService BreadcrumbService
 
-<CatalogProductsSection CategoryId="CategoryId" />
+@if (category is null) {
+    <PageTitle>BikeShop</PageTitle>
+    <LoadingSpinner />
+}
+else {
+    <PageTitle>@category.Name - BikeShop</PageTitle>
+    <PageHeader Text="@category.Name" />
+    <CatalogProductsSection CategoryId="CategoryId" />
+}
+
+
 
 @code {
 
@@ -17,6 +29,19 @@
     protected override async Task OnParametersSetAsync()
     {
         category = await ApiClient.GetCategoryByIdAsync(CategoryId);
-    }
 
+        if (category is not null) {
+            BreadcrumbService.SetItems([
+                new()
+            {
+                Text = "Home",
+                Url = "/"
+            },
+            new()
+            {
+                Text = category.Name
+            }
+            ]);
+        }
+    }
 }

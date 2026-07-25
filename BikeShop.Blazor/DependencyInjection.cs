@@ -23,7 +23,7 @@ namespace BikeShop.Blazor
             //    client.BaseAddress = new Uri(configuration["ApiSettings:BaseUrl"]!); //appsettings.json
             //});
 
-
+            services.AddScoped<BreadcrumbService>();
 
             return services;
         }
