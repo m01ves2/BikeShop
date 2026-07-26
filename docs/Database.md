@@ -54,7 +54,13 @@ Implementation details are subject to further refinement.
 Purpose:
 Represents customer's shopping cart item.
 
-Implementation details are subject to further refinement.
+Fields:
+- ProductId
+- ProductName
+- Price 
+- Quantity
+- ImageUrl 
+- TotalPrice = Price * Quantity
 
 ### 2.6 Orders
 Purpose:

@@ -3,9 +3,10 @@
 @using BikeShop.Blazor.Services
 
 @inject CurrencyFormatter Currency
+@inject ICartService CartService
 
-<NavLink href=@($"/product/{Product.Id}") class="text-decoration-none text-dark">
-    <div class="card h-100 shadow-sm">
+<div class="card h-100 shadow-sm">
+    <NavLink href=@($"/product/{Product.Id}") class="text-decoration-none text-dark">
 
         <div class="card-body">
             <h5 class="card-title">
@@ -28,17 +29,36 @@
             <div class="d-flex justify-content-between align-items-center">
                 <strong>@Currency.Format(Product.Price)</strong>
 
-                <NavLink class="btn btn-primary btn-sm" href="@($"/product/{Product.Id}")">
+                @* <NavLink class="btn btn-primary btn-sm" href="@($"/product/{Product.Id}")">
                     View
-                </NavLink>
+                </NavLink> *@
             </div>
         </div>
+    </NavLink>
 
-    </div>
-</NavLink>
+    <button class="btn btn-primary"
+            @onclick="AddToCart">
+        Add to cart
+    </button>
+
+</div>
 
 @code
 {
     [Parameter]
     public required ProductListItemModel Product { get; set; }
+
+    private async Task AddToCart()
+    {
+        var item = new CartItemModel
+        {
+            ProductId = Product.Id,
+            ProductName = Product.Name,
+            Price = Product.Price,
+            Quantity = 1,
+            //ImageUrl = Product.ImageUrl
+        };
+
+        await CartService.AddItemAsync(item);
+    }
 }

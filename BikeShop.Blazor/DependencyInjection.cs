@@ -25,6 +25,8 @@ namespace BikeShop.Blazor
 
             services.AddScoped<BreadcrumbService>();
 
+            services.AddScoped<ICartService, CartService>();
+
             return services;
         }
     }
