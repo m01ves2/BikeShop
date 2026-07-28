@@ -7,8 +7,9 @@ namespace BikeShop.Blazor.Services
     public class CartService : ICartService
     {
         private readonly IJSRuntime _jsRuntime;
-
         private const string StorageKey = "cart";
+
+        public event EventHandler? CartChanged;
 
         public CartService(IJSRuntime jsRuntime)
         {
@@ -39,6 +40,7 @@ namespace BikeShop.Blazor.Services
             }
 
             await SaveAsync(items);
+            CartChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public async Task RemoveItemAsync(int productId)
@@ -48,6 +50,7 @@ namespace BikeShop.Blazor.Services
             items.RemoveAll(x => x.ProductId == productId);
 
             await SaveAsync(items);
+            CartChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public async Task UpdateQuantityAsync(int productId, int quantity)
@@ -61,11 +64,13 @@ namespace BikeShop.Blazor.Services
 
             item.Quantity = quantity;
             await SaveAsync(items);
+            CartChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public async Task ClearAsync()
         {
             await _jsRuntime.InvokeVoidAsync("cartStorage.clear");
+            CartChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private async Task SaveAsync(List<CartItemModel> items)

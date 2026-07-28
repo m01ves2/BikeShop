@@ -1,4 +1,10 @@
-﻿<header class="sticky-top border-top border-bottom bg-white shadow-sm">
+﻿@using BikeShop.Blazor.Services
+
+@implements IDisposable
+
+@inject ICartService CartService
+
+<header class="sticky-top border-top border-bottom bg-white shadow-sm">
 
     <nav class="navbar container">
 
@@ -22,7 +28,11 @@
                 <i class="bi bi-cart3 fs-5"></i>
 
                 <span class="cart-badge badge rounded-pill bg-danger">
-                    0
+                    @if (cartCount > 0) {
+                        <span>
+                            (@cartCount)
+                        </span>
+                    }
                 </span>
 
             </NavLink>
@@ -35,5 +45,40 @@
 
 
 @code {
+    private int cartCount;
 
+    protected override void OnInitialized()
+    {
+        CartService.CartChanged += UpdateCartCount;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender) {
+            await LoadCartCount();
+            StateHasChanged();
+        }
+    }
+
+    private async void UpdateCartCount(object? sender, EventArgs e)
+    {
+        await InvokeAsync(async () =>
+        {
+            await LoadCartCount();
+            await InvokeAsync(StateHasChanged);
+        });
+    }
+
+
+    private async Task LoadCartCount()
+    {
+        var items = await CartService.GetItemsAsync();
+
+        cartCount = items.Sum(x => x.Quantity);
+    }
+
+    public void Dispose()
+    {
+        CartService.CartChanged -= UpdateCartCount;
+    }
 }
