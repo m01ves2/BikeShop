@@ -16,9 +16,10 @@ namespace BikeShop.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(BikeShopDbContext).Assembly); //Configuration вместо OnModelCreating,
                                                                                               //то есть Entity -- Configuration вместо modelBuilder.Entity<Category>().HasKey(...)
-                                                                                              //Это строка через Reflection находит все классы,
+                                                                                               //Это строка через Reflection находит все классы,
                                                                                               //реализующие IEntityTypeConfiguration<T>
                                                                                               
             //То есть происходит примерно следующее (неявно):
