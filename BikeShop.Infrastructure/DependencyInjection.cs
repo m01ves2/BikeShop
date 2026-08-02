@@ -1,4 +1,5 @@
-﻿using BikeShop.Application.Abstractions.Persistence;
+﻿using BikeShop.Application.Abstractions.Identity;
+using BikeShop.Application.Abstractions.Persistence;
 using BikeShop.Infrastructure.Identity;
 using BikeShop.Infrastructure.Persistence;
 using BikeShop.Infrastructure.Repositories;
@@ -23,6 +24,11 @@ namespace BikeShop.Infrastructure
             // Email
 
             // DateTimeProvider
+
+            //Identity
+            services.AddScoped<IUserService, IdentityUserService>();
+
+            //services.AddIdentity<ApplicationUser, IdentityRole<int>>().AddEntityFrameworkStores<BikeShopDbContext>();
 
             return services;
         }
