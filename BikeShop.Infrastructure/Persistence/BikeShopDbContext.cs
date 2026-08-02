@@ -1,11 +1,13 @@
 ﻿using BikeShop.Application.Abstractions.Persistence;
 using BikeShop.Domain.Entities;
+using BikeShop.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace BikeShop.Infrastructure.Persistence
 {
-    public class BikeShopDbContext : DbContext, IUnitOfWork
+    public class BikeShopDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>, IUnitOfWork
     {
         public BikeShopDbContext(DbContextOptions<BikeShopDbContext> options) : base(options)
         {

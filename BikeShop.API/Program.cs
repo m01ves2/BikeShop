@@ -1,6 +1,8 @@
 using BikeShop.Application;
 using BikeShop.Infrastructure;
+using BikeShop.Infrastructure.Identity;
 using BikeShop.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,12 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+// Add Identity services
+builder.Services
+    .AddIdentity<ApplicationUser, IdentityRole<int>>()
+    .AddEntityFrameworkStores<BikeShopDbContext>()
+    .AddDefaultTokenProviders();
 
 var app = builder.Build();
 
