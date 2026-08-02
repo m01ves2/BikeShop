@@ -6,10 +6,7 @@ namespace BikeShop.Blazor
     {
         public static IServiceCollection AddBlazorServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<CategoryApiClient>();
-            services.AddScoped<ProductApiClient>();
             services.AddScoped<CurrencyFormatter>();
-
             services.AddScoped<HttpClient>(sp =>
             {
                 return new HttpClient
@@ -17,6 +14,8 @@ namespace BikeShop.Blazor
                     BaseAddress = new Uri("https://localhost:7263/")
                 };
             });
+            services.AddScoped<CategoryApiClient>();
+            services.AddScoped<ProductApiClient>();
 
             //services.AddHttpClient<CategoryApiClient>(client =>
             //{
@@ -27,6 +26,8 @@ namespace BikeShop.Blazor
 
             services.AddScoped<ICartService, CartService>();
 
+            services.AddScoped<AuthApiClient>();
+            
             return services;
         }
     }

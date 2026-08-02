@@ -1,0 +1,40 @@
+﻿@page "/register"
+@using BikeShop.Blazor.Models
+@using BikeShop.Blazor.Services
+
+@inject AuthApiClient AuthClient
+
+<h3>Register</h3>
+
+@* <input @bind="model.Email" />
+<input @bind="model.Password" type="password" />
+<input @bind="model.ConfirmPassword" type="password" /> *@
+
+<div>
+    <label>Email</label>
+    <input @bind="model.Email" />
+</div>
+
+<div>
+    <label>Password</label>
+    <input type="password" @bind="model.Password" />
+</div>
+
+<div>
+    <label>Comfirm Password</label>
+    <input type="password" @bind="model.ConfirmPassword" />
+</div>
+
+<button @onclick="RegisterUser">
+    Register
+</button>
+
+
+@code {   
+    private RegisterModel model = new();
+
+    private async Task RegisterUser()
+    {
+        var success = await AuthClient.RegisterAsync(model);
+    }
+}

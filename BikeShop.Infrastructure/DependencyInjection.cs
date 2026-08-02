@@ -28,8 +28,6 @@ namespace BikeShop.Infrastructure
             //Identity
             services.AddScoped<IUserService, IdentityUserService>();
 
-            //services.AddIdentity<ApplicationUser, IdentityRole<int>>().AddEntityFrameworkStores<BikeShopDbContext>();
-
             return services;
         }
     }
