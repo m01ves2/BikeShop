@@ -47,7 +47,7 @@ namespace BikeShop.API.Controllers
             var result = await _getCategoriesQueryHandler.Handle(new GetCategoriesQuery(), cancellationToken);
 
             if (result.IsFailure)
-                return BadRequest(result.Error);
+                return BadRequest(result.Error?.Message);
 
             return Ok(result.Data);
         }
@@ -58,7 +58,7 @@ namespace BikeShop.API.Controllers
             var result = await _getCategoryDetailsQueryHandler.Handle(new GetCategoryDetailsQuery(id), cancellationToken);
 
             if (result.IsFailure)
-                return BadRequest(result.Error);
+                return BadRequest(result.Error?.Message);
 
             return Ok(result.Data);
         }
@@ -69,7 +69,7 @@ namespace BikeShop.API.Controllers
             var result = await _getProductsbyCategoryIdQueryHandler.Handle(new GetProductsByCategoryIdQuery(categoryId), cancellationToken);
 
             if (result.IsFailure)
-                return BadRequest(result.Error);
+                return BadRequest(result.Error?.Message);
 
             return Ok(result.Data);
         }
@@ -79,7 +79,7 @@ namespace BikeShop.API.Controllers
         {
             var result = await _createCategoryCommandHandler.Handle(command, cancellationToken);
             if(result.IsFailure)
-                return BadRequest(result.Error);
+                return BadRequest(result.Error?.Message);
 
             return NoContent();
         }
@@ -93,7 +93,7 @@ namespace BikeShop.API.Controllers
 
             var result = await _updateCategoryCommandHandler.Handle(command, cancellationToken);
             if (result.IsFailure)
-                return BadRequest(result.Error);
+                return BadRequest(result.Error?.Message);
 
             return NoContent();
         }
@@ -107,7 +107,7 @@ namespace BikeShop.API.Controllers
 
             var result = await _deleteCategoryCommandHandler.Handle(command, cancellationToken);
             if (result.IsFailure)
-                return BadRequest(result.Error);
+                return BadRequest(result.Error?.Message);
 
             return NoContent();
         }

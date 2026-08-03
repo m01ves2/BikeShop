@@ -41,7 +41,7 @@ namespace BikeShop.API.Controllers
             var result = await _getProductsQueryHandler.Handle(new GetProductsQuery(), cancellationToken);
 
             if (result.IsFailure)
-                return BadRequest(result.Error);
+                return BadRequest(result.Error?.Message);
 
             return Ok(result.Data);
         }
@@ -52,7 +52,7 @@ namespace BikeShop.API.Controllers
             var result = await _getProductDetailsQueryHandler.Handle(new GetProductDetailsQuery(id), cancellationToken);
 
             if (result.IsFailure)
-                return BadRequest(result.Error);
+                return BadRequest(result.Error?.Message);
 
             return Ok(result.Data);
         }
@@ -62,7 +62,7 @@ namespace BikeShop.API.Controllers
         {
             var result = await _createProductCommandHandler.Handle(command, cancellationToken);
             if (result.IsFailure)
-                return BadRequest(result.Error);
+                return BadRequest(result.Error?.Message);
 
             return NoContent();
         }
@@ -76,7 +76,7 @@ namespace BikeShop.API.Controllers
 
             var result = await _updateProductCommandHandler.Handle(command, cancellationToken);
             if (result.IsFailure)
-                return BadRequest(result.Error);
+                return BadRequest(result.Error?.Message);
 
             return NoContent();
         }
@@ -90,7 +90,7 @@ namespace BikeShop.API.Controllers
 
             var result = await _deleteProductCommandHandler.Handle(command, cancellationToken);
             if (result.IsFailure)
-                return BadRequest(result.Error);
+                return BadRequest(result.Error?.Message);
 
             return NoContent();
         }

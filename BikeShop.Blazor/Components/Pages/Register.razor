@@ -1,40 +1,57 @@
 ﻿@page "/register"
+@using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Services
 
+@inject NavigationManager Navigation
 @inject AuthApiClient AuthClient
 
-<h3>Register</h3>
+<PageTitle>Register</PageTitle>
+<PageHeader Text="Register" />
 
-@* <input @bind="model.Email" />
-<input @bind="model.Password" type="password" />
-<input @bind="model.ConfirmPassword" type="password" /> *@
+<div class="container my-5">
+    <EditForm Model="model" OnValidSubmit="RegisterUser">
 
-<div>
-    <label>Email</label>
-    <input @bind="model.Email" />
+        <div class="mb-3">
+            <label>Email</label>
+            <InputText class="form-control"
+                       @bind-Value="model.Email" />
+        </div>
+
+        <div class="mb-3">
+            <label>Password</label>
+            <InputText class="form-control"
+                       type="password"
+                       @bind-Value="model.Password" />
+        </div>
+
+        @if (!string.IsNullOrEmpty(errorMessage)) {
+            <div class="alert alert-danger">
+                @errorMessage
+            </div>
+        }
+
+        <button class="btn btn-primary" @onclick="() => RegisterUser()">
+            Register
+        </button>
+
+    </EditForm>
 </div>
 
-<div>
-    <label>Password</label>
-    <input type="password" @bind="model.Password" />
-</div>
-
-<div>
-    <label>Comfirm Password</label>
-    <input type="password" @bind="model.ConfirmPassword" />
-</div>
-
-<button @onclick="RegisterUser">
-    Register
-</button>
-
-
-@code {   
+@code {
     private RegisterModel model = new();
+    private string? errorMessage;
 
     private async Task RegisterUser()
     {
-        var success = await AuthClient.RegisterAsync(model);
+        var error = await AuthClient.RegisterAsync(model);
+
+        if (error is not null) {
+            errorMessage = error.Message;
+            return;
+        }
+
+        // success
+        Navigation.NavigateTo("/");
     }
 }

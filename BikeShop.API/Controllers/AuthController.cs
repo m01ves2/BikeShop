@@ -23,7 +23,7 @@ namespace BikeShop.API.Controllers
             var result = await _userService.RegisterAsync(command.Email, command.Password, cancellationToken);
 
             if (!result.IsSuccess) {
-                return Conflict(result.Error);
+                return Conflict(result.Error?.Message);
             }
 
             return Ok();

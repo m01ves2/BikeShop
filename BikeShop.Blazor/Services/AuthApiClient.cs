@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using BikeShop.Blazor.Models;
+using BikeShop.Blazor.Services.Models;
 
 namespace BikeShop.Blazor.Services
 {
@@ -12,10 +13,15 @@ namespace BikeShop.Blazor.Services
             _http = http;
         }
 
-        public async Task<bool> RegisterAsync(RegisterModel model)
+        public async Task<ApiErrorModel?> RegisterAsync(RegisterModel model)
         {
             var response = await _http.PostAsJsonAsync("api/auth/register", model);
-            return response.IsSuccessStatusCode;
+
+            if (response.IsSuccessStatusCode) {
+                return null;
+            }
+
+            return await response.Content.ReadFromJsonAsync<ApiErrorModel>();
         }
     }
 }
