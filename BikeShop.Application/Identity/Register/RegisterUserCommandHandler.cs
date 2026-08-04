@@ -1,9 +1,10 @@
 ﻿using BikeShop.Application.Abstractions.Identity;
+using BikeShop.Application.Abstractions.Messaging;
 using BikeShop.Application.Common.Models;
 
 namespace BikeShop.Application.Authentication.Register
 {
-    public sealed class RegisterUserCommandHandler
+    public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, Result>
     {
         private readonly IUserService _userService;
 

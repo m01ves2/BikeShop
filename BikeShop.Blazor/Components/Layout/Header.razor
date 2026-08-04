@@ -1,7 +1,7 @@
 ﻿@using BikeShop.Blazor.Services
+@using Microsoft.AspNetCore.Components.Authorization
 
 @implements IDisposable
-
 @inject ICartService CartService
 
 <header class="sticky-top border-top border-bottom bg-white shadow-sm">
@@ -23,8 +23,23 @@
                 <i class="bi bi-person"></i>
             </NavLink> *@
 
+            <AuthorizeView>
+
+                <Authorized>
+                    Hello, @context.User.Identity?.Name
+                </Authorized>
+
+                <NotAuthorized>
+                    Not authorized
+                </NotAuthorized>
+
+            </AuthorizeView>
+
             <NavLink class="text-dark text-decoration-none fs-5" href="/register">
                 <i class="bi bi-person"></i>
+            </NavLink>
+            <NavLink class="text-dark text-decoration-none fs-5" href="/login">
+                <i class="bi bi bi-person-fill"></i>
             </NavLink>
 
             <NavLink class="cart-link text-dark text-decoration-none" href="/cart">

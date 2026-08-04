@@ -1,4 +1,5 @@
-﻿@page "/register"
+﻿@page "/login"
+
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Services
@@ -6,24 +7,39 @@
 @inject NavigationManager Navigation
 @inject AuthApiClient AuthClient
 
-<PageTitle>Register</PageTitle>
-<PageHeader Text="Register" />
+<PageTitle>Login</PageTitle>
+<PageHeader Text="Login" />
 
 <div class="container my-5">
-    <EditForm Model="model" OnValidSubmit="RegisterUser">
+
+    <EditForm Model="model" OnValidSubmit="LoginUser">
 
         <div class="mb-3">
             <label>Email</label>
+
             <InputText class="form-control"
                        @bind-Value="model.Email" />
         </div>
 
+
         <div class="mb-3">
             <label>Password</label>
+
             <InputText class="form-control"
                        type="password"
                        @bind-Value="model.Password" />
         </div>
+
+
+        <div class="form-check mb-3">
+            <InputCheckbox class="form-check-input"
+                           @bind-Value="model.RememberMe" />
+
+            <label class="form-check-label">
+                Remember me
+            </label>
+        </div>
+
 
         @if (!string.IsNullOrEmpty(errorMessage)) {
             <div class="alert alert-danger">
@@ -31,27 +47,33 @@
             </div>
         }
 
+
         <button class="btn btn-primary">
-            Register
+            Login
         </button>
 
     </EditForm>
+
 </div>
 
+
 @code {
-    private RegisterModel model = new();
+
+    private LoginModel model = new();
+
     private string? errorMessage;
 
-    private async Task RegisterUser()
+
+    private async Task LoginUser()
     {
-        var error = await AuthClient.RegisterAsync(model);
+        var error = await AuthClient.LoginAsync(model);
 
         if (error is not null) {
             errorMessage = error.Message;
             return;
         }
 
-        // success
-        Navigation.NavigateTo("/");
+//        Navigation.NavigateTo("/");
+        Navigation.NavigateTo("/", forceLoad: true);
     }
 }

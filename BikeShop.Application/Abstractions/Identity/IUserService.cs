@@ -1,9 +1,13 @@
-﻿using BikeShop.Application.Common.Models;
+﻿using System.Threading;
+using BikeShop.Application.Authentication.DTOs;
+using BikeShop.Application.Common.Models;
 
 namespace BikeShop.Application.Abstractions.Identity
 {
     public interface IUserService
     {
         Task<Result> RegisterAsync(string email, string password, CancellationToken cancellationToken);
+        //Task<Result> LoginAsync(string email, string password, bool rememberMe, CancellationToken cancellationToken);
+        Task<Result<LoginDto>> LoginAsync(string email, string password, bool rememberMe, CancellationToken cancellationToken);
     }
 }

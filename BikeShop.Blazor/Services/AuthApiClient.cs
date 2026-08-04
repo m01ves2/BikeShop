@@ -23,5 +23,17 @@ namespace BikeShop.Blazor.Services
 
             return await response.Content.ReadFromJsonAsync<ApiErrorModel>();
         }
+
+        public async Task<ApiErrorModel?> LoginAsync(LoginModel model)
+        {
+            var response = await _http.PostAsJsonAsync("api/auth/login", model);
+
+            if (response.IsSuccessStatusCode) {
+                return null;
+            }
+
+            return await response.Content.ReadFromJsonAsync<ApiErrorModel>();
+        }
+
     }
 }

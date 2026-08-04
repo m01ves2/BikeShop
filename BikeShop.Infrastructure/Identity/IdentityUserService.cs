@@ -1,4 +1,5 @@
 ﻿using BikeShop.Application.Abstractions.Identity;
+using BikeShop.Application.Authentication.DTOs;
 using BikeShop.Application.Common.Models;
 using Microsoft.AspNetCore.Identity;
 
@@ -7,10 +8,13 @@ namespace BikeShop.Infrastructure.Identity
     public class IdentityUserService : IUserService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-
-        public IdentityUserService(UserManager<ApplicationUser> userManager)
+        //private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IJwtTokenService _jwtTokenService;
+        public IdentityUserService(UserManager<ApplicationUser> userManager, /*SignInManager<ApplicationUser> signInManager,*/ IJwtTokenService jwtTokenService)
         {
             _userManager = userManager;
+            //_signInManager = signInManager;
+            _jwtTokenService = jwtTokenService;
         }
 
 
@@ -28,10 +32,43 @@ namespace BikeShop.Infrastructure.Identity
             if (!result.Succeeded) {
                 var errors = result.Errors.Select(x => x.Description);
 
-                return Result.Failure( new Error( ErrorCode.Unexpected, string.Join("; ", errors)));
+                return Result.Failure(new Error(ErrorCode.Unexpected, string.Join("; ", errors)));
             }
 
             return Result.Success();
+        }
+
+        //Cookie-auth
+        //public async Task<Result> LoginAsync(string email, string password, bool rememberMe, CancellationToken cancellationToken)
+        //{
+        //    var result = await _signInManager.PasswordSignInAsync(email, password, rememberMe, lockoutOnFailure: false);
+
+        //    if (!result.Succeeded) {
+        //        return Result.Failure(new Error(ErrorCode.Unexpected, "Invalid email or password"));
+        //    }
+
+        //    return Result.Success();
+        //}
+
+        //JWT-auth, add Set-Cookie to HTTP response.
+        public async Task<Result<LoginDto>> LoginAsync(string email, string password,  bool rememberMe, CancellationToken cancellationToken)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user is null) {
+                return Result<LoginDto>.Failure(new Error(ErrorCode.Unexpected, "Invalid email or password"));
+            }
+
+            var passwordValid =
+                await _userManager.CheckPasswordAsync(user, password);
+
+            if (!passwordValid) {
+                return Result<LoginDto>.Failure(new Error(ErrorCode.Unexpected, "Invalid email or password"));
+            }
+
+            var token = _jwtTokenService.CreateToken(user);
+
+            return Result<LoginDto>.Success(new LoginDto() { Token = token });
         }
     }
 }

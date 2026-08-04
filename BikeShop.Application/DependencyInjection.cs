@@ -1,5 +1,7 @@
-﻿using BikeShop.Application.Abstractions.Identity;
-using BikeShop.Application.Abstractions.Messaging;
+﻿using BikeShop.Application.Abstractions.Messaging;
+using BikeShop.Application.Authentication.DTOs;
+using BikeShop.Application.Authentication.Login;
+using BikeShop.Application.Authentication.Register;
 using BikeShop.Application.Categories.CreateCategory;
 using BikeShop.Application.Categories.DeleteCategory;
 using BikeShop.Application.Categories.DTOs;
@@ -43,6 +45,9 @@ namespace BikeShop.Application
             services.AddScoped<ICommandHandler<CreateProductCommand, Result>, CreateProductCommandHandler>();
             services.AddScoped<ICommandHandler<UpdateProductCommand, Result>, UpdateProductCommandHandler>();
             services.AddScoped<ICommandHandler<DeleteProductCommand, Result>, DeleteProductCommandHandler>();
+
+            services.AddScoped<ICommandHandler<RegisterUserCommand, Result>, RegisterUserCommandHandler>();
+            services.AddScoped<ICommandHandler<LoginUserCommand, Result<LoginDto>>, LoginUserCommandHandler>();
 
             return services;
         }

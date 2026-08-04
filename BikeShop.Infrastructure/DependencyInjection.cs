@@ -28,6 +28,8 @@ namespace BikeShop.Infrastructure
             //Identity
             services.AddScoped<IUserService, IdentityUserService>();
 
+            //JWT for Identity login
+            services.AddScoped<IJwtTokenService, JwtTokenService>();
             return services;
         }
     }

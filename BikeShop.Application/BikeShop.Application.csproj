@@ -7,11 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Abstractions\Services\" />
-    <Folder Include="Authentication\DTOs\" />
     <Folder Include="Behaviors\" />
-    <Folder Include="Common\Exceptions\" />
-    <Folder Include="Common\Mapping\" />
     <Folder Include="Customers\" />
     <Folder Include="Cart\" />
     <Folder Include="Orders\" />
