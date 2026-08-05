@@ -59,8 +59,7 @@ namespace BikeShop.Infrastructure.Identity
                 return Result<LoginDto>.Failure(new Error(ErrorCode.Unexpected, "Invalid email or password"));
             }
 
-            var passwordValid =
-                await _userManager.CheckPasswordAsync(user, password);
+            var passwordValid = await _userManager.CheckPasswordAsync(user, password);
 
             if (!passwordValid) {
                 return Result<LoginDto>.Failure(new Error(ErrorCode.Unexpected, "Invalid email or password"));

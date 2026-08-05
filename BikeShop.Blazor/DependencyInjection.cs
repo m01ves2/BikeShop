@@ -1,4 +1,6 @@
-﻿using BikeShop.Blazor.Services;
+﻿using BikeShop.Blazor.Identity;
+using BikeShop.Blazor.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace BikeShop.Blazor
 {
@@ -27,7 +29,16 @@ namespace BikeShop.Blazor
             services.AddScoped<ICartService, CartService>();
 
             services.AddScoped<AuthApiClient>();
-            
+
+            services.AddScoped<ITokenStorage, TokenStorage>();
+
+            //services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
+
+            services.AddScoped<JwtAuthenticationStateProvider>();
+
+            services.AddScoped<AuthenticationStateProvider>(sp =>
+                sp.GetRequiredService<JwtAuthenticationStateProvider>());
+
             return services;
         }
     }

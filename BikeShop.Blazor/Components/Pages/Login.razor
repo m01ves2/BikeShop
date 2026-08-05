@@ -1,11 +1,14 @@
 ﻿@page "/login"
 
 @using BikeShop.Blazor.Components.Shared
+@using BikeShop.Blazor.Identity
 @using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Services
 
 @inject NavigationManager Navigation
 @inject AuthApiClient AuthClient
+@inject ITokenStorage TokenStorage
+@inject JwtAuthenticationStateProvider AuthStateProvider
 
 <PageTitle>Login</PageTitle>
 <PageHeader Text="Login" />
@@ -66,14 +69,17 @@
 
     private async Task LoginUser()
     {
-        var error = await AuthClient.LoginAsync(model);
+        var (response, error) = await AuthClient.LoginAsync(model);
 
         if (error is not null) {
             errorMessage = error.Message;
             return;
         }
 
-//        Navigation.NavigateTo("/");
-        Navigation.NavigateTo("/", forceLoad: true);
+        await TokenStorage.SaveTokenAsync(response!.Token);
+
+        AuthStateProvider.SignIn(response.Token);
+
+        Navigation.NavigateTo("/");
     }
 }

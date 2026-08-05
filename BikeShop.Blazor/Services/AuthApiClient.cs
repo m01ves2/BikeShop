@@ -13,7 +13,7 @@ namespace BikeShop.Blazor.Services
             _http = http;
         }
 
-        public async Task<ApiErrorModel?> RegisterAsync(RegisterModel model)
+        public async Task<ApiErrorResponseModel?> RegisterAsync(RegisterModel model)
         {
             var response = await _http.PostAsJsonAsync("api/auth/register", model);
 
@@ -21,18 +21,22 @@ namespace BikeShop.Blazor.Services
                 return null;
             }
 
-            return await response.Content.ReadFromJsonAsync<ApiErrorModel>();
+            return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
         }
 
-        public async Task<ApiErrorModel?> LoginAsync(LoginModel model)
+        public async Task<(LoginResponseModel? Login, ApiErrorResponseModel? Error)> LoginAsync(LoginModel model)
         {
             var response = await _http.PostAsJsonAsync("api/auth/login", model);
 
             if (response.IsSuccessStatusCode) {
-                return null;
+                var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponseModel>();
+
+                return (loginResponse, null);
             }
 
-            return await response.Content.ReadFromJsonAsync<ApiErrorModel>();
+            var error = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+
+            return (null, error);
         }
 
     }
