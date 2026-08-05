@@ -26,21 +26,33 @@
             <AuthorizeView>
 
                 <Authorized>
-                    Hello, @context.User.Identity?.Name
+
+                    <span class="me-2">
+                        Hello, @context.User.Identity?.Name
+                    </span>
+
+                    <NavLink class="text-dark text-decoration-none fs-5"
+                             href="/logout">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </NavLink>
+
                 </Authorized>
 
                 <NotAuthorized>
-                    Not authorized
+
+                    <NavLink class="text-dark text-decoration-none fs-5"
+                             href="/register">
+                        <i class="bi bi-person-plus"></i>
+                    </NavLink>
+
+                    <NavLink class="text-dark text-decoration-none fs-5 ms-2"
+                             href="/login">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                    </NavLink>
+
                 </NotAuthorized>
 
             </AuthorizeView>
-
-            <NavLink class="text-dark text-decoration-none fs-5" href="/register">
-                <i class="bi bi-person"></i>
-            </NavLink>
-            <NavLink class="text-dark text-decoration-none fs-5" href="/login">
-                <i class="bi bi bi-person-fill"></i>
-            </NavLink>
 
             <NavLink class="cart-link text-dark text-decoration-none" href="/cart">
 
