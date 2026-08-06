@@ -51,10 +51,13 @@ namespace BikeShop.API.Controllers
         }
 
         [Authorize]
-        [HttpGet("test")]
-        public IActionResult Test()
+        [HttpGet("me")]
+        public IActionResult Me()
         {
-            return Ok(User.Identity?.Name);
+            return Ok(new
+            {
+                Email = User.Identity?.Name
+            });
         }
     }
 }

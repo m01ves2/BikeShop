@@ -1,16 +1,13 @@
-﻿using System.Net.Http;
+﻿using BikeShop.Blazor.Identity;
 using BikeShop.Blazor.Models;
 using BikeShop.Blazor.Services.Models;
 
-namespace BikeShop.Blazor.Services
+namespace BikeShop.Blazor.Services.ApiClients
 {
-    public class AuthApiClient
+    public class AuthApiClient : BaseApiClient
     {
-        private readonly HttpClient _http;
-
-        public AuthApiClient(HttpClient http)
+        public AuthApiClient(IHttpClientFactory factory, JwtAuthenticationStateProvider authStateProvider) : base(factory, authStateProvider)
         {
-            _http = http;
         }
 
         public async Task<ApiErrorResponseModel?> RegisterAsync(RegisterModel model)
@@ -37,6 +34,15 @@ namespace BikeShop.Blazor.Services
             var error = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
 
             return (null, error);
+        }
+
+        public async Task<CurrentUserModel> GetCurrentUserAsync()
+        {
+            AddAuthorizationHeader();
+
+            var result = await _http.GetFromJsonAsync<CurrentUserModel>("api/auth/me");
+
+            return result;
         }
 
     }

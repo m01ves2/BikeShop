@@ -1,0 +1,31 @@
+﻿@page "/profile"
+@using BikeShop.Blazor.Models
+@using BikeShop.Blazor.Services.ApiClients
+@using System.Net
+
+@inject AuthApiClient ApiClient
+@inject NavigationManager Navigation
+
+<h3>Profile</h3>
+
+@if (_user is null || string.IsNullOrEmpty(_user.Email)) {
+    <p>Loading...</p>
+}
+else {
+    <p>Hello @_user.Email</p>
+}
+
+@code
+{
+    private CurrentUserModel? _user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try {
+            _user = await ApiClient.GetCurrentUserAsync();
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized) {
+            Navigation.NavigateTo("/login");
+        }
+    }
+}

@@ -8,6 +8,8 @@ namespace BikeShop.Blazor.Identity
     public sealed class JwtAuthenticationStateProvider : AuthenticationStateProvider
     {
         private ClaimsPrincipal _currentUser = Anonymous().User;
+        private string? _token;
+        public string? Token => _token;
 
         public override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
@@ -23,20 +25,23 @@ namespace BikeShop.Blazor.Identity
 
         public void SignIn(string token)
         {
-            var handler = new JwtSecurityTokenHandler();
+            _token = token;
 
+            var handler = new JwtSecurityTokenHandler();
             var jwt = handler.ReadJwtToken(token);
 
             _currentUser = new ClaimsPrincipal(
-                new ClaimsIdentity(
-                    jwt.Claims,
-                    authenticationType: "jwt"));
+                new ClaimsIdentity(jwt.Claims, "jwt"));
 
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+
+            //Console.WriteLine(token);
         }
 
         public void SignOut()
         {
+            _token = null;
+
             _currentUser = Anonymous().User;
 
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());

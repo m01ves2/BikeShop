@@ -1,0 +1,38 @@
+﻿@using BikeShop.Blazor.Identity
+@using BikeShop.Blazor.Services.ApiClients
+
+@inject ITokenStorage TokenStorage
+@inject JwtAuthenticationStateProvider AuthStateProvider
+
+@if (_initialized) {
+    @ChildContent
+}
+else {
+    <p>Loading...</p>
+}
+
+
+@code {
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    private bool _initialized;
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        var token = await TokenStorage.GetTokenAsync();
+
+        if (!string.IsNullOrWhiteSpace(token)) {
+            AuthStateProvider.SignIn(token);
+        }
+
+        _initialized = true;
+
+        StateHasChanged();
+    }
+}

@@ -117,17 +117,17 @@ builder.Services
         {
             OnMessageReceived = context =>
             {
-                Console.WriteLine("JWT: OnMessageReceived");
+                //Console.WriteLine("JWT: OnMessageReceived");
                 return Task.CompletedTask;
             },
             OnAuthenticationFailed = context =>
             {
-                Console.WriteLine($"JWT ERROR: {context.Exception.Message}");
+                //Console.WriteLine($"JWT ERROR: {context.Exception.Message}");
                 return Task.CompletedTask;
             },
             OnTokenValidated = context =>
             {
-                Console.WriteLine("JWT: Token validated");
+                //Console.WriteLine("JWT: Token validated");
                 return Task.CompletedTask;
             }
         };

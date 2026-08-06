@@ -1,30 +1,35 @@
-﻿using BikeShop.Blazor.Models;
+﻿using System.Net.Http.Headers;
+using BikeShop.Blazor.Identity;
+using BikeShop.Blazor.Models;
 
-namespace BikeShop.Blazor.Services
+namespace BikeShop.Blazor.Services.ApiClients
 {
-    public class ProductApiClient
+    public class ProductApiClient : BaseApiClient
     {
-        private readonly HttpClient _http;
-
-        public ProductApiClient(HttpClient http)
+        public ProductApiClient(IHttpClientFactory factory, JwtAuthenticationStateProvider authStateProvider) : base(factory, authStateProvider)
         {
-            _http = http;
         }
 
         public async Task<List<ProductListItemModel>> GetProductsAsync()
         {
+            AddAuthorizationHeader();
+
             var url = "api/products";
             return await _http.GetFromJsonAsync<List<ProductListItemModel>>(url) ?? [];
         }
 
         public async Task<List<ProductListItemModel>> GetProductsByCategoryAsync(int categoryId)
         {
+            AddAuthorizationHeader();
+
             var url = $"api/categories/{categoryId}/products";
             return await _http.GetFromJsonAsync<List<ProductListItemModel>>(url) ?? [];
         }
 
         public async Task<ProductDetailsModel?> GetProductDetailsAsync(int id)
         {
+            AddAuthorizationHeader();
+
             var url = $"api/products/{id}";
             return await _http.GetFromJsonAsync<ProductDetailsModel>(url);
         }

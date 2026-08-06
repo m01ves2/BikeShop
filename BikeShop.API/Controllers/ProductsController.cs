@@ -6,6 +6,7 @@ using BikeShop.Application.Products.DTOs;
 using BikeShop.Application.Products.GetProductDetails;
 using BikeShop.Application.Products.GetProducts;
 using BikeShop.Application.Products.UpdateProduct;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BikeShop.API.Controllers

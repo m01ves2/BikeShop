@@ -1,4 +1,4 @@
-﻿namespace BikeShop.Blazor.Services
+﻿namespace BikeShop.Blazor.Services.ApiClients
 {
     public interface ITokenStorage
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.JSInterop;
 
-namespace BikeShop.Blazor.Services
+namespace BikeShop.Blazor.Services.ApiClients
 {
     public class TokenStorage : ITokenStorage
     {
