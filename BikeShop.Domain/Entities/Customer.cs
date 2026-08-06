@@ -7,12 +7,15 @@ namespace BikeShop.Domain.Entities
     public class Customer
     {
         public int Id { get; private set; }
-
-        public Email Email { get; private set; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
         public string Phone { get; private set; }
         public string Address { get; private set; }
+        
+        public int ApplicationUserId { get; set; }
+
+        public Cart Cart { get; set; } = null!;
+        public int CartId { get; set; }
 
         public Customer(Email email, string firstname="", string lastname="", string phone = "", string address = "")
         {
