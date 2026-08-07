@@ -1,4 +1,5 @@
-﻿using BikeShop.Application.Abstractions.Identity;
+﻿using BikeShop.API.Controllers.DTOs;
+using BikeShop.Application.Abstractions.Identity;
 using BikeShop.Application.Abstractions.Messaging;
 using BikeShop.Application.Authentication.DTOs;
 using BikeShop.Application.Authentication.Login;
@@ -32,7 +33,11 @@ namespace BikeShop.API.Controllers
             var result = await _registerUserCommandHandler.Handle(command, cancellationToken);
 
             if (!result.IsSuccess) {
-                return Conflict(result.Error?.Message ?? "Unknown error");
+                return Conflict(new ApiErrorResponseDto
+                {
+                    Code = result.Error?.Code.ToString() ?? "Unknown",
+                    Message = result.Error?.Message ?? "Unknown error"
+                });
             }
 
             return Ok();
@@ -43,8 +48,16 @@ namespace BikeShop.API.Controllers
         {
             var result = await _loginUserCommandHandler.Handle(command, cancellationToken);
 
+            //if (!result.IsSuccess) {
+            //    return Conflict(result.Error?.Message ?? "Unknown error");
+            //}
+
             if (!result.IsSuccess) {
-                return Conflict(result.Error?.Message ?? "Unknown error");
+                return Conflict(new ApiErrorResponseDto
+                {
+                    Code = result.Error?.Code.ToString() ?? "Unknown",
+                    Message = result.Error?.Message ?? "Unknown error"
+                });
             }
 
             return Ok(result.Data);
