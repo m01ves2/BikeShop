@@ -156,6 +156,5 @@ namespace BikeShop.API.Controllers
             return NoContent();
         }
 
-
     }
 }

@@ -28,7 +28,6 @@ namespace BikeShop.Infrastructure
 
             //Identity
             services.AddScoped<IUserService, IdentityUserService>();
-            services.AddScoped<IUserStore<ApplicationUser>, BikeShopUserStore>();
 
             //JWT for Identity login
             services.AddScoped<IJwtTokenService, JwtTokenService>();
