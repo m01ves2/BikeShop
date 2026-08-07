@@ -18,7 +18,7 @@ namespace BikeShop.Infrastructure.Identity
         }
 
 
-        public async Task<Result> RegisterAsync(string email, string password, CancellationToken cancellationToken)
+        public async Task<Result<int>> RegisterAsync(string email, string password, CancellationToken cancellationToken)
         {
             var user = new ApplicationUser
             {
@@ -28,14 +28,13 @@ namespace BikeShop.Infrastructure.Identity
 
             var result = await _userManager.CreateAsync(user, password);
 
-
             if (!result.Succeeded) {
                 var errors = result.Errors.Select(x => x.Description);
 
-                return Result.Failure(new Error(ErrorCode.Unexpected, string.Join("; ", errors)));
+                return Result<int>.Failure(new Error(ErrorCode.Unexpected, string.Join("; ", errors)));
             }
 
-            return Result.Success();
+            return Result<int>.Success(user.Id);
         }
 
         //Cookie-auth

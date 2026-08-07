@@ -6,7 +6,8 @@ namespace BikeShop.Application.Abstractions.Identity
 {
     public interface IUserService
     {
-        Task<Result> RegisterAsync(string email, string password, CancellationToken cancellationToken);
+        Task<Result<int>> RegisterAsync(string email, string password, CancellationToken cancellationToken);
+
         //Task<Result> LoginAsync(string email, string password, bool rememberMe, CancellationToken cancellationToken);
         Task<Result<LoginDto>> LoginAsync(string email, string password, bool rememberMe, CancellationToken cancellationToken);
     }
