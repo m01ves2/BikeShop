@@ -7,31 +7,23 @@ namespace BikeShop.Domain.Entities
     public class Customer
     {
         public int Id { get; private set; }
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public string Phone { get; private set; }
-        public string Address { get; private set; }
-        
-        public int ApplicationUserId { get; set; }
+        public string FirstName { get; private set; } = string.Empty;
+        public string LastName { get; private set; } = string.Empty;
+        public string Phone { get; private set; } = string.Empty;
+        public string Address { get; private set; } = string.Empty;
 
-        public Cart Cart { get; set; } = null!;
-        public int CartId { get; set; }
+        public int ApplicationUserId { get; private set; }
 
-        public Customer(Email email, string firstname="", string lastname="", string phone = "", string address = "")
+        //public Cart Cart { get; set; } = null!;
+        //public int CartId { get; set; }
+
+        private Customer()
         {
-            ChangeEmail(email);
-            ChangeFirstName(firstname);
-            ChangeLastName(lastname);
-            ChangePhone(phone);
-            ChangeAddress(address);
         }
 
-        public void ChangeEmail(Email email)
+        public Customer(int applicationUserId)
         {
-            if (email == null)
-                throw new DomainValidationException("Email cannot be null");
-
-            Email = email;
+            ApplicationUserId = applicationUserId;
         }
 
         public void ChangeFirstName(string firstName)
