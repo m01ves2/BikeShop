@@ -9,6 +9,9 @@ namespace BikeShop.Domain.Entities
         public Product Product { get; private set; }
         public int Quantity { get; private set; }
 
+        public Cart Cart { get; private set; }
+        public int CartId { get; private set; }
+
         public CartItem(Product product, int quantity)
         {
             if (product == null)

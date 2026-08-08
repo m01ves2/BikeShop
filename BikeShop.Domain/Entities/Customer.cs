@@ -14,8 +14,7 @@ namespace BikeShop.Domain.Entities
 
         public int ApplicationUserId { get; private set; }
 
-        //public Cart Cart { get; set; } = null!;
-        //public int CartId { get; set; }
+        public Cart Cart { get; set; } = null!;
 
         private Customer()
         {

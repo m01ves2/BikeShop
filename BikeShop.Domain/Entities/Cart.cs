@@ -5,12 +5,16 @@ namespace BikeShop.Domain.Entities
     public class Cart
     {
         public int Id { get; private set; }
+
         public int CustomerId { get; private set; }
+        public Customer Customer { get; private set; } = null!;
 
+
+        //public List<CartItem> Items { get; private set; } //Но это защищает только замену самой коллекции: cart.Items = anotherList;
+        //а мы хотим, чтобы в самой коллекцию контролировалось изменение элементов,
+        //поэтому делаем так:
         private readonly List<CartItem> _items = new();
-
         public IReadOnlyCollection<CartItem> Items => _items;
-
 
         public void AddItem(Product product, int amount)
         {
