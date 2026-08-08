@@ -55,13 +55,13 @@ namespace BikeShop.Infrastructure.Identity
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user is null) {
-                return Result<LoginDto>.Failure(new Error(ErrorCode.Unexpected, "Invalid email or password"));
+                return Result<LoginDto>.Failure(new Error(ErrorCode.Unauthorized, "Invalid email or password"));
             }
 
             var passwordValid = await _userManager.CheckPasswordAsync(user, password);
 
             if (!passwordValid) {
-                return Result<LoginDto>.Failure(new Error(ErrorCode.Unexpected, "Invalid email or password"));
+                return Result<LoginDto>.Failure(new Error(ErrorCode.Unauthorized, "Invalid email or password"));
             }
 
             var token = _jwtTokenService.CreateToken(user);

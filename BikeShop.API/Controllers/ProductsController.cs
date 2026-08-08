@@ -1,4 +1,4 @@
-﻿using BikeShop.API.Controllers.DTOs;
+﻿using BikeShop.API.Mappers;
 using BikeShop.Application.Abstractions.Messaging;
 using BikeShop.Application.Common.Models;
 using BikeShop.Application.Products.CreateProduct;
@@ -7,7 +7,6 @@ using BikeShop.Application.Products.DTOs;
 using BikeShop.Application.Products.GetProductDetails;
 using BikeShop.Application.Products.GetProducts;
 using BikeShop.Application.Products.UpdateProduct;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BikeShop.API.Controllers
@@ -54,11 +53,7 @@ namespace BikeShop.API.Controllers
             var result = await _getProductDetailsQueryHandler.Handle(new GetProductDetailsQuery(id), cancellationToken);
 
             if (result.IsFailure) {
-                return BadRequest(new ApiErrorResponseDto
-                {
-                    Code = result.Error?.Code.ToString() ?? "Unknown",
-                    Message = result.Error?.Message ?? "Unknown error"
-                });
+                return this.ToActionResult(result.Error!);
             }
 
             return Ok(result.Data);
@@ -70,11 +65,7 @@ namespace BikeShop.API.Controllers
             var result = await _createProductCommandHandler.Handle(command, cancellationToken);
 
             if (result.IsFailure) {
-                return BadRequest(new ApiErrorResponseDto
-                {
-                    Code = result.Error?.Code.ToString() ?? "Unknown",
-                    Message = result.Error?.Message ?? "Unknown error"
-                });
+                return this.ToActionResult(result.Error!);
             }
 
             return NoContent();
@@ -84,21 +75,13 @@ namespace BikeShop.API.Controllers
         public async Task<IActionResult> Update([FromRoute] int id, UpdateProductCommand command, CancellationToken cancellationToken)
         {
             if (id != command.Id) {
-                return BadRequest(new ApiErrorResponseDto
-                {
-                    Code = "Unknown",
-                    Message = "Route id does not match body id."
-                });
+                return this.ToActionResult(new Error(ErrorCode.Validation, "Route id does not match body id."));
             }
 
             var result = await _updateProductCommandHandler.Handle(command, cancellationToken);
 
             if (result.IsFailure) {
-                return BadRequest(new ApiErrorResponseDto
-                {
-                    Code = result.Error?.Code.ToString() ?? "Unknown",
-                    Message = result.Error?.Message ?? "Unknown error"
-                });
+                return this.ToActionResult(result.Error!);
             }
 
             return NoContent();
@@ -108,22 +91,14 @@ namespace BikeShop.API.Controllers
         public async Task<IActionResult> Delete([FromRoute] int id, DeleteProductCommand command, CancellationToken cancellationToken)
         {
             if (id != command.Id) {
-                return BadRequest(new ApiErrorResponseDto
-                {
-                    Code = "Unknown",
-                    Message = "Route id does not match body id."
-                });
+                return this.ToActionResult(new Error(ErrorCode.Validation, "Route id does not match body id."));
             }
 
             var result = await _deleteProductCommandHandler.Handle(command, cancellationToken);
 
 
             if (result.IsFailure) {
-                return BadRequest(new ApiErrorResponseDto
-                {
-                    Code = result.Error?.Code.ToString() ?? "Unknown",
-                    Message = result.Error?.Message ?? "Unknown error"
-                });
+                return this.ToActionResult(result.Error!);
             }
 
             return NoContent();

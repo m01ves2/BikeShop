@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using BikeShop.Application;
 using BikeShop.Domain.Entities;
 using BikeShop.Infrastructure;
@@ -6,7 +7,6 @@ using BikeShop.Infrastructure.Identity;
 using BikeShop.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-//using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -15,7 +15,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
@@ -52,11 +57,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
-//// Add Identity services
-//builder.Services
-//    .AddIdentity<ApplicationUser, IdentityRole<int>>()
-//    .AddEntityFrameworkStores<BikeShopDbContext>()
-//    .AddDefaultTokenProviders();
+// Add Identity services
 builder.Services
     .AddIdentityCore<ApplicationUser>(options =>
     {
@@ -77,24 +78,6 @@ builder.Services
 //проверить Issuer;
 //проверить Audience.
 //создавать HttpContext.User
-//builder.Services
-//    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//    .AddJwtBearer(options =>
-//    {
-//        options.TokenValidationParameters = new TokenValidationParameters
-//        {
-//            ValidateIssuer = true,
-//            ValidateAudience = true,
-//            ValidateLifetime = true,
-//            ValidateIssuerSigningKey = true,
-
-//            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-//            ValidAudience = builder.Configuration["Jwt:Audience"],
-
-//            IssuerSigningKey = new SymmetricSecurityKey(
-//                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
-//        };
-//    });
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -113,6 +96,7 @@ builder.Services
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
         };
 
+        //подписка на события с логами
         options.Events = new JwtBearerEvents
         {
             OnMessageReceived = context =>
