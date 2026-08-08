@@ -5,6 +5,7 @@ namespace BikeShop.Domain.Entities
     public class Category
     {
         public const int MaxNameLength = 100;
+
         public int Id { get; private set; }
         public string Name { get; private set; }
 

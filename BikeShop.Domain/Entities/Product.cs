@@ -7,13 +7,16 @@ namespace BikeShop.Domain.Entities
     {
         public const int MaxNameLength = 150;
         public const int MaxDescriptionLength = 4000;
+
         public int Id { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
         public decimal Price { get; private set; }
         public int StockQuantity { get; private set; }
+        
         public int CategoryId { get; private set; }
         public Category Category { get; private set; }
+
 
         private Product() // "Этот конструктор существует только для EF."
         {

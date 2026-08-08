@@ -16,6 +16,15 @@ namespace BikeShop.Domain.Entities
         private readonly List<CartItem> _items = new();
         public IReadOnlyCollection<CartItem> Items => _items;
 
+        private Cart()
+        {
+        }
+
+        public Cart(int customerId)
+        {
+            CustomerId = customerId;
+        }
+
         public void AddItem(Product product, int amount)
         {
             if (amount <= 0)

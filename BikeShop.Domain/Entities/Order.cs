@@ -13,14 +13,19 @@ namespace BikeShop.Domain.Entities
     public class Order
     {
         public int Id { get; private set; }
-        public int CustomerId { get; private set; }
-        public Customer Customer { get; private set; }
+
         public OrderStatus Status { get; private set; }
         public DateTime CreatedAt { get; private set; }
 
+        public int CustomerId { get; private set; }
+        public Customer Customer { get; private set; }
+
+
         private readonly List<OrderItem> _items = new();
         public IReadOnlyCollection<OrderItem> Items => _items;
+
         public decimal TotalPrice => _items.Sum(x => x.UnitPrice * x.Quantity);
+
 
         Order(Customer customer, IEnumerable<OrderItem> items)
         {
