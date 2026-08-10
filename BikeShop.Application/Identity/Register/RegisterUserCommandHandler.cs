@@ -11,12 +11,14 @@ namespace BikeShop.Application.Authentication.Register
         private readonly IUserService _userService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICustomerRepository _customerRepository;
+        private readonly ICartRepository _cartRepository;
 
-        public RegisterUserCommandHandler(IUserService userService, IUnitOfWork unitOfWork, ICustomerRepository customerRepository)
+        public RegisterUserCommandHandler(IUserService userService, IUnitOfWork unitOfWork, ICustomerRepository customerRepository, ICartRepository cartRepository)
         {
             _userService = userService;
             _unitOfWork = unitOfWork;
             _customerRepository = customerRepository;
+            _cartRepository = cartRepository;
         }
 
         public async Task<Result> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
@@ -29,9 +31,11 @@ namespace BikeShop.Application.Authentication.Register
                 return Result.Failure(result.Error);
 
             var customer = new Customer(result.Data);
-
             await _customerRepository.AddAsync(customer, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+            var cart = new Cart(customer.Id); //вот тут мы передаём только Id, а значит, перед этим придется вызвать SaveChangesAsync, чтобы его сгенерировать
+            await _cartRepository.AddAsync(cart, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return Result.Success();

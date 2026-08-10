@@ -2,6 +2,8 @@
 using BikeShop.Application.Authentication.DTOs;
 using BikeShop.Application.Authentication.Login;
 using BikeShop.Application.Authentication.Register;
+using BikeShop.Application.Carts.DTOs;
+using BikeShop.Application.Carts.GetCartByCustomerId;
 using BikeShop.Application.Categories.CreateCategory;
 using BikeShop.Application.Categories.DeleteCategory;
 using BikeShop.Application.Categories.DTOs;
@@ -48,6 +50,8 @@ namespace BikeShop.Application
 
             services.AddScoped<ICommandHandler<RegisterUserCommand, Result>, RegisterUserCommandHandler>();
             services.AddScoped<ICommandHandler<LoginUserCommand, Result<LoginDto>>, LoginUserCommandHandler>();
+
+            services.AddScoped<IQueryHandler<GetCartByCustomerIdQuery, Result<CartDto>>, GetCartByCustomerIdQueryHandler>();
 
             return services;
         }

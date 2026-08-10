@@ -18,9 +18,9 @@ namespace BikeShop.Application.Categories.GetCategories
         {
             var categories = await _categoryRepository.GetAllAsync(cancellationToken);
 
-            var result = categories.Select(x => new CategoryListItemDto(x.Id, x.Name)).ToList();
+            var resultData = categories.Select(x => new CategoryListItemDto(x.Id, x.Name)).ToList();
 
-            return Result<IReadOnlyList<CategoryListItemDto>>.Success(result);
+            return Result<IReadOnlyList<CategoryListItemDto>>.Success(resultData);
         }
     }
 }

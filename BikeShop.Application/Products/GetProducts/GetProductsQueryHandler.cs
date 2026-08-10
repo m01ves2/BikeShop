@@ -18,9 +18,9 @@ namespace BikeShop.Application.Products.GetProducts
         {
             var products = await _productRepository.GetAllAsync(cancellationToken);
 
-            var result = products.Select(x => new ProductListItemDto(x.Id, x.Name,  x.Price, x.Category.Name)).ToList();
+            var resultData = products.Select(x => new ProductListItemDto(x.Id, x.Name,  x.Price, x.Category.Name)).ToList();
 
-            return Result<IReadOnlyList<ProductListItemDto>>.Success(result);
+            return Result<IReadOnlyList<ProductListItemDto>>.Success(resultData);
         }
     }
 }

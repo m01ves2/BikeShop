@@ -22,9 +22,9 @@ namespace BikeShop.Application.Categories.GetCategoryDetails
             if (category == null)
                 return Result<CategoryDetailsDto>.Failure(new Error(ErrorCode.NotFound, $"Not found product id = {query.Id}"));
 
-            var result = new CategoryDetailsDto(category.Id, category.Name);
+            var resultData = new CategoryDetailsDto(category.Id, category.Name);
 
-            return Result<CategoryDetailsDto>.Success(result);
+            return Result<CategoryDetailsDto>.Success(resultData);
         }
     }
 }

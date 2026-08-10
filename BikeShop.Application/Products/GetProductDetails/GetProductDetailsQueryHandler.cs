@@ -22,10 +22,10 @@ namespace BikeShop.Application.Products.GetProductDetails
             if (product == null)
                 return Result<ProductDetailsDto>.Failure(new Error(ErrorCode.NotFound, $"Not found product id = {query.Id}"));
 
-            var result = new ProductDetailsDto(product.Id, product.Name, product.Description, product.Price, product.StockQuantity,
+            var resultData = new ProductDetailsDto(product.Id, product.Name, product.Description, product.Price, product.StockQuantity,
                                                 product.Category.Id, product.Category.Name);
 
-            return Result<ProductDetailsDto>.Success(result);
+            return Result<ProductDetailsDto>.Success(resultData);
         }
     }
 }
