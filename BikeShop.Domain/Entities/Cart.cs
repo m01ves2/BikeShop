@@ -25,24 +25,24 @@ namespace BikeShop.Domain.Entities
             CustomerId = customerId;
         }
 
-        public void AddItem(Product product, int amount)
+        public void AddItem(int productId, int amount)
         {
             if (amount <= 0)
                 throw new DomainValidationException("Amount must be greater than zero");
 
-            var existing = _items.FirstOrDefault(x => x.ProductId == product.Id);
+            var existing = _items.FirstOrDefault(x => x.ProductId == productId);
 
             if (existing != null) {
                 existing.IncreaseQuantity(amount);
                 return;
             }
 
-            _items.Add(new CartItem(product, amount));
+            _items.Add(new CartItem(productId, amount));
         }
 
-        public void RemoveItem(Product product)
+        public void RemoveItem(int productId)
         {
-            var item = _items.FirstOrDefault(x => x.ProductId == product.Id);
+            var item = _items.FirstOrDefault(x => x.ProductId == productId);
 
             if (item == null)
                 return;
@@ -50,24 +50,24 @@ namespace BikeShop.Domain.Entities
             _items.Remove(item);
         }
 
-        public void IncreaseQuantity(Product product, int amount)
+        public void IncreaseItemQuantity(int productId, int amount)
         {
             if (amount <= 0)
                 throw new DomainValidationException("Amount must be greater than zero");
 
-            var item = _items.FirstOrDefault(x => x.ProductId == product.Id);
+            var item = _items.FirstOrDefault(x => x.ProductId == productId);
             if (item == null)
                 return;
 
             item.IncreaseQuantity(amount);
         }
 
-        public void DecreaseQuantity(Product product, int amount)
+        public void DecreaseItemQuantity(int productId, int amount)
         {
             if (amount <= 0)
                 throw new DomainValidationException("Amount must be greater than zero");
 
-            var item = _items.FirstOrDefault(x => x.ProductId == product.Id);
+            var item = _items.FirstOrDefault(x => x.ProductId == productId);
 
             if (item == null)
                 return;
@@ -77,6 +77,11 @@ namespace BikeShop.Domain.Entities
             
             if(item.Quantity <= 0)
                 _items.Remove(item);
+        }
+
+        public void Clear()
+        {
+            _items.Clear();
         }
     }
 }

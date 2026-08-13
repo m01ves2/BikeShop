@@ -4,5 +4,5 @@ using BikeShop.Application.Common.Models;
 
 namespace BikeShop.Application.Carts.GetCartByCustomerId
 {
-    public sealed record GetCartByCustomerIdQuery(int CustomerId) : IQuery<Result<CartDto>>;
+    public sealed record GetCartQuery(int ApplicationUserId) : IQuery<Result<CartDto>>;
 }

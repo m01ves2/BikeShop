@@ -1,27 +1,27 @@
 ﻿using BikeShop.Application.Abstractions.Messaging;
 using BikeShop.Application.Abstractions.Persistence;
 using BikeShop.Application.Carts.DTOs;
-using BikeShop.Application.Categories.DTOs;
 using BikeShop.Application.Common.Models;
-using BikeShop.Domain.Entities;
 
 namespace BikeShop.Application.Carts.GetCartByCustomerId
 {
-    public class GetCartByCustomerIdQueryHandler : IQueryHandler<GetCartByCustomerIdQuery, Result<CartDto>>
+    public class GetCartQueryHandler : IQueryHandler<GetCartQuery, Result<CartDto>>
     {
-        private readonly ICartRepository _cartRepository;
+        private readonly ICustomerRepository _customerRepository;
 
-        public GetCartByCustomerIdQueryHandler(ICartRepository cartRepository)
+        public GetCartQueryHandler(ICartRepository cartRepository, ICustomerRepository customerRepository)
         {
-            _cartRepository = cartRepository;
+            _customerRepository = customerRepository;
         }
 
-        public async Task<Result<CartDto>> Handle(GetCartByCustomerIdQuery query, CancellationToken cancellationToken)
+        public async Task<Result<CartDto>> Handle(GetCartQuery query, CancellationToken cancellationToken)
         {
-            var cart = await _cartRepository.GetByCustomerIdAsync(query.CustomerId, cancellationToken);
+            var customer = await _customerRepository.GetCustomerWithCartByApplicationUserIdAsync(query.ApplicationUserId, cancellationToken);
 
-            if (cart == null)
-                return Result<CartDto>.Failure(new Error(ErrorCode.NotFound, $"Not found cart with CustomerId = {query.CustomerId}"));
+            if (customer == null)
+                return Result<CartDto>.Failure(new Error(ErrorCode.NotFound, $"Not found customer with applicationUserId = {query.ApplicationUserId}"));
+
+            var cart = customer.Cart;
 
             var resultData = new CartDto(
                 cart.Id,

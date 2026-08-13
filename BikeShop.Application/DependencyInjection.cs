@@ -2,8 +2,13 @@
 using BikeShop.Application.Authentication.DTOs;
 using BikeShop.Application.Authentication.Login;
 using BikeShop.Application.Authentication.Register;
+using BikeShop.Application.Carts.AddItem;
+using BikeShop.Application.Carts.ClearCart;
+using BikeShop.Application.Carts.DecreaseItemQuantity;
 using BikeShop.Application.Carts.DTOs;
 using BikeShop.Application.Carts.GetCartByCustomerId;
+using BikeShop.Application.Carts.IncreaseItemQuantity;
+using BikeShop.Application.Carts.RemoveItem;
 using BikeShop.Application.Categories.CreateCategory;
 using BikeShop.Application.Categories.DeleteCategory;
 using BikeShop.Application.Categories.DTOs;
@@ -51,7 +56,12 @@ namespace BikeShop.Application
             services.AddScoped<ICommandHandler<RegisterUserCommand, Result>, RegisterUserCommandHandler>();
             services.AddScoped<ICommandHandler<LoginUserCommand, Result<LoginDto>>, LoginUserCommandHandler>();
 
-            services.AddScoped<IQueryHandler<GetCartByCustomerIdQuery, Result<CartDto>>, GetCartByCustomerIdQueryHandler>();
+            services.AddScoped<IQueryHandler<GetCartQuery, Result<CartDto>>, GetCartQueryHandler>();
+            services.AddScoped<ICommandHandler<AddItemCommand, Result>, AddItemCommandHandler>();
+            services.AddScoped<ICommandHandler<ClearCartCommand, Result>, ClearCartCommandHandler>();
+            services.AddScoped<ICommandHandler<RemoveItemCommand, Result>, RemoveItemCommandHandler>();
+            services.AddScoped<ICommandHandler<IncreaseItemQuantityCommand, Result>, IncreaseItemQuantityCommandHandler>();
+            services.AddScoped<ICommandHandler<DecreaseItemQuantityCommand, Result>, DecreaseItemQuantityCommandHandler>();
 
             return services;
         }

@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using BikeShop.Application.Authentication.DTOs;
+﻿using BikeShop.Application.Authentication.DTOs;
 using BikeShop.Application.Common.Models;
 
 namespace BikeShop.Application.Abstractions.Identity

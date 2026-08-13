@@ -19,37 +19,36 @@ namespace BikeShop.Domain.Entities
         {
         }
 
-        public CartItem(Product product, int quantity)
+        public CartItem(int productId, int quantity)
         {
-            if (product == null)
-                throw new DomainValidationException("Product cannot be null");
+            if (productId <= 0)
+                throw new DomainValidationException("ProductId must be greater than zero");
 
-            Product = product;
-
+            ProductId = productId;
             ChangeQuantity(quantity);
         }
 
 
-        internal void IncreaseQuantity(int amount)
+        public void IncreaseQuantity(int amount)
         {
             if (amount <= 0)
-                throw new DomainValidationException("Amount must be greater than zero");
+                throw new DomainValidationException("Quantity cannot be negative");
 
             Quantity += amount;
         }
 
-        internal void DecreaseQuantity(int amount)
+        public void DecreaseQuantity(int amount)
         {
             if (amount <= 0)
-                throw new DomainValidationException("Amount must be greater than zero");
+                throw new DomainValidationException("Quantity cannot be negative");
 
-            Quantity -= amount;
+            Quantity = Math.Max(0, Quantity - amount);
         }
 
         private void ChangeQuantity(int quantity)
         {
-            if (quantity <= 0)
-                throw new DomainValidationException("Quantity must be greater than zero");
+            if (quantity < 0)
+                throw new DomainValidationException("Quantity cannot be negative");
 
             Quantity = quantity; 
         }
