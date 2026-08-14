@@ -7,7 +7,6 @@ namespace BikeShop.Blazor.Services
     public class CartService : ICartService
     {
         private readonly IJSRuntime _jsRuntime;
-        private const string StorageKey = "cart";
 
         public event EventHandler? CartChanged;
 
@@ -16,54 +15,54 @@ namespace BikeShop.Blazor.Services
             _jsRuntime = jsRuntime;
         }
 
-        public async Task<List<CartItemModel>> GetItemsAsync()
+        public async Task<CartModel> GetCartAsync()
         {
             var json = await _jsRuntime.InvokeAsync<string?>("cartStorage.get");
 
             if (string.IsNullOrEmpty(json)) {
-                return new List<CartItemModel>();
+                return new CartModel(new List<CartItemModel>());
             }
 
-            return JsonSerializer.Deserialize<List<CartItemModel>>(json) ?? new List<CartItemModel>();
+            return JsonSerializer.Deserialize<CartModel>(json) ?? new CartModel(new List<CartItemModel>());
         }
 
         public async Task AddItemAsync(CartItemModel item)
         {
-            var items = await GetItemsAsync();
-            var existing = items.FirstOrDefault(x => x.ProductId == item.ProductId);
+            var cart = await GetCartAsync();
+            var existing = cart.Items.FirstOrDefault(i => i.Product.Id == item.Product.Id);
 
             if (existing != null) {
                 existing.Quantity += item.Quantity;
             }
             else {
-                items.Add(item);
+                cart.Items.Add(item);
             }
 
-            await SaveAsync(items);
+            await SaveAsync(cart);
             CartChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public async Task RemoveItemAsync(int productId)
         {
-            var items = await GetItemsAsync();
+            var cart = await GetCartAsync();
 
-            items.RemoveAll(x => x.ProductId == productId);
+            cart.Items.RemoveAll(i => i.Product.Id == productId);
 
-            await SaveAsync(items);
+            await SaveAsync(cart);
             CartChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public async Task UpdateQuantityAsync(int productId, int quantity)
         {
-            var items = await GetItemsAsync();
-            var item = items.FirstOrDefault(x => x.ProductId == productId);
+            var cart = await GetCartAsync();
+            var existing = cart.Items.FirstOrDefault(x => x.Product.Id == productId);
 
-            if (item == null) {
+            if (existing == null) {
                 return;
             }
 
-            item.Quantity = quantity;
-            await SaveAsync(items);
+            existing.Quantity = quantity;
+            await SaveAsync(cart);
             CartChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -73,9 +72,9 @@ namespace BikeShop.Blazor.Services
             CartChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private async Task SaveAsync(List<CartItemModel> items)
+        private async Task SaveAsync(CartModel cart)
         {
-            var json = JsonSerializer.Serialize(items);
+            var json = JsonSerializer.Serialize(cart);
 
             await _jsRuntime.InvokeVoidAsync("cartStorage.set", json);
         }

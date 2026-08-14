@@ -50,13 +50,20 @@
 
     private async Task AddToCart()
     {
+        // var item = new CartItemModel
+        // {
+        //     ProductId = Product.Id,
+        //     ProductName = Product.Name,
+        //     Price = Product.Price,
+        //     Quantity = 1,
+        //     ImageUrl = Product.ImageUrl
+        // };
+
         var item = new CartItemModel
         {
-            ProductId = Product.Id,
-            ProductName = Product.Name,
-            Price = Product.Price,
+            Id = Product.Id,
             Quantity = 1,
-            //ImageUrl = Product.ImageUrl
+            Product = new ProductCartModel(Product.Id, Product.Name, Product.Price, 100),
         };
 
         await CartService.AddItemAsync(item);

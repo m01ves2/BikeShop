@@ -6,7 +6,7 @@ namespace BikeShop.Blazor.Services
     {
         event EventHandler? CartChanged;
 
-        Task<List<CartItemModel>> GetItemsAsync();
+        Task<CartModel> GetCartAsync();
         Task AddItemAsync(CartItemModel item);
         Task RemoveItemAsync(int productId);
         Task UpdateQuantityAsync(int productId, int quantity);

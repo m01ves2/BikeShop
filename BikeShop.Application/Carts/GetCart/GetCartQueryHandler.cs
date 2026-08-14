@@ -24,8 +24,6 @@ namespace BikeShop.Application.Carts.GetCartByCustomerId
             var cart = customer.Cart;
 
             var resultData = new CartDto(
-                cart.Id,
-                cart.CustomerId,
                 cart.Items.Select(i => new CartItemDto(
                     i.Id,
                     i.Quantity,

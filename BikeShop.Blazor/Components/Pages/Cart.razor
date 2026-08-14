@@ -11,7 +11,7 @@
         <h1>Shopping Cart</h1>
     </div>
 
-    @if (items.Count == 0) {
+    @if (cart.Items.Count == 0) {
         <p>Your cart is empty.</p>
     }
     else {
@@ -28,12 +28,12 @@
                 </thead>
                 <tbody>
 
-                    @foreach (var item in items) {
+                    @foreach (var item in cart.Items) {
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center">
 
-                                    @if (!string.IsNullOrEmpty(item.ImageUrl)) {
+                                    @* @if (!string.IsNullOrEmpty(item.ImageUrl)) {
                                         <img src="@item.ImageUrl"
                                              width="80"
                                              height="80"
@@ -43,16 +43,16 @@
                                         <div class="bg-light"
                                              style="width:80px;height:80px">
                                         </div>
-                                    }
+                                    } *@
 
                                     <span>
-                                        @item.ProductName
+                                        @item.Product.Name
                                     </span>
 
                                 </div>
                             </td>
                             <td>
-                                @Currency.Format(item.Price)
+                                @Currency.Format(item.Product.Price)
                             </td>
                             <td>
                                 <div class="input-group">
@@ -79,7 +79,7 @@
                                 @Currency.Format(item.Total)
                             </td>
                             <td>
-                                <button class="btn btn-danger" @onclick="() => Remove(item.ProductId)">Remove</button>
+                                <button class="btn btn-danger" @onclick="() => Remove(item.Product.Id)">Remove</button>
                             </td>
                         </tr>
                     }
@@ -111,21 +111,19 @@
 
 
 @code {
-
-    private List<CartItemModel> items = new();
-    private decimal Total => items.Sum(x => x.Total);
-
+    private CartModel cart = new CartModel(new List<CartItemModel>());
+    private decimal Total => cart.Items.Sum(x => x.Total);
 
     protected override async Task OnInitializedAsync()
     {
-        items = await CartService.GetItemsAsync();
+        cart = await CartService.GetCartAsync();
     }
 
     private async Task Remove(int id)
     {
         await CartService.RemoveItemAsync(id);
 
-        items = await CartService.GetItemsAsync();
+        cart = await CartService.GetCartAsync();
     }
 
     private async Task Increase(CartItemModel item)
@@ -133,10 +131,10 @@
         item.Quantity++;
 
         await CartService.UpdateQuantityAsync(
-            item.ProductId,
+            item.Product.Id,
             item.Quantity);
 
-        items = await CartService.GetItemsAsync();
+        cart = await CartService.GetCartAsync();
     }
 
     private async Task Decrease(CartItemModel item)
@@ -148,9 +146,9 @@
         item.Quantity--;
 
         await CartService.UpdateQuantityAsync(
-            item.ProductId,
+            item.Product.Id,
             item.Quantity);
 
-        items = await CartService.GetItemsAsync();
+        cart = await CartService.GetCartAsync();
     }
 }

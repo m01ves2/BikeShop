@@ -2,5 +2,5 @@
 
 namespace BikeShop.Application.Carts.DTOs
 {
-    public sealed record CartDto(int Id, int CustomerId, List<CartItemDto> Items);
+    public sealed record CartDto(List<CartItemDto> Items);
 }

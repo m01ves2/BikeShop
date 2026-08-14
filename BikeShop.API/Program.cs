@@ -1,4 +1,4 @@
-using System.Text;
+п»їusing System.Text;
 using System.Text.Json.Serialization;
 using BikeShop.Application;
 using BikeShop.Domain.Entities;
@@ -25,7 +25,7 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 
 //builder.Services.AddSwaggerGen();
-//Настройка swagger для работы с JWT 
+//РќР°СЃС‚СЂРѕР№РєР° swagger РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ JWT 
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
@@ -61,23 +61,23 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services
     .AddIdentityCore<ApplicationUser>(options =>
     {
-        // Пока можно оставить настройки по умолчанию.
-        // Позже сюда перенесём требования к паролю.
+        // РџРѕРєР° РјРѕР¶РЅРѕ РѕСЃС‚Р°РІРёС‚СЊ РЅР°СЃС‚СЂРѕР№РєРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.
+        // РџРѕР·Р¶Рµ СЃСЋРґР° РїРµСЂРµРЅРµСЃС‘Рј С‚СЂРµР±РѕРІР°РЅРёСЏ Рє РїР°СЂРѕР»СЋ.
     })
-    .AddRoles<IdentityRole<int>>() //И в будущем у нас почти наверняка появятся роли: Customer и Admin
+    .AddRoles<IdentityRole<int>>() //Р РІ Р±СѓРґСѓС‰РµРј Сѓ РЅР°СЃ РїРѕС‡С‚Рё РЅР°РІРµСЂРЅСЏРєР° РїРѕСЏРІСЏС‚СЃСЏ СЂРѕР»Рё: Customer Рё Admin
     .AddEntityFrameworkStores<BikeShopDbContext>()
     .AddDefaultTokenProviders();
 
 
-//Именно этот middleware будет:
-//читать заголовок. Если пришёл заголовок
+//РРјРµРЅРЅРѕ СЌС‚РѕС‚ middleware Р±СѓРґРµС‚:
+//С‡РёС‚Р°С‚СЊ Р·Р°РіРѕР»РѕРІРѕРє. Р•СЃР»Рё РїСЂРёС€С‘Р» Р·Р°РіРѕР»РѕРІРѕРє
 //Authorization: Bearer xxxxxxx, 
-//то:
-//проверить подпись;
-//проверить срок действия;
-//проверить Issuer;
-//проверить Audience.
-//создавать HttpContext.User
+//С‚Рѕ:
+//РїСЂРѕРІРµСЂРёС‚СЊ РїРѕРґРїРёСЃСЊ;
+//РїСЂРѕРІРµСЂРёС‚СЊ СЃСЂРѕРє РґРµР№СЃС‚РІРёСЏ;
+//РїСЂРѕРІРµСЂРёС‚СЊ Issuer;
+//РїСЂРѕРІРµСЂРёС‚СЊ Audience.
+//СЃРѕР·РґР°РІР°С‚СЊ HttpContext.User
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -96,7 +96,7 @@ builder.Services
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
         };
 
-        //подписка на события с логами
+        //РїРѕРґРїРёСЃРєР° РЅР° СЃРѕР±С‹С‚РёСЏ СЃ Р»РѕРіР°РјРё
         options.Events = new JwtBearerEvents
         {
             OnMessageReceived = context =>
@@ -117,7 +117,7 @@ builder.Services
         };
     });
 
-//регистрирует сервисы авторизации. Именно благодаря ей работают [Authorize] и <AuthorizeView> в контроллерах
+//СЂРµРіРёСЃС‚СЂРёСЂСѓРµС‚ СЃРµСЂРІРёСЃС‹ Р°РІС‚РѕСЂРёР·Р°С†РёРё. РРјРµРЅРЅРѕ Р±Р»Р°РіРѕРґР°СЂСЏ РµР№ СЂР°Р±РѕС‚Р°СЋС‚ [Authorize] Рё <AuthorizeView> РІ РєРѕРЅС‚СЂРѕР»Р»РµСЂР°С…
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -137,9 +137,9 @@ if (app.Environment.IsDevelopment()) {
 
 app.UseHttpsRedirection();
 
-//порядок критически важен:
-app.UseAuthentication(); //  читает JWT, создаёт HttpContext.User
-app.UseAuthorization(); //  смотрит: есть ли [Authorize]?
+//РїРѕСЂСЏРґРѕРє РєСЂРёС‚РёС‡РµСЃРєРё РІР°Р¶РµРЅ:
+app.UseAuthentication(); //  С‡РёС‚Р°РµС‚ JWT, СЃРѕР·РґР°С‘С‚ HttpContext.User
+app.UseAuthorization(); //  СЃРјРѕС‚СЂРёС‚: РµСЃС‚СЊ Р»Рё [Authorize]?
 
 app.MapControllers();
 
