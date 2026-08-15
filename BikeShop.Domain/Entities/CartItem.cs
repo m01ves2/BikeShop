@@ -45,7 +45,7 @@ namespace BikeShop.Domain.Entities
             Quantity = Math.Max(0, Quantity - amount);
         }
 
-        private void ChangeQuantity(int quantity)
+        public void ChangeQuantity(int quantity)
         {
             if (quantity < 0)
                 throw new DomainValidationException("Quantity cannot be negative");

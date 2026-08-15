@@ -30,6 +30,11 @@ namespace BikeShop.Infrastructure.Repositories
             return await _context.Products.Include(p => p.Category).FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
 
+        public async Task<IReadOnlyList<Product>> GetByIdsAsync(IEnumerable<int> ids, CancellationToken cancellationToken)
+        {
+            return await _context.Products.Where(p => ids.Contains(p.Id)).ToListAsync(cancellationToken);
+        }
+
         public async Task AddAsync(Product product, CancellationToken cancellationToken)
         {
             await _context.Products.AddAsync(product, cancellationToken);
