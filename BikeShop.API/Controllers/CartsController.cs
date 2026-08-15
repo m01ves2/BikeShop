@@ -7,10 +7,12 @@ using BikeShop.Application.Carts.DecreaseItemQuantity;
 using BikeShop.Application.Carts.DTOs;
 using BikeShop.Application.Carts.GetCartByCustomerId;
 using BikeShop.Application.Carts.IncreaseItemQuantity;
+using BikeShop.Application.Carts.MergeGuestCart;
 using BikeShop.Application.Carts.RemoveItem;
 using BikeShop.Application.Common.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace BikeShop.API.Controllers
 {
@@ -28,13 +30,15 @@ namespace BikeShop.API.Controllers
         private readonly ICommandHandler<ClearCartCommand, Result> _clearCartCommandHandler;
         private readonly ICommandHandler<IncreaseItemQuantityCommand, Result> _increaseItemQuantityCommandHandler;
         private readonly ICommandHandler<DecreaseItemQuantityCommand, Result> _decreaseItemQuantityCommandHandler;
+        private readonly ICommandHandler<MergeGuestCartCommand, Result<MergeGuestCartResultDto>> _mergeGuestCartCommandHandler;
 
         public CartsController(IQueryHandler<GetCartQuery, Result<CartDto>> getCartQueryHandler,
                                ICommandHandler<AddItemCommand, Result> addItemCommandHandler,
                                ICommandHandler<RemoveItemCommand, Result> removeItemCommandHandler,
                                ICommandHandler<ClearCartCommand, Result> clearCartCommandHandler,
                                ICommandHandler<IncreaseItemQuantityCommand, Result> increaseItemQuantityCommandHandler,
-                               ICommandHandler<DecreaseItemQuantityCommand, Result> decreaseItemQuantityCommandHandler)
+                               ICommandHandler<DecreaseItemQuantityCommand, Result> decreaseItemQuantityCommandHandler,
+                               ICommandHandler<MergeGuestCartCommand, Result<MergeGuestCartResultDto>> mergeGuestCartCommandHandler)
         {
             _getCartQueryHandler = getCartQueryHandler;
             _addItemCommandHandler = addItemCommandHandler;
@@ -42,6 +46,7 @@ namespace BikeShop.API.Controllers
             _clearCartCommandHandler = clearCartCommandHandler;
             _increaseItemQuantityCommandHandler = increaseItemQuantityCommandHandler;
             _decreaseItemQuantityCommandHandler = decreaseItemQuantityCommandHandler;
+            _mergeGuestCartCommandHandler = mergeGuestCartCommandHandler;
         }
 
 
@@ -156,6 +161,23 @@ namespace BikeShop.API.Controllers
             return Ok();
         }
 
+        [HttpPost("merge")]
+        public async Task<IActionResult> MergeGuestCart([FromBody] CartDto guestCart, CancellationToken cancellationToken)
+        {
+            var userIdResult = GetApplicationUserId();
+
+            if (userIdResult.IsFailure)
+                return this.ToActionResult(userIdResult.Error!);
+
+            var applicationUserId = userIdResult.Data;
+            var result = await _mergeGuestCartCommandHandler.Handle(new MergeGuestCartCommand(applicationUserId, guestCart), cancellationToken);
+
+            if (result.IsFailure) {
+                return this.ToActionResult(result.Error!);
+            }
+
+            return Ok(result.Data);
+        }
 
         private Result<int> GetApplicationUserId()
         {

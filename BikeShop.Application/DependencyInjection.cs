@@ -8,6 +8,7 @@ using BikeShop.Application.Carts.DecreaseItemQuantity;
 using BikeShop.Application.Carts.DTOs;
 using BikeShop.Application.Carts.GetCartByCustomerId;
 using BikeShop.Application.Carts.IncreaseItemQuantity;
+using BikeShop.Application.Carts.MergeGuestCart;
 using BikeShop.Application.Carts.RemoveItem;
 using BikeShop.Application.Categories.CreateCategory;
 using BikeShop.Application.Categories.DeleteCategory;
@@ -62,6 +63,7 @@ namespace BikeShop.Application
             services.AddScoped<ICommandHandler<RemoveItemCommand, Result>, RemoveItemCommandHandler>();
             services.AddScoped<ICommandHandler<IncreaseItemQuantityCommand, Result>, IncreaseItemQuantityCommandHandler>();
             services.AddScoped<ICommandHandler<DecreaseItemQuantityCommand, Result>, DecreaseItemQuantityCommandHandler>();
+            services.AddScoped<ICommandHandler<MergeGuestCartCommand, Result<MergeGuestCartResultDto>>, MergeGuestCartCommandHandler>();
 
             return services;
         }
