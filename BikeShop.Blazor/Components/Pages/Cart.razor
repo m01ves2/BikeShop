@@ -116,14 +116,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        cart = await CartService.GetCartAsync();
+        cart = await CartService.GetLocalCartAsync();
     }
 
     private async Task Remove(int id)
     {
         await CartService.RemoveItemAsync(id);
 
-        cart = await CartService.GetCartAsync();
+        cart = await CartService.GetLocalCartAsync();
     }
 
     private async Task Increase(CartItemModel item)
@@ -134,7 +134,7 @@
             item.Product.Id,
             item.Quantity);
 
-        cart = await CartService.GetCartAsync();
+        cart = await CartService.GetLocalCartAsync();
     }
 
     private async Task Decrease(CartItemModel item)
@@ -149,6 +149,6 @@
             item.Product.Id,
             item.Quantity);
 
-        cart = await CartService.GetCartAsync();
+        cart = await CartService.GetLocalCartAsync();
     }
 }

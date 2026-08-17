@@ -6,10 +6,12 @@ namespace BikeShop.Blazor.Services
     {
         event EventHandler? CartChanged;
 
-        Task<CartModel> GetCartAsync();
+        Task<CartModel> GetLocalCartAsync();
         Task AddItemAsync(CartItemModel item);
         Task RemoveItemAsync(int productId);
         Task UpdateQuantityAsync(int productId, int quantity);
+        Task<CartModel?> GetServerCartAsync();
+        Task<CartSynchronizationResultModel?> SynchronizeCartAsync();
         Task ClearAsync();
     }
 }

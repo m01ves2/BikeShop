@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using BikeShop.Blazor.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -30,8 +29,7 @@ namespace BikeShop.Blazor.Identity
             var handler = new JwtSecurityTokenHandler();
             var jwt = handler.ReadJwtToken(token);
 
-            _currentUser = new ClaimsPrincipal(
-                new ClaimsIdentity(jwt.Claims, "jwt"));
+            _currentUser = new ClaimsPrincipal(new ClaimsIdentity(jwt.Claims, "jwt"));
 
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
 

@@ -26,9 +26,9 @@ namespace BikeShop.Blazor.Services.ApiClients
             var response = await _http.PostAsJsonAsync("api/auth/login", model);
 
             if (response.IsSuccessStatusCode) {
-                var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponseModel>();
+                var result = await response.Content.ReadFromJsonAsync<LoginResponseModel>();
 
-                return (loginResponse, null);
+                return (result, null);
             }
 
             var error = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();

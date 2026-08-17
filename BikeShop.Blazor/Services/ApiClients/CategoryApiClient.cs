@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Headers;
-using BikeShop.Blazor.Identity;
+﻿using BikeShop.Blazor.Identity;
 using BikeShop.Blazor.Models;
 
 namespace BikeShop.Blazor.Services.ApiClients

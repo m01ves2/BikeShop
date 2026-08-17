@@ -26,7 +26,10 @@ namespace BikeShop.Infrastructure.Repositories
 
         public async Task<Customer?> GetCustomerWithCartByApplicationUserIdAsync(int applicationUserId, CancellationToken cancellationToken)
         {
-            return await _context.Customers.Include(c => c.Cart).FirstOrDefaultAsync(c => c.ApplicationUserId == applicationUserId, cancellationToken);
+            return await _context.Customers.Include(c => c.Cart)
+                                           .ThenInclude(cart => cart.Items)
+                                           .ThenInclude(ci => ci.Product)
+                                           .FirstOrDefaultAsync(c => c.ApplicationUserId == applicationUserId, cancellationToken);
         }
     }
 }

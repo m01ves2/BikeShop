@@ -10,6 +10,7 @@
 @inject AuthApiClient AuthClient
 @inject ITokenStorage TokenStorage
 @inject JwtAuthenticationStateProvider AuthStateProvider
+@inject ICartService CartService
 
 <PageTitle>Login</PageTitle>
 <PageHeader Text="Login" />
@@ -74,16 +75,46 @@
         errorMessage = null;
 
         try {
-            var (response, error) = await AuthClient.LoginAsync(model);
+            var (response, error) = await AuthClient.LoginAsync(model); // получаем token от сервера, если userManager на сервере нашел login+password
 
             if (error is not null) {
                 errorMessage = error.Message;
                 return;
             }
 
-            await TokenStorage.SaveTokenAsync(response!.Token);
-
+            await TokenStorage.SaveTokenAsync(response!.Token); // сохранили токен в localStorage
+            
+            //наш AuthStateProvider является источником информации о текущем authentication state. превращает JWT в ClaimsPrincipal. 
+            // Он берёт JWT, разбирает его claims и создаёт ClaimsPrincipal. 
+            // Если JWT валидный и пользователь залогинен, provider возвращает: ClaimsPrincipal.Identity.IsAuthenticated == true. 
+            // Если JWT отсутствует/недействителен — anonymous principal.
             AuthStateProvider.SignIn(response.Token);
+
+            // Blazor - компоненты не ходят каждый раз напрямую в JWT.
+            // Они работают через: AuthenticationState
+            // То есть компонент может получить: AuthenticationState
+
+            // var user = authenticationState.User;
+            // user.Identity?.IsAuthenticated
+            // или получить claims пользователя.
+            // Именно поэтому в UI существуют механизмы вроде: <AuthorizeView>
+            // которые позволяют сказать:
+            // если authenticated → показать это
+            // если anonymous → показать другое
+            // После успешной авторизации JwtAuthenticationStateProvider уведомляет Blazor, что authentication state изменился.
+            // То есть было: Anonymous,  становится:
+            // Authenticated + ClaimsPrincipal + ApplicationUserId
+
+            // Поэтому login фактически:
+            // получили JWT → сохранили JWT → provider узнал о новом JWT → создан новый ClaimsPrincipal → AuthenticationState изменился → Blazor узнаёт:
+            // "пользователь теперь authenticated"
+
+            var cartSyncResult = await CartService.SynchronizeCartAsync();
+            if (cartSyncResult is not null && cartSyncResult.RemovedProductNames.Count > 0) {
+                // TODO:
+                // показать пользователю RemovedProductNames
+                // если они есть
+            }
 
             Navigation.NavigateTo("/");
         }

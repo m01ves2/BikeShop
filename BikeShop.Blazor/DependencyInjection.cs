@@ -52,6 +52,8 @@ namespace BikeShop.Blazor
             services.AddScoped<AuthenticationStateProvider>(sp =>
                 sp.GetRequiredService<JwtAuthenticationStateProvider>());
 
+            services.AddScoped<CartApiClient>();
+
             return services;
         }
     }
