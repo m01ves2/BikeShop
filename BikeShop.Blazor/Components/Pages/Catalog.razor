@@ -26,10 +26,15 @@ else {
     public int CategoryId { get; set; }
 
     private CategoryListItemModel? category;
+    private string? errorMessage;
 
     protected override async Task OnParametersSetAsync()
     {
-        category = await ApiClient.GetCategoryByIdAsync(CategoryId);
+        (category, var error) = await ApiClient.GetCategoryByIdAsync(CategoryId);
+        if (error is not null) {
+            errorMessage = error.Message;
+        }
+
 
         if (category is not null) {
             BreadcrumbService.SetItems([

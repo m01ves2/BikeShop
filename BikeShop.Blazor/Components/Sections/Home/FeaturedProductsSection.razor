@@ -38,6 +38,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        products = (await ApiClient.GetProductsAsync()).Take(4).ToList();
+        (products, var error) = (await ApiClient.GetProductsAsync());
+
+        products = products.Take(4).ToList();
     }
 }

@@ -19,7 +19,7 @@ namespace BikeShop.Blazor.Services
             _cartApiClient = cartApiClient;
         }
 
-        public async Task<CartModel> GetLocalCartAsync()
+        public async Task<CartModel> GetCartAsync()
         {
             var json = await _jsRuntime.InvokeAsync<string?>("cartStorage.get");
 
@@ -30,25 +30,26 @@ namespace BikeShop.Blazor.Services
             return JsonSerializer.Deserialize<CartModel>(json) ?? new CartModel(new List<CartItemModel>());
         }
 
-        public async Task AddItemAsync(CartItemModel item)
-        {
-            var cart = await GetLocalCartAsync();
-            var existing = cart.Items.FirstOrDefault(i => i.Product.Id == item.Product.Id);
+        //public async Task AddItemAsync(CartItemModel item)
+        //{
+        //    var cart = await GetCartAsync();
+        //    var existing = cart.Items.FirstOrDefault(i => i.Product.Id == item.Product.Id);
 
-            if (existing != null) {
-                existing.Quantity += item.Quantity;
-            }
-            else {
-                cart.Items.Add(item);
-            }
+        //    if (existing != null) {
+        //        existing.Quantity += item.Quantity;
+        //    }
+        //    else {
+        //        cart.Items.Add(item);
+        //    }
 
-            await SaveAsync(cart);
-            CartChanged?.Invoke(this, EventArgs.Empty);
-        }
+        //    await SaveAsync(cart);
+        //    CartChanged?.Invoke(this, EventArgs.Empty);
+        //}
+
 
         public async Task RemoveItemAsync(int productId)
         {
-            var cart = await GetLocalCartAsync();
+            var cart = await GetCartAsync();
 
             cart.Items.RemoveAll(i => i.Product.Id == productId);
 
@@ -58,7 +59,7 @@ namespace BikeShop.Blazor.Services
 
         public async Task UpdateQuantityAsync(int productId, int quantity)
         {
-            var cart = await GetLocalCartAsync();
+            var cart = await GetCartAsync();
             var existing = cart.Items.FirstOrDefault(x => x.Product.Id == productId);
 
             if (existing == null) {
@@ -83,7 +84,7 @@ namespace BikeShop.Blazor.Services
 
         public async Task<CartSynchronizationResultModel?> SynchronizeCartAsync()
         {
-            var localCart = await GetLocalCartAsync();
+            var localCart = await GetCartAsync();
             var resultCart = await _cartApiClient.SynchronizeCartAsync(localCart);
 
             //TODO обработка ошибок

@@ -12,7 +12,8 @@ namespace BikeShop.Blazor.Services.ApiClients
 
         public async Task<ApiErrorResponseModel?> RegisterAsync(RegisterModel model)
         {
-            var response = await _http.PostAsJsonAsync("api/auth/register", model);
+            var url = "api/auth/register";
+            var response = await _http.PostAsJsonAsync(url, model);
 
             if (response.IsSuccessStatusCode) {
                 return null;
@@ -23,7 +24,8 @@ namespace BikeShop.Blazor.Services.ApiClients
 
         public async Task<(LoginResponseModel? Login, ApiErrorResponseModel? Error)> LoginAsync(LoginModel model)
         {
-            var response = await _http.PostAsJsonAsync("api/auth/login", model);
+            var url = "api/auth/login";
+            var response = await _http.PostAsJsonAsync(url, model);
 
             if (response.IsSuccessStatusCode) {
                 var result = await response.Content.ReadFromJsonAsync<LoginResponseModel>();
@@ -36,13 +38,23 @@ namespace BikeShop.Blazor.Services.ApiClients
             return (null, error);
         }
 
-        public async Task<CurrentUserModel> GetCurrentUserAsync()
+        public async Task<(CurrentUserModel?, ApiErrorResponseModel?)> GetCurrentUserAsync()
         {
             AddAuthorizationHeader();
 
-            var result = await _http.GetFromJsonAsync<CurrentUserModel>("api/auth/me");
+            var url = "api/auth/me";
+            //var result = await _http.GetFromJsonAsync<CurrentUserModel>(url);
+            var response = await _http.GetAsync(url);
 
-            return result;
+            if (response.IsSuccessStatusCode) {
+                var result = await response.Content.ReadFromJsonAsync<CurrentUserModel>();
+
+                return (result, null);
+            }
+
+            var error = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+
+            return (null, error);
         }
 
     }
