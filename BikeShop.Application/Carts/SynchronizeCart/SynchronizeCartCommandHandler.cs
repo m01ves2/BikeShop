@@ -27,6 +27,7 @@ namespace BikeShop.Application.Carts.SynchronizeCart
             //1. ищем совпадения гостевой корзины с серверной и корректируем количество
             var cart = customer.Cart;
             var localCart = command.LocalCart;
+
             var localCartItemsByProductId = localCart.Items.ToDictionary(item => item.Product.Id); //Dictionary<ProductId, localCartItem>
 
             foreach (var item in cart.Items) {
@@ -52,19 +53,7 @@ namespace BikeShop.Application.Carts.SynchronizeCart
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            var cartDto = new CartDto(
-                cart.Items.Select(i => new CartItemDto(
-                    i.Id,
-                    i.Quantity,
-                    new ProductCartDto(
-                        i.Product.Id,
-                        i.Product.Name,
-                        i.Product.Price,
-                        i.Product.StockQuantity
-                    ))).ToList()
-                );
-
-            return Result<SynchronizeCartResultDto>.Success( new SynchronizeCartResultDto(cartDto, removedProductNames));
+            return Result<SynchronizeCartResultDto>.Success( new SynchronizeCartResultDto(removedProductNames));
         }
     }
 }

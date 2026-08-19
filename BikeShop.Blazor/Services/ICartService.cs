@@ -16,7 +16,6 @@ namespace BikeShop.Blazor.Services
         Task<ApiErrorResponseModel?> DecreaseItemQuantityAsync(int productId, int amount);
         Task<ApiErrorResponseModel?> ClearAsync();
 
-        Task<ApiErrorResponseModel?> RefreshLocalCartAsync();
         Task<(SynchronizeCartResultModel?, ApiErrorResponseModel?)> SynchronizeCartAsync();
     }
 }

@@ -1,4 +1,5 @@
 ﻿@page "/product/{Id:int}"
+
 @using BikeShop.Blazor.Components.Sections.Product
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
@@ -9,19 +10,20 @@
 @inject ProductApiClient ApiClient
 @inject BreadcrumbService BreadcrumbService
 
-<ErrorMessage Error="_error" />
+<ErrorToast Message="@errorMessage" />
 
-@if (_product is null) {
+@if (model is null) {
     <PageTitle>BikeShop</PageTitle>
+    <PageHeader Text="Product details" />
     <LoadingSpinner />
 }
 else {
-    <PageTitle>@_product.Name - BikeShop</PageTitle>
-    <PageHeader Text="@_product.Name" />
+    <PageTitle>@model.Name - BikeShop</PageTitle>
+    <PageHeader Text="@model.Name" />
 
     <div class="container my-5">
 
-        <ProductDetailsSection Product="@_product" />
+        <ProductDetailsSection Product="@model" />
 
     </div>
 }
@@ -31,19 +33,21 @@ else {
     [Parameter]
     public int Id { get; set; }
 
-    private ProductDetailsModel? _product;
-    private ApiErrorResponseModel? _error;
+    private ProductDetailsModel? model = new();
+    private string? errorMessage;
 
     protected override async Task OnParametersSetAsync()
     {
         var (product, error) = await ApiClient.GetProductDetailsAsync(Id);
         if (error != null) {
-            _error = error;
+            ShowError(error);
             return;
         }
 
+        model = product;
+
         //TODO
-        if (product is not null) {
+        if (model is not null) {
             BreadcrumbService.SetItems([
                 new()
                 {
@@ -63,4 +67,8 @@ else {
         }
     }
 
+    private void ShowError(ApiErrorResponseModel error)
+    {
+        errorMessage = error.Message;
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using BikeShop.Blazor.Identity;
 using BikeShop.Blazor.Models;
 using BikeShop.Blazor.Services.ApiClients;
 using BikeShop.Blazor.Services.Models;
@@ -10,14 +11,17 @@ namespace BikeShop.Blazor.Services
     {
         private readonly IJSRuntime _jsRuntime;
         private readonly CartApiClient _cartApiClient;
+        private readonly JwtAuthenticationStateProvider _authStateProvider;
+
+        private bool IsAuthenticated => !string.IsNullOrWhiteSpace(_authStateProvider.Token);
 
         public event EventHandler? CartChanged;
-        //public event EventHandler<IReadOnlyList<string>>? SynchronizeCartCompleted;
 
-        public CartService(IJSRuntime jsRuntime, CartApiClient cartApiClient)
+        public CartService(IJSRuntime jsRuntime, CartApiClient cartApiClient, JwtAuthenticationStateProvider authStateProvider)
         {
             _jsRuntime = jsRuntime;
             _cartApiClient = cartApiClient;
+            _authStateProvider = authStateProvider;
         }
 
         public async Task<CartModel> GetLocalCartAsync()
@@ -40,10 +44,30 @@ namespace BikeShop.Blazor.Services
 
         public async Task<(CartModel?, ApiErrorResponseModel?)> GetServerCartAsync()
         {
+            if (!IsAuthenticated)
+                return (null, null);
+
             return await _cartApiClient.GetCartAsync();
         }
         public async Task<ApiErrorResponseModel?> AddItemAsync(CartItemModel item)
         {
+            if (!IsAuthenticated) {
+                var localCart = await GetLocalCartAsync();
+
+                var existing = localCart.Items.FirstOrDefault(x => x.Product.Id == item.Product.Id);
+
+                if (existing is not null)
+                    existing.Quantity += item.Quantity;
+                else
+                    localCart.Items.Add(item);
+
+                await SaveLocalCartAsync(localCart);
+
+                CartChanged?.Invoke(this, EventArgs.Empty);
+
+                return null;
+            }
+
             var error = await _cartApiClient.AddItemAsync(item.Product.Id);
 
             if (error != null)
@@ -53,43 +77,102 @@ namespace BikeShop.Blazor.Services
         }
         public async Task<ApiErrorResponseModel?> RemoveItemAsync(int productId)
         {
-            var error = await _cartApiClient.RemoveItemAsync(productId);
-            if (error != null) {
-                return error;
+            if (!IsAuthenticated) {
+                var localCart = await GetLocalCartAsync();
+
+                localCart.Items.RemoveAll(x => x.Product.Id == productId);
+
+                await SaveLocalCartAsync(localCart);
+
+                CartChanged?.Invoke(this, EventArgs.Empty);
+
+                return null;
             }
+
+            var error = await _cartApiClient.RemoveItemAsync(productId);
+
+            if (error is not null)
+                return error;
 
             return await RefreshLocalCartAsync();
         }
         public async Task<ApiErrorResponseModel?> IncreaseItemQuantityAsync(int productId, int amount)
         {
+            if (!IsAuthenticated) {
+                var localCart = await GetLocalCartAsync();
+
+                var item = localCart.Items.FirstOrDefault(x => x.Product.Id == productId);
+
+                if (item is null)
+                    return null;
+
+                item.Quantity += amount;
+
+                await SaveLocalCartAsync(localCart);
+
+                CartChanged?.Invoke(this, EventArgs.Empty);
+
+                return null;
+            }
+
             var error = await _cartApiClient.IncreaseItemQuantityAsync(productId, amount);
 
-            if (error != null)
+            if (error is not null)
                 return error;
 
             return await RefreshLocalCartAsync();
         }
         public async Task<ApiErrorResponseModel?> DecreaseItemQuantityAsync(int productId, int amount)
         {
+            if (!IsAuthenticated) {
+                var localCart = await GetLocalCartAsync();
+
+                var item = localCart.Items.FirstOrDefault(x => x.Product.Id == productId);
+
+                if (item is null)
+                    return null;
+
+                item.Quantity -= amount;
+
+                if (item.Quantity <= 0)
+                    localCart.Items.Remove(item);
+
+                await SaveLocalCartAsync(localCart);
+
+                CartChanged?.Invoke(this, EventArgs.Empty);
+
+                return null;
+            }
+
             var error = await _cartApiClient.DecreaseItemQuantityAsync(productId, amount);
 
-            if (error != null)
+            if (error is not null)
                 return error;
 
             return await RefreshLocalCartAsync();
         }
         public async Task<ApiErrorResponseModel?> ClearAsync()
         {
+            if (!IsAuthenticated) {
+                await ClearLocalCartAsync();
+
+                CartChanged?.Invoke(this, EventArgs.Empty);
+
+                return null;
+            }
+
             var error = await _cartApiClient.ClearCartAsync();
 
-            if (error != null)
+            if (error is not null)
                 return error;
 
             return await RefreshLocalCartAsync();
         }
-
-
-        public async Task<ApiErrorResponseModel?> RefreshLocalCartAsync()
+        private async Task ClearLocalCartAsync()
+        {
+            await _jsRuntime.InvokeVoidAsync("cartStorage.clear");
+        }
+        private async Task<ApiErrorResponseModel?> RefreshLocalCartAsync()
         {
             var (serverCart, error) = await GetServerCartAsync();
 
@@ -104,19 +187,24 @@ namespace BikeShop.Blazor.Services
         }
         public async Task<(SynchronizeCartResultModel?, ApiErrorResponseModel?)> SynchronizeCartAsync()
         {
+            if (!IsAuthenticated)
+                return (null, null);
+
             var localCart = await GetLocalCartAsync();
-            var (resultCart, error) = await _cartApiClient.SynchronizeCartAsync(localCart);
 
-            if (error != null) {
+            var (result, error) = await _cartApiClient.SynchronizeCartAsync(localCart);
+
+            if (error != null)
                 return (null, error);
-            }
 
-            var lcart = new CartModel(new List<CartItemModel>() );
+            var refreshError = await RefreshLocalCartAsync();
 
-            await SaveLocalCartAsync(resultCart!.Cart);
+            if (refreshError != null)
+                return (null, refreshError);
+
             CartChanged?.Invoke(this, EventArgs.Empty);
 
-            return (resultCart, null);
+            return (result, null);
         }
     }
 }

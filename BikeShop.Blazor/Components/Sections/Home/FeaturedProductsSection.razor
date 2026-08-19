@@ -11,7 +11,7 @@
 
     <SectionTitle Text="Featured Products" />
 
-    @if (products is null)
+    @if (_products is null)
     {
         <LoadingSpinner />
     }
@@ -19,7 +19,7 @@
     {
         <div class="row g-4">
 
-            @foreach (var product in products)
+            @foreach (var product in _products)
             {
                 <div class="col-lg-3 col-md-6">
 

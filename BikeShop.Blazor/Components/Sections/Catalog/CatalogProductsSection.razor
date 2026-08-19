@@ -7,6 +7,7 @@
 
 @inject ProductApiClient ApiClient
 
+<ErrorToast Message="@errorMessage" />
 
 @if (_products is null)
 {
@@ -25,18 +26,22 @@ else
     [Parameter]
     public int CategoryId { get; set; }
 
-    private IReadOnlyList<ProductListItemModel>? _products;
-    private ApiErrorResponseModel? _error;
+    private List<ProductListItemModel>? _products;
+    private string? errorMessage;
 
     protected override async Task OnParametersSetAsync()
     {
         var (products, error) =  await ApiClient.GetProductsByCategoryAsync(CategoryId);
         if (error != null) {
-            _error = error;
+            ShowError(error);
             return;
         }
 
         _products = products;
     }
 
+    private void ShowError(ApiErrorResponseModel error)
+    {
+        errorMessage = error.Message;
+    }
 }

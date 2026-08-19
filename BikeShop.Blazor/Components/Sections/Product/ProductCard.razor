@@ -36,8 +36,7 @@
         </div>
     </NavLink>
 
-    <button class="btn btn-primary"
-            @onclick="AddToCart">
+    <button class="btn btn-primary" @onclick="AddToCart">
         Add to cart
     </button>
 
@@ -50,15 +49,6 @@
 
     private async Task AddToCart()
     {
-        // var item = new CartItemModel
-        // {
-        //     ProductId = Product.Id,
-        //     ProductName = Product.Name,
-        //     Price = Product.Price,
-        //     Quantity = 1,
-        //     ImageUrl = Product.ImageUrl
-        // };
-
         var item = new CartItemModel
         {
             Id = 0, //no need

@@ -1,6 +1,5 @@
 ﻿using System.Net.Http.Headers;
 using BikeShop.Blazor.Identity;
-using static System.Net.WebRequestMethods;
 
 namespace BikeShop.Blazor.Services.ApiClients
 {

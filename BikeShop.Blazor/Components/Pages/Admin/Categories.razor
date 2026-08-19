@@ -1,18 +1,24 @@
 ﻿@page "/categories"
+
+@using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Services
 @using BikeShop.Blazor.Services.ApiClients
+@using BikeShop.Blazor.Services.Models
 
 @inject CategoryApiClient ApiClient
 
-<h1>Categories</h1>
+<ErrorToast Message="@errorMessage" />
 
-@if (categories == null) {
-    <p>Loading...</p>
+@if (_categories == null) {
+    <PageTitle>BikeShop</PageTitle>
+    <LoadingSpinner />
 }
 else {
+    <PageTitle>Categories - BikeShop</PageTitle>
+    <PageHeader Text="Categories" />
     <ul>
-        @foreach (var category in categories) {
+        @foreach (var category in _categories) {
             <li>
                 @category.Name
             </li>
@@ -30,11 +36,15 @@ else {
     {
         var (categories, error) = await ApiClient.GetCategoriesAsync();
         if (error is not null) {
-            errorMessage = error.Message;
+            ShowError(error);
             return;
         }
 
         _categories = categories;
     }
 
+    private void ShowError(ApiErrorResponseModel error)
+    {
+        errorMessage = error.Message;
+    }
 }

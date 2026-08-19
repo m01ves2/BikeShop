@@ -105,7 +105,7 @@
 
     private async Task LoadCartCount()
     {
-        var cart = await CartService.GetCartAsync();
+        var cart = await CartService.GetLocalCartAsync();
 
         cartCount = cart.Items.Sum(x => x.Quantity);
     }

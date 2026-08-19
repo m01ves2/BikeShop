@@ -9,7 +9,7 @@
 
     <div class="container">
 
-        @if (categories is null) {
+        @if (model is null) {
             @* <div class="text-center py-2">
                 <div class="spinner-border spinner-border-sm"></div>
             </div> *@
@@ -18,7 +18,7 @@
         else {
             <ul class="nav justify-content-center flex-wrap py-2">
 
-                @foreach (var category in categories) {
+                @foreach (var category in model) {
                     <li class="nav-item">
                         <NavLink class="nav-link" href="@($"/category/{category.Id}")">
                             @category.Name
@@ -35,7 +35,7 @@
 
 @code
 {
-    private IReadOnlyList<CategoryListItemModel>? _categories;
+    private IReadOnlyList<CategoryListItemModel>? model;
     private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
@@ -46,6 +46,6 @@
             return;
         }
 
-        _categories = categories;
+        model = categories;
     }
 }

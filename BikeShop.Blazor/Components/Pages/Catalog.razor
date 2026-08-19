@@ -1,20 +1,25 @@
 ﻿@page "/category/{CategoryId:int}"
+
 @using BikeShop.Blazor.Components.Sections.Catalog
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Services
 @using BikeShop.Blazor.Services.ApiClients
+@using BikeShop.Blazor.Services.Models
 
 @inject CategoryApiClient ApiClient
 @inject BreadcrumbService BreadcrumbService
 
-@if (category is null) {
+<ErrorToast Message="@errorMessage" />
+
+@if (model is null) {
     <PageTitle>BikeShop</PageTitle>
+    <PageHeader Text="Catalog" />
     <LoadingSpinner />
 }
 else {
-    <PageTitle>@category.Name - BikeShop</PageTitle>
-    <PageHeader Text="@category.Name" />
+    <PageTitle>@model.Name - BikeShop</PageTitle>
+    <PageHeader Text="@model.Name" />
     <CatalogProductsSection CategoryId="CategoryId" />
 }
 
@@ -25,20 +30,21 @@ else {
     [Parameter]
     public int CategoryId { get; set; }
 
-    private CategoryListItemModel? _category;
+    private CategoryListItemModel? model = new();
     private string? errorMessage;
 
     protected override async Task OnParametersSetAsync()
     {
         var (category, error) = await ApiClient.GetCategoryByIdAsync(CategoryId);
+
         if (error is not null) {
-            errorMessage = error.Message;
+            ShowError(error);
             return;
         }
 
-        _category = category;
+        model = category;
 
-        if (category is not null) {
+        if (model is not null) {
             BreadcrumbService.SetItems([
                 new()
             {
@@ -51,5 +57,10 @@ else {
             }
             ]);
         }
+    }
+
+    private void ShowError(ApiErrorResponseModel error)
+    {
+        errorMessage = error.Message;
     }
 }

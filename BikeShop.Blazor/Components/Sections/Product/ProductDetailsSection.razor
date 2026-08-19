@@ -4,6 +4,7 @@
 @using System.Globalization
 
 @inject CurrencyFormatter Currency
+@inject ICartService CartService
 
 @if (Product is null)
 {
@@ -32,7 +33,7 @@ else
                 <strong>In stock:</strong>
                 @Product.StockQuantity
             </p>
-            <button class="btn btn-primary btn-lg">
+            <button class="btn btn-primary btn-lg" @onclick="AddToCart">
                 Add to Cart
             </button>
         </div>
@@ -45,4 +46,15 @@ else
     [Parameter]
     public ProductDetailsModel? Product { get; set; }
 
+    private async Task AddToCart()
+    {
+        var item = new CartItemModel
+        {
+            Id = 0, //no need
+            Quantity = 1,
+            Product = new ProductCartModel(Product.Id, Product.Name, Product.Price, 100),
+        };
+
+        await CartService.AddItemAsync(item);
+    }
 }

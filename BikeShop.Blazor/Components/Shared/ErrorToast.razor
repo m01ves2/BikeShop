@@ -1,56 +1,64 @@
 ﻿@implements IDisposable
 
-@if (!string.IsNullOrEmpty(Message)) {
+@if (!string.IsNullOrEmpty(_message)) {
     <div class="toast-container position-fixed top-0 end-0 p-3"
          style="z-index: 1100;">
         <div class="toast show" role="alert">
             <div class="toast-header">
                 <strong class="me-auto">Error</strong>
-                <button type="button" class="btn-close" @onclick="Hide"></button>
+
+                <button type="button" class="btn-close" @onclick="Close"></button>
             </div>
 
-            <div class="toast-body">
-                @Message
-            </div>
+            <div class="toast-body">@_message</div>
         </div>
     </div>
 }
 
 @code {
-    private string? Message;
-    private CancellationTokenSource? _hideCts;
+    [Parameter]
+    public string? Message { get; set; }
 
-    public async Task ShowAsync(string message)
+    private string? _message;
+    private CancellationTokenSource? _cts;
+
+    protected override async Task OnParametersSetAsync()
     {
-        _hideCts?.Cancel();
-        _hideCts?.Dispose();
+        if (Message == _message)
+            return;
 
-        _hideCts = new CancellationTokenSource();
-        Message = message;
+        _message = Message;
 
-        await InvokeAsync(StateHasChanged);
+        _cts?.Cancel();
+        _cts?.Dispose();
+
+        if (string.IsNullOrEmpty(_message))
+            return;
+
+        _cts = new CancellationTokenSource();
 
         try {
-            await Task.Delay(TimeSpan.FromSeconds(5), _hideCts.Token);
+            await Task.Delay(TimeSpan.FromSeconds(5), _cts.Token);
 
-            Message = null;
-
+            _message = null;
             await InvokeAsync(StateHasChanged);
         }
         catch (OperationCanceledException) {
-            // A new error replaced the current one.
         }
     }
 
-    private void Hide()
+    private async Task Close()
     {
-        _hideCts?.Cancel();
-        Message = null;
+        _cts?.Cancel();
+
+        _message = null;
+
+        await InvokeAsync(StateHasChanged);
     }
 
     public void Dispose()
     {
-        _hideCts?.Cancel();
-        _hideCts?.Dispose();
+        _cts?.Cancel();
+        _cts?.Dispose();
     }
 }

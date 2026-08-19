@@ -1,4 +1,4 @@
 ﻿namespace BikeShop.Application.Carts.DTOs
 {
-    public sealed record SynchronizeCartResultDto(CartDto cart, List<string> RemovedProductNames);
+    public sealed record SynchronizeCartResultDto(List<string> RemovedProductNames);
 }
