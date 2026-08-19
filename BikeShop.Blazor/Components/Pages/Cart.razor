@@ -1,10 +1,15 @@
 ﻿@page "/cart"
 
+@using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Services
+@using BikeShop.Blazor.Services.Models
 
 @inject ICartService CartService
 @inject CurrencyFormatter Currency
+
+<ErrorMessage Error="_error" />
+<ErrorToast @ref="_errorToast" />
 
 <div class="container mt-4">
     <div class="mb-4">
@@ -113,17 +118,40 @@
 @code {
     private CartModel cart = new CartModel(new List<CartItemModel>());
     private decimal Total => cart.Items.Sum(x => x.Total);
+    
+    private ApiErrorResponseModel? _error;
+    private ErrorToast? _errorToast;
+
 
     protected override async Task OnInitializedAsync()
     {
-        cart = await CartService.GetCartAsync();
+        var (result, error) = await CartService.GetCartAsync();
+
+        if (error != null) {
+            _error = error;
+            return;
+        }
+
+        cart = result!;
     }
 
     private async Task Remove(int id)
     {
-        await CartService.RemoveItemAsync(id);
+        var error = await CartService.RemoveItemAsync(id);
 
-        cart = await CartService.GetCartAsync();
+        if (error != null) {
+            await _errorToast!.ShowAsync(error.Message);
+            return;
+        }
+
+        var (result, getError) = await CartService.GetCartAsync();
+
+        if (getError != null) {
+            await _errorToast!.ShowAsync(getError.Message);
+            return;
+        }
+
+        cart = result!;
     }
 
     private async Task Increase(CartItemModel item)

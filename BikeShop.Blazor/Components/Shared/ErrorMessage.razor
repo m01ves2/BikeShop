@@ -1,0 +1,12 @@
+﻿@using BikeShop.Blazor.Services.Models
+
+@if (Error != null) {
+    <div class="alert alert-danger" role="alert">
+        @Error.Message
+    </div>
+}
+
+@code {
+    [Parameter]
+    public ApiErrorResponseModel? Error { get; set; }
+}

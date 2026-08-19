@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using BikeShop.Blazor.Models;
 using BikeShop.Blazor.Services.ApiClients;
+using BikeShop.Blazor.Services.Models;
 using Microsoft.JSInterop;
 
 namespace BikeShop.Blazor.Services
@@ -19,7 +20,7 @@ namespace BikeShop.Blazor.Services
             _cartApiClient = cartApiClient;
         }
 
-        public async Task<CartModel> GetCartAsync()
+        public async Task<CartModel> GetLocalCartAsync()
         {
             var json = await _jsRuntime.InvokeAsync<string?>("cartStorage.get");
 
@@ -29,80 +30,93 @@ namespace BikeShop.Blazor.Services
 
             return JsonSerializer.Deserialize<CartModel>(json) ?? new CartModel(new List<CartItemModel>());
         }
-
-        //public async Task AddItemAsync(CartItemModel item)
-        //{
-        //    var cart = await GetCartAsync();
-        //    var existing = cart.Items.FirstOrDefault(i => i.Product.Id == item.Product.Id);
-
-        //    if (existing != null) {
-        //        existing.Quantity += item.Quantity;
-        //    }
-        //    else {
-        //        cart.Items.Add(item);
-        //    }
-
-        //    await SaveAsync(cart);
-        //    CartChanged?.Invoke(this, EventArgs.Empty);
-        //}
-
-
-        public async Task RemoveItemAsync(int productId)
-        {
-            var cart = await GetCartAsync();
-
-            cart.Items.RemoveAll(i => i.Product.Id == productId);
-
-            await SaveAsync(cart);
-            CartChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        public async Task UpdateQuantityAsync(int productId, int quantity)
-        {
-            var cart = await GetCartAsync();
-            var existing = cart.Items.FirstOrDefault(x => x.Product.Id == productId);
-
-            if (existing == null) {
-                return;
-            }
-
-            existing.Quantity = quantity;
-            await SaveAsync(cart);
-            CartChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        public async Task ClearAsync()
-        {
-            await _jsRuntime.InvokeVoidAsync("cartStorage.clear");
-            CartChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        public async Task<CartModel?> GetServerCartAsync()
-        {
-            return await _cartApiClient.GetCartAsync();
-        }
-
-        public async Task<CartSynchronizationResultModel?> SynchronizeCartAsync()
-        {
-            var localCart = await GetCartAsync();
-            var resultCart = await _cartApiClient.SynchronizeCartAsync(localCart);
-
-            //TODO обработка ошибок
-            if (resultCart == null) {
-                return new CartSynchronizationResultModel(localCart, new List<string>());
-            }
-
-            //await ClearAsync();
-            await SaveAsync(resultCart.cart);
-            CartChanged?.Invoke(this, EventArgs.Empty);
-            return new CartSynchronizationResultModel(localCart, resultCart.RemovedProductNames);
-        }
-
-        private async Task SaveAsync(CartModel cart)
+        private async Task SaveLocalCartAsync(CartModel cart)
         {
             var json = JsonSerializer.Serialize(cart);
 
             await _jsRuntime.InvokeVoidAsync("cartStorage.set", json);
+        }
+
+
+        public async Task<(CartModel?, ApiErrorResponseModel?)> GetServerCartAsync()
+        {
+            return await _cartApiClient.GetCartAsync();
+        }
+        public async Task<ApiErrorResponseModel?> AddItemAsync(CartItemModel item)
+        {
+            var error = await _cartApiClient.AddItemAsync(item.Product.Id);
+
+            if (error != null)
+                return error;
+
+            return await RefreshLocalCartAsync();
+        }
+        public async Task<ApiErrorResponseModel?> RemoveItemAsync(int productId)
+        {
+            var error = await _cartApiClient.RemoveItemAsync(productId);
+            if (error != null) {
+                return error;
+            }
+
+            return await RefreshLocalCartAsync();
+        }
+        public async Task<ApiErrorResponseModel?> IncreaseItemQuantityAsync(int productId, int amount)
+        {
+            var error = await _cartApiClient.IncreaseItemQuantityAsync(productId, amount);
+
+            if (error != null)
+                return error;
+
+            return await RefreshLocalCartAsync();
+        }
+        public async Task<ApiErrorResponseModel?> DecreaseItemQuantityAsync(int productId, int amount)
+        {
+            var error = await _cartApiClient.DecreaseItemQuantityAsync(productId, amount);
+
+            if (error != null)
+                return error;
+
+            return await RefreshLocalCartAsync();
+        }
+        public async Task<ApiErrorResponseModel?> ClearAsync()
+        {
+            var error = await _cartApiClient.ClearCartAsync();
+
+            if (error != null)
+                return error;
+
+            return await RefreshLocalCartAsync();
+        }
+
+
+        public async Task<ApiErrorResponseModel?> RefreshLocalCartAsync()
+        {
+            var (serverCart, error) = await GetServerCartAsync();
+
+            if (error != null)
+                return error;
+
+            await SaveLocalCartAsync(serverCart!);
+
+            CartChanged?.Invoke(this, EventArgs.Empty);
+
+            return null;
+        }
+        public async Task<(SynchronizeCartResultModel?, ApiErrorResponseModel?)> SynchronizeCartAsync()
+        {
+            var localCart = await GetLocalCartAsync();
+            var (resultCart, error) = await _cartApiClient.SynchronizeCartAsync(localCart);
+
+            if (error != null) {
+                return (null, error);
+            }
+
+            var lcart = new CartModel(new List<CartItemModel>() );
+
+            await SaveLocalCartAsync(resultCart!.Cart);
+            CartChanged?.Invoke(this, EventArgs.Empty);
+
+            return (resultCart, null);
         }
     }
 }

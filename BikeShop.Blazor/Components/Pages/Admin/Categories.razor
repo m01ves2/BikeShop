@@ -23,15 +23,18 @@ else {
 
 @code {
 
-    private List<CategoryListItemModel>? categories;
+    private List<CategoryListItemModel>? _categories;
     private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
-        (categories, var error) = await ApiClient.GetCategoriesAsync();
+        var (categories, error) = await ApiClient.GetCategoriesAsync();
         if (error is not null) {
             errorMessage = error.Message;
+            return;
         }
+
+        _categories = categories;
     }
 
 }

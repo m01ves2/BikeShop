@@ -3,6 +3,7 @@
 @using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Services
 @using BikeShop.Blazor.Services.ApiClients
+@using BikeShop.Blazor.Services.Models
 
 @inject ProductApiClient ApiClient
 
@@ -34,12 +35,17 @@
 
 @code 
 {
-    private IReadOnlyList<ProductListItemModel>? products;
+    private IReadOnlyList<ProductListItemModel>? _products;
+    private ApiErrorResponseModel? _error;
 
     protected override async Task OnInitializedAsync()
     {
-        (products, var error) = (await ApiClient.GetProductsAsync());
+        var (products, error) = (await ApiClient.GetProductsAsync());
+        if (error != null) {
+            _error = error;
+            return;
+        }
 
-        products = products.Take(4).ToList();
+        _products = products!.Take(4).ToList();
     }
 }

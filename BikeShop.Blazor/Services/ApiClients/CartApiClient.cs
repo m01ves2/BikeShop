@@ -55,8 +55,7 @@ namespace BikeShop.Blazor.Services.ApiClients
             if (response.IsSuccessStatusCode)
                 return null;
 
-            return await response.Content
-                .ReadFromJsonAsync<ApiErrorResponseModel>();
+            return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
         }
 
         public async Task<ApiErrorResponseModel?> ClearCartAsync()
@@ -69,8 +68,7 @@ namespace BikeShop.Blazor.Services.ApiClients
             if (response.IsSuccessStatusCode)
                 return null;
 
-            return await response.Content
-                .ReadFromJsonAsync<ApiErrorResponseModel>();
+            return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
         }
 
         public async Task<ApiErrorResponseModel?> IncreaseItemQuantityAsync(int productId, int amount)
@@ -99,13 +97,21 @@ namespace BikeShop.Blazor.Services.ApiClients
             return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
         }
 
-        public async Task<SynchronizeCartResultModel?> SynchronizeCartAsync(CartModel localCart)
+        public async Task<(SynchronizeCartResultModel?, ApiErrorResponseModel?)> SynchronizeCartAsync(CartModel localCart)
         {
             AddAuthorizationHeader();
 
             var url = "api/cart/synchronize";
             var response = await _http.PostAsJsonAsync(url, localCart);
-            return await response.Content.ReadFromJsonAsync<SynchronizeCartResultModel>();
+            if (response.IsSuccessStatusCode) {
+                var result = await response.Content.ReadFromJsonAsync<SynchronizeCartResultModel>();
+                return (result, null);
+            }
+
+            var error = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+
+            return (null, error);
         }
+
     }
 }

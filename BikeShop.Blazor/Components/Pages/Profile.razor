@@ -2,6 +2,7 @@
 @using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Services.ApiClients
 @using System.Net
+@using BikeShop.Blazor.Services.Models
 
 @inject AuthApiClient ApiClient
 @inject NavigationManager Navigation
@@ -18,11 +19,18 @@ else {
 @code
 {
     private CurrentUserModel? _user;
+    private ApiErrorResponseModel? _error;
 
     protected override async Task OnInitializedAsync()
     {
         try {
-            _user = await ApiClient.GetCurrentUserAsync();
+            var(result, error) = await ApiClient.GetCurrentUserAsync();
+            if (error != null) {
+                _error = error;
+                return;
+            }
+
+            _user = result!;
         }
         catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized) {
             Navigation.NavigateTo("/login");

@@ -3,18 +3,19 @@
 @using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Services
 @using BikeShop.Blazor.Services.ApiClients
+@using BikeShop.Blazor.Services.Models
 
 @inject ProductApiClient ApiClient
 
 
-@if (products is null)
+@if (_products is null)
 {
     <LoadingSpinner />
 }
 else
 {
     <div class="container my-5">
-        <ProductGrid Products="products" />
+        <ProductGrid Products="_products" />
     </div>
 }
 
@@ -24,11 +25,18 @@ else
     [Parameter]
     public int CategoryId { get; set; }
 
-    private IReadOnlyList<ProductListItemModel>? products;
+    private IReadOnlyList<ProductListItemModel>? _products;
+    private ApiErrorResponseModel? _error;
 
     protected override async Task OnParametersSetAsync()
     {
-        products = await ApiClient.GetProductsByCategoryAsync(CategoryId);
+        var (products, error) =  await ApiClient.GetProductsByCategoryAsync(CategoryId);
+        if (error != null) {
+            _error = error;
+            return;
+        }
+
+        _products = products;
     }
 
 }

@@ -1,0 +1,56 @@
+﻿@implements IDisposable
+
+@if (!string.IsNullOrEmpty(Message)) {
+    <div class="toast-container position-fixed top-0 end-0 p-3"
+         style="z-index: 1100;">
+        <div class="toast show" role="alert">
+            <div class="toast-header">
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close" @onclick="Hide"></button>
+            </div>
+
+            <div class="toast-body">
+                @Message
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private string? Message;
+    private CancellationTokenSource? _hideCts;
+
+    public async Task ShowAsync(string message)
+    {
+        _hideCts?.Cancel();
+        _hideCts?.Dispose();
+
+        _hideCts = new CancellationTokenSource();
+        Message = message;
+
+        await InvokeAsync(StateHasChanged);
+
+        try {
+            await Task.Delay(TimeSpan.FromSeconds(5), _hideCts.Token);
+
+            Message = null;
+
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (OperationCanceledException) {
+            // A new error replaced the current one.
+        }
+    }
+
+    private void Hide()
+    {
+        _hideCts?.Cancel();
+        Message = null;
+    }
+
+    public void Dispose()
+    {
+        _hideCts?.Cancel();
+        _hideCts?.Dispose();
+    }
+}

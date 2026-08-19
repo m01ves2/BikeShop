@@ -1,4 +1,5 @@
 ﻿using BikeShop.Blazor.Models;
+using BikeShop.Blazor.Services.Models;
 
 namespace BikeShop.Blazor.Services
 {
@@ -7,11 +8,15 @@ namespace BikeShop.Blazor.Services
         event EventHandler? CartChanged;
 
         Task<CartModel> GetLocalCartAsync();
-        Task AddItemAsync(CartItemModel item);
-        Task RemoveItemAsync(int productId);
-        Task UpdateQuantityAsync(int productId, int quantity);
-        Task<CartModel?> GetServerCartAsync();
-        Task<CartSynchronizationResultModel?> SynchronizeCartAsync();
-        Task ClearAsync();
+
+        Task<(CartModel?, ApiErrorResponseModel?)> GetServerCartAsync();
+        Task<ApiErrorResponseModel?> AddItemAsync(CartItemModel item);
+        Task<ApiErrorResponseModel?> RemoveItemAsync(int productId);
+        Task<ApiErrorResponseModel?> IncreaseItemQuantityAsync(int productId, int amount);
+        Task<ApiErrorResponseModel?> DecreaseItemQuantityAsync(int productId, int amount);
+        Task<ApiErrorResponseModel?> ClearAsync();
+
+        Task<ApiErrorResponseModel?> RefreshLocalCartAsync();
+        Task<(SynchronizeCartResultModel?, ApiErrorResponseModel?)> SynchronizeCartAsync();
     }
 }

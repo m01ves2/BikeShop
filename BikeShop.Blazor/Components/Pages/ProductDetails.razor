@@ -4,21 +4,24 @@
 @using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Services
 @using BikeShop.Blazor.Services.ApiClients
+@using BikeShop.Blazor.Services.Models
 
 @inject ProductApiClient ApiClient
 @inject BreadcrumbService BreadcrumbService
 
-@if (product is null) {
+<ErrorMessage Error="_error" />
+
+@if (_product is null) {
     <PageTitle>BikeShop</PageTitle>
     <LoadingSpinner />
 }
 else {
-    <PageTitle>@product.Name - BikeShop</PageTitle>
-    <PageHeader Text="@product.Name" />
+    <PageTitle>@_product.Name - BikeShop</PageTitle>
+    <PageHeader Text="@_product.Name" />
 
     <div class="container my-5">
 
-        <ProductDetailsSection Product="@product" />
+        <ProductDetailsSection Product="@_product" />
 
     </div>
 }
@@ -28,12 +31,18 @@ else {
     [Parameter]
     public int Id { get; set; }
 
-    private ProductDetailsModel? product;
+    private ProductDetailsModel? _product;
+    private ApiErrorResponseModel? _error;
 
     protected override async Task OnParametersSetAsync()
     {
-        product = await ApiClient.GetProductDetailsAsync(Id);
+        var (product, error) = await ApiClient.GetProductDetailsAsync(Id);
+        if (error != null) {
+            _error = error;
+            return;
+        }
 
+        //TODO
         if (product is not null) {
             BreadcrumbService.SetItems([
                 new()
