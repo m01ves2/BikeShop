@@ -34,8 +34,10 @@ namespace BikeShop.Domain.Entities
 
         public decimal TotalPrice => _items.Sum(x => x.UnitPrice * x.Quantity);
 
-
-        Order( Customer customer, string deliveryAddress, DateTime deliveryAt,  string customerPhone, IEnumerable<OrderItem> items)
+        private Order()
+        {
+        }
+        public Order( Customer customer, string deliveryAddress, DateTime deliveryAt,  string customerPhone, IEnumerable<OrderItem> items)
         {
             if (customer == null)
                 throw new DomainValidationException("Customer cannot be empty");
@@ -92,6 +94,14 @@ namespace BikeShop.Domain.Entities
                 throw new DomainValidationException("Customer phone cannot be empty");
 
             CustomerPhone = phone;
+        }
+
+        public void AssignCourierPhone(string phone)
+        {
+            if (string.IsNullOrWhiteSpace(phone))
+                throw new DomainValidationException("Courier phone cannot be empty");
+
+            CourierPhone = phone;
         }
     }
 }
