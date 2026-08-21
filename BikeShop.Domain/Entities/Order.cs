@@ -1,4 +1,5 @@
-﻿using BikeShop.Domain.Exceptions;
+﻿using System.Runtime.Intrinsics.X86;
+using BikeShop.Domain.Exceptions;
 
 namespace BikeShop.Domain.Entities
 {
@@ -105,3 +106,13 @@ namespace BikeShop.Domain.Entities
         }
     }
 }
+
+
+//Я бы зафиксировал 5 use cases:
+
+//Use case	Тип	Кто вызывает
+//CreateOrder	Command	Customer
+//GetOrderById	Query	Customer / возможно Admin
+//GetCustomerOrders	Query	Customer
+//UpdateOrder	Command	Customer
+//CancelOrder	Command	Customer

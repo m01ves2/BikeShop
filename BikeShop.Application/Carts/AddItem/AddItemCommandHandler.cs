@@ -17,16 +17,6 @@ namespace BikeShop.Application.Carts.AddItem
         }
         public async Task<Result> Handle(AddItemCommand command, CancellationToken cancellationToken)
         {
-            //var customer = await _customerRepository.GetCustomerByApplicationUserIdAsync(command.ApplicationUserId, cancellationToken);
-            //if (customer == null) {
-            //    return Result.Failure(new Error(ErrorCode.NotFound, $"Not found customer with applicationUserId = {command.ApplicationUserId}"));
-            //}
-
-            //var cart = await _cartRepository.GetByCustomerIdAsync(customer.Id, cancellationToken);
-
-            //if (cart is null) {
-            //    return Result.Failure(new Error(ErrorCode.NotFound, $"Not found cart with customerId = {customer.Id}"));
-            //}
             var customer = await _customerRepository.GetCustomerWithCartByApplicationUserIdAsync(command.ApplicationUserId, cancellationToken);
 
             if (customer == null)

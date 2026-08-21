@@ -1,6 +1,9 @@
-﻿namespace BikeShop.Application.Abstractions.Persistence
+﻿using BikeShop.Domain.Entities;
+
+namespace BikeShop.Application.Abstractions.Persistence
 {
-    internal interface IOrderRepository
+    public interface IOrderRepository
     {
+        Task AddAsync(Order order, CancellationToken cancellationToken);
     }
 }
