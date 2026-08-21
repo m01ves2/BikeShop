@@ -14,7 +14,7 @@ namespace BikeShop.API.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class OrdersController : ControllerBase
+    public class OrdersController : BikeShopController
     {
         private readonly ICommandHandler<CreateOrderCommand, Result<CreateOrderResultDto>> _createOrderCommandHandler;
 
@@ -40,16 +40,6 @@ namespace BikeShop.API.Controllers
             }
 
             return Ok(result.Data);
-        }
-
-        private Result<int> GetApplicationUserId()
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (!int.TryParse(userId, out var applicationUserId))
-                return Result<int>.Failure(new Error(ErrorCode.Validation, "Invalid user identity"));
-
-            return Result<int>.Success(applicationUserId);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace BikeShop.API.Controllers
     [Authorize]
     [ApiController]
     [Route("api/cart")]
-    public class CartsController : ControllerBase
+    public class CartsController : BikeShopController
     {
         private readonly IQueryHandler<GetCartQuery, Result<CartDto>> _getCartQueryHandler;
         private readonly ICommandHandler<AddItemCommand, Result> _addItemCommandHandler;
@@ -176,16 +176,6 @@ namespace BikeShop.API.Controllers
             }
 
             return Ok(result.Data);
-        }
-
-        private Result<int> GetApplicationUserId()
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (!int.TryParse(userId, out var applicationUserId))
-                return Result<int>.Failure(new Error(ErrorCode.Validation, "Invalid user identity"));
-
-            return Result<int>.Success(applicationUserId);
         }
     }
 }
