@@ -19,6 +19,7 @@ using BikeShop.Application.Categories.UpdateCategory;
 using BikeShop.Application.Common.Models;
 using BikeShop.Application.Orders.CreateOrder;
 using BikeShop.Application.Orders.DTOs;
+using BikeShop.Application.Orders.GetCustomerOrders;
 using BikeShop.Application.Products.CreateProduct;
 using BikeShop.Application.Products.DeleteProduct;
 using BikeShop.Application.Products.DTOs;
@@ -68,7 +69,7 @@ namespace BikeShop.Application
             services.AddScoped<ICommandHandler<SynchronizeCartCommand, Result<SynchronizeCartResultDto>>, SynchronizeCartCommandHandler>();
 
             services.AddScoped<ICommandHandler<CreateOrderCommand, Result<CreateOrderResultDto>>, CreateOrderCommandHandler>();
-
+            services.AddScoped<IQueryHandler<GetCustomerOrdersQuery, Result<IReadOnlyList<OrderListItemDto>>>, GetCustomerOrdersQueryHandler>();
             return services;
         }
     }

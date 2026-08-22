@@ -14,12 +14,15 @@
 <PageTitle>Profile</PageTitle>
 <PageHeader Text="Profile" />
 
-@if (model is null || string.IsNullOrEmpty(model.Email)) {
-    <p>Loading...</p>
-}
-else {
-    <p>Hello @model.Email</p>
-}
+
+<div class="container mt-4">
+    @if (model is null || string.IsNullOrEmpty(model.Email)) {
+        <p>Loading...</p>
+    }
+    else {
+        <p>Hello @model.Email</p>
+    }
+</div>
 
 @code
 {
@@ -29,7 +32,7 @@ else {
     protected override async Task OnInitializedAsync()
     {
         try {
-            var(result, error) = await ApiClient.GetCurrentUserAsync();
+            var (result, error) = await ApiClient.GetCurrentUserAsync();
             if (error != null) {
                 ShowError(error);
                 return;

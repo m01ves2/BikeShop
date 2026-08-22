@@ -31,5 +31,12 @@ namespace BikeShop.Infrastructure.Repositories
                                            .ThenInclude(ci => ci.Product)
                                            .FirstOrDefaultAsync(c => c.ApplicationUserId == applicationUserId, cancellationToken);
         }
+        
+        public async Task<Customer?> GetCustomerWithOrdersByApplicationUserIdAsync(int applicationUserId, CancellationToken cancellationToken)
+        {
+            return await _context.Customers.Include(o => o.Orders)
+                               .ThenInclude(order => order.Items)
+                               .FirstOrDefaultAsync(c => c.ApplicationUserId == applicationUserId, cancellationToken);
+        }
     }
 }
