@@ -6,7 +6,8 @@ namespace BikeShop.Blazor.Services.ApiClients
 {
     public class CartApiClient : BaseApiClient
     {
-        public CartApiClient(IHttpClientFactory factory, JwtAuthenticationStateProvider authStateProvider) : base(factory, authStateProvider)
+        public CartApiClient(IHttpClientFactory factory, JwtAuthenticationStateProvider authStateProvider) 
+            : base(factory, authStateProvider)
         {
         }
 
@@ -37,7 +38,7 @@ namespace BikeShop.Blazor.Services.ApiClients
             AddAuthorizationHeader();
 
             var url = $"api/cart/{productId}";
-            var response = await _http.PostAsync(url, null);
+            var response = await _http.PostAsync(url, null); //просто сделать HTTP POST с указанным HttpContent.
 
             if (response.IsSuccessStatusCode)
                 return null;
@@ -102,7 +103,7 @@ namespace BikeShop.Blazor.Services.ApiClients
             AddAuthorizationHeader();
 
             var url = "api/cart/synchronize";
-            var response = await _http.PostAsJsonAsync(url, localCart);
+            var response = await _http.PostAsJsonAsync(url, localCart); //это специализированный вариант PostAsync, который сам сериализует объект в JSON и выставляет нужный Content-Type.
             if (response.IsSuccessStatusCode) {
                 var result = await response.Content.ReadFromJsonAsync<SynchronizeCartResultModel>();
                 return (result, null);

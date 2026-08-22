@@ -1,12 +1,16 @@
 ﻿@page "/cart"
 
 @using BikeShop.Blazor.Components.Shared
+@using BikeShop.Blazor.Identity
 @using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Services
 @using BikeShop.Blazor.Services.Models
+@using Microsoft.AspNetCore.Components.Authorization
 
 @inject ICartService CartService
 @inject CurrencyFormatter Currency
+@inject JwtAuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
 
 <ErrorToast Message="@errorMessage" />
 
@@ -107,10 +111,19 @@
                 Continue Shopping
             </a>
 
+            <AuthorizeView>
+                <Authorized>
+                    <NavLink class="btn btn-primary" href="/checkout">
+                        Checkout
+                    </NavLink>
+                </Authorized>
 
-            <button class="btn btn-primary">
-                Checkout
-            </button>
+                <NotAuthorized>
+                    <NavLink class="btn btn-primary" href="/login">
+                        Login to checkout
+                    </NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
 
         </div>
     }

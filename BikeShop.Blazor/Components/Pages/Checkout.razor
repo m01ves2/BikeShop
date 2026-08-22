@@ -1,0 +1,221 @@
+﻿@page "/checkout"
+@attribute [Authorize]
+
+@using BikeShop.Blazor.Components.Shared
+@using BikeShop.Blazor.Identity
+@using BikeShop.Blazor.Models
+@using BikeShop.Blazor.Services
+@using BikeShop.Blazor.Services.ApiClients
+@using BikeShop.Blazor.Services.Models
+@using Microsoft.AspNetCore.Authorization
+
+@inject ICartService CartService
+@inject OrdersApiClient OrdersApiClient
+@inject CurrencyFormatter CurrencyFormatter
+@inject NavigationManager Navigation
+@inject JwtAuthenticationStateProvider AuthStateProvider
+
+<ErrorToast Message="@errorMessage" />
+
+<PageTitle>Checkout</PageTitle>
+<PageHeader Text="Order" />
+
+<div class="container mt-4">
+    @if (_orderCreated) {
+        <div class="text-center">
+
+            <h2>
+                Order created successfully!
+            </h2>
+
+            <p>
+                Thank you for your order.
+            </p>
+
+            <NavLink class="btn btn-primary" href="/">
+                Continue shopping
+            </NavLink>
+
+        </div>
+    }
+    else if (_loading) {
+        <p>Loading...</p>
+    }
+    else if (_cart is null || !_cart.Items.Any()) {
+        <p>Your cart is empty.</p>
+    }
+    else {
+        <div class="row">
+
+            <div class="col-md-7">
+
+                <EditForm Model="_model" OnValidSubmit="CreateOrderAsync">
+
+                    <DataAnnotationsValidator />
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Delivery address
+                        </label>
+
+                        <InputText class="form-control"
+                                   @bind-Value="_model.DeliveryAddress" />
+
+                        <ValidationMessage For="@(() => _model.DeliveryAddress)" />
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Customer phone
+                        </label>
+
+                        <InputText class="form-control"
+                                   @bind-Value="_model.CustomerPhone" />
+
+                        <ValidationMessage For="@(() => _model.CustomerPhone)" />
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Delivery date and time
+                        </label>
+
+                        <InputDate class="form-control"
+                                   @bind-Value="_model.DeliveryAt" />
+
+                        <ValidationMessage For="@(() => _model.DeliveryAt)" />
+                    </div>
+
+
+                    @if (_adjustments.Count > 0) {
+                        <div class="alert alert-warning">
+
+                            <ul class="mb-0">
+                                @foreach (var adjustment in _adjustments) {
+                                    <li>
+                                        @adjustment
+                                    </li>
+                                }
+                            </ul>
+
+                        </div>
+                    }
+
+
+                    <button type="submit" class="btn btn-primary" disabled="@_creating">
+                        @(_creating ? "Creating..." : "Create order")
+                    </button>
+
+                </EditForm>
+
+            </div>
+
+
+            <div class="col-md-5">
+
+                <h3>
+                    Order
+                </h3>
+
+
+                @foreach (var item in _cart.Items) {
+                    <div class="d-flex justify-content-between mb-2">
+
+                        <span>
+                            @item.Product.Name × @item.Quantity
+                        </span>
+
+                        <span>
+                            @CurrencyFormatter.Format(item.Total)
+                        </span>
+
+                    </div>
+                }
+
+
+                <hr />
+
+
+                <div class="d-flex justify-content-between fw-bold">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <span>
+                        @CurrencyFormatter.Format(_cart.Items.Sum(x => x.Total))
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+</div>
+
+
+@code {
+
+    private CartModel? _cart;
+
+    private readonly CreateOrderModel _model = new();
+
+    private bool _loading = true;
+    private bool _creating;
+    private bool _orderCreated = false;
+
+    private string? errorMessage;
+
+    private readonly List<string> _adjustments = [];
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+
+        if (!authState.User.Identity!.IsAuthenticated) {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        var (syncResult, syncError) = await CartService.SynchronizeCartAsync();
+
+        if (syncError is not null) {
+            ShowError(syncError);
+            return;
+        }
+
+        _cart = await CartService.GetLocalCartAsync();
+
+        _loading = false;
+    }
+
+    private async Task CreateOrderAsync()
+    {
+        var (result, error) = await OrdersApiClient.CreateOrderAsync(_model);
+
+        if (error is not null) {
+            ShowError(error);
+            return;
+        }
+
+        await CartService.ClearAsync();
+
+        // дальше пока просто сообщение
+
+        _cart = new CartModel([]);
+
+        _creating = false;
+
+        _orderCreated = true;
+    }
+
+
+    private void ShowError(ApiErrorResponseModel error)
+    {
+        errorMessage = error.Message;
+    }
+}

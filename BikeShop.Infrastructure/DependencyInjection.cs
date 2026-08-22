@@ -23,6 +23,7 @@ namespace BikeShop.Infrastructure
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             // Email
 
             // DateTimeProvider

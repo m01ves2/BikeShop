@@ -8,8 +8,8 @@ using BikeShop.Application.Carts.DecreaseItemQuantity;
 using BikeShop.Application.Carts.DTOs;
 using BikeShop.Application.Carts.GetCartByCustomerId;
 using BikeShop.Application.Carts.IncreaseItemQuantity;
-using BikeShop.Application.Carts.SynchronizeCart;
 using BikeShop.Application.Carts.RemoveItem;
+using BikeShop.Application.Carts.SynchronizeCart;
 using BikeShop.Application.Categories.CreateCategory;
 using BikeShop.Application.Categories.DeleteCategory;
 using BikeShop.Application.Categories.DTOs;
@@ -17,6 +17,8 @@ using BikeShop.Application.Categories.GetCategories;
 using BikeShop.Application.Categories.GetCategoryDetails;
 using BikeShop.Application.Categories.UpdateCategory;
 using BikeShop.Application.Common.Models;
+using BikeShop.Application.Orders.CreateOrder;
+using BikeShop.Application.Orders.DTOs;
 using BikeShop.Application.Products.CreateProduct;
 using BikeShop.Application.Products.DeleteProduct;
 using BikeShop.Application.Products.DTOs;
@@ -64,6 +66,8 @@ namespace BikeShop.Application
             services.AddScoped<ICommandHandler<IncreaseItemQuantityCommand, Result>, IncreaseItemQuantityCommandHandler>();
             services.AddScoped<ICommandHandler<DecreaseItemQuantityCommand, Result>, DecreaseItemQuantityCommandHandler>();
             services.AddScoped<ICommandHandler<SynchronizeCartCommand, Result<SynchronizeCartResultDto>>, SynchronizeCartCommandHandler>();
+
+            services.AddScoped<ICommandHandler<CreateOrderCommand, Result<CreateOrderResultDto>>, CreateOrderCommandHandler>();
 
             return services;
         }

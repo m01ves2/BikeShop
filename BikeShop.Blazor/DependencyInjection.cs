@@ -54,6 +54,8 @@ namespace BikeShop.Blazor
 
             services.AddScoped<CartApiClient>();
 
+            services.AddScoped<OrdersApiClient>();
+
             return services;
         }
     }
