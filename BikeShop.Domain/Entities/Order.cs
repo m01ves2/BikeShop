@@ -114,5 +114,5 @@ namespace BikeShop.Domain.Entities
 //CreateOrder	Command	Customer +
 //GetOrderById	Query	Customer / возможно Admin+
 //GetCustomerOrders	Query	Customer+
-//UpdateOrder	Command	Customer
+//UpdateOrder	Command	Customer+
 //CancelOrder	Command	Customer

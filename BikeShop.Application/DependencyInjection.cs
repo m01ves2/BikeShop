@@ -21,6 +21,7 @@ using BikeShop.Application.Orders.CreateOrder;
 using BikeShop.Application.Orders.DTOs;
 using BikeShop.Application.Orders.GetCustomerOrders;
 using BikeShop.Application.Orders.GetOrderDetails;
+using BikeShop.Application.Orders.UpdateOrder;
 using BikeShop.Application.Products.CreateProduct;
 using BikeShop.Application.Products.DeleteProduct;
 using BikeShop.Application.Products.DTOs;
@@ -72,6 +73,7 @@ namespace BikeShop.Application
             services.AddScoped<ICommandHandler<CreateOrderCommand, Result<CreateOrderResultDto>>, CreateOrderCommandHandler>();
             services.AddScoped<IQueryHandler<GetCustomerOrdersQuery, Result<IReadOnlyList<OrderListItemDto>>>, GetCustomerOrdersQueryHandler>();
             services.AddScoped<IQueryHandler<GetOrderDetailsQuery, Result<OrderDetailsDto>>, GetOrderDetailsQueryHandler>();
+            services.AddScoped<ICommandHandler<UpdateOrderCommand, Result>, UpdateOrderCommandHandler>();
 
             return services;
         }

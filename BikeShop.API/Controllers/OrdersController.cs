@@ -8,6 +8,7 @@ using BikeShop.Application.Orders.DTOs;
 using BikeShop.Application.Orders.GetCustomerOrders;
 using BikeShop.Application.Orders.GetOrderDetails;
 using BikeShop.Application.Orders.Requests;
+using BikeShop.Application.Orders.UpdateOrder;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,14 +22,17 @@ namespace BikeShop.API.Controllers
         private readonly ICommandHandler<CreateOrderCommand, Result<CreateOrderResultDto>> _createOrderCommandHandler;
         private readonly IQueryHandler<GetCustomerOrdersQuery, Result<IReadOnlyList<OrderListItemDto>>> _getCustomerOrdersQueryHandler;
         private readonly IQueryHandler<GetOrderDetailsQuery, Result<OrderDetailsDto>> _getOrderDetailsQueryHandler;
+        private readonly ICommandHandler<UpdateOrderCommand, Result> _updateOrderCommandHandler;
 
         public OrdersController(ICommandHandler<CreateOrderCommand, Result<CreateOrderResultDto>> createOrderCommandHandler,
                                 IQueryHandler<GetCustomerOrdersQuery, Result<IReadOnlyList<OrderListItemDto>>> getCustomerOrdersQueryHandler,
-                                IQueryHandler<GetOrderDetailsQuery, Result<OrderDetailsDto>> getOrderDetailsQueryHandler)
+                                IQueryHandler<GetOrderDetailsQuery, Result<OrderDetailsDto>> getOrderDetailsQueryHandler,
+                                ICommandHandler<UpdateOrderCommand, Result> updateOrderCommandHandler)
         {
             _createOrderCommandHandler = createOrderCommandHandler;
             _getCustomerOrdersQueryHandler = getCustomerOrdersQueryHandler;
             _getOrderDetailsQueryHandler = getOrderDetailsQueryHandler;
+            _updateOrderCommandHandler = updateOrderCommandHandler;
         }
 
         [HttpGet]
@@ -84,6 +88,30 @@ namespace BikeShop.API.Controllers
             }
 
             return Ok(result.Data);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateOrder([FromRoute] int id, UpdateOrderRequest request, CancellationToken cancellationToken)
+        {
+            var userIdResult = GetApplicationUserId();
+            if (userIdResult.IsFailure)
+                return this.ToActionResult(userIdResult.Error!);
+
+            var applicationUserId = userIdResult.Data;
+
+            if (id != request.OrderId) {
+                return this.ToActionResult(new Error(ErrorCode.Validation, "Route id does not match body id."));
+            }
+
+            var result = await _updateOrderCommandHandler.Handle(
+                new UpdateOrderCommand(applicationUserId, request.OrderId, request.DeliveryAddress, request.DeliveryAt, request.CustomerPhone ),
+                cancellationToken);
+
+            if (result.IsFailure) {
+                return this.ToActionResult(result.Error!);
+            }
+
+            return Ok();
         }
     }
 }
