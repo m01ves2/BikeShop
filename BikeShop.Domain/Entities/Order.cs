@@ -112,7 +112,7 @@ namespace BikeShop.Domain.Entities
 
 //Use case	Тип	Кто вызывает
 //CreateOrder	Command	Customer +
-//GetOrderById	Query	Customer / возможно Admin
-//GetCustomerOrders	Query	Customer
+//GetOrderById	Query	Customer / возможно Admin+
+//GetCustomerOrders	Query	Customer+
 //UpdateOrder	Command	Customer
 //CancelOrder	Command	Customer

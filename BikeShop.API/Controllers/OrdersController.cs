@@ -6,6 +6,7 @@ using BikeShop.Application.Common.Models;
 using BikeShop.Application.Orders.CreateOrder;
 using BikeShop.Application.Orders.DTOs;
 using BikeShop.Application.Orders.GetCustomerOrders;
+using BikeShop.Application.Orders.GetOrderDetails;
 using BikeShop.Application.Orders.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,12 +20,15 @@ namespace BikeShop.API.Controllers
     {
         private readonly ICommandHandler<CreateOrderCommand, Result<CreateOrderResultDto>> _createOrderCommandHandler;
         private readonly IQueryHandler<GetCustomerOrdersQuery, Result<IReadOnlyList<OrderListItemDto>>> _getCustomerOrdersQueryHandler;
+        private readonly IQueryHandler<GetOrderDetailsQuery, Result<OrderDetailsDto>> _getOrderDetailsQueryHandler;
 
         public OrdersController(ICommandHandler<CreateOrderCommand, Result<CreateOrderResultDto>> createOrderCommandHandler,
-                                IQueryHandler<GetCustomerOrdersQuery, Result<IReadOnlyList<OrderListItemDto>>> getCustomerOrdersQueryHandler)
+                                IQueryHandler<GetCustomerOrdersQuery, Result<IReadOnlyList<OrderListItemDto>>> getCustomerOrdersQueryHandler,
+                                IQueryHandler<GetOrderDetailsQuery, Result<OrderDetailsDto>> getOrderDetailsQueryHandler)
         {
             _createOrderCommandHandler = createOrderCommandHandler;
             _getCustomerOrdersQueryHandler = getCustomerOrdersQueryHandler;
+            _getOrderDetailsQueryHandler = getOrderDetailsQueryHandler;
         }
 
         [HttpGet]
@@ -36,6 +40,24 @@ namespace BikeShop.API.Controllers
 
             var applicationUserId = userIdResult.Data;
             var result = await _getCustomerOrdersQueryHandler.Handle(new GetCustomerOrdersQuery(applicationUserId), cancellationToken);
+
+            if (result.IsFailure) {
+                return this.ToActionResult(result.Error!);
+            }
+
+            return Ok(result.Data);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetOrderById([FromRoute] int id, CancellationToken cancellationToken)
+        {
+            var userIdResult = GetApplicationUserId();
+            if (userIdResult.IsFailure)
+                return this.ToActionResult(userIdResult.Error!);
+
+            var applicationUserId = userIdResult.Data;
+
+            var result = await _getOrderDetailsQueryHandler.Handle(new GetOrderDetailsQuery(applicationUserId, id), cancellationToken);
 
             if (result.IsFailure) {
                 return this.ToActionResult(result.Error!);
