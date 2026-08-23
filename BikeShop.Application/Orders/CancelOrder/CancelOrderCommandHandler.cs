@@ -2,23 +2,24 @@
 using BikeShop.Application.Abstractions.Persistence;
 using BikeShop.Application.Common.Models;
 using BikeShop.Application.Orders.DTOs;
+using BikeShop.Domain.Entities;
 
-namespace BikeShop.Application.Orders.UpdateOrder
+namespace BikeShop.Application.Orders.CancelOrder
 {
-    public class UpdateOrderCommandHandler : ICommandHandler<UpdateOrderCommand, Result>
+    public class CancelOrderCommandHandler : ICommandHandler<CancelOrderCommand, Result>
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateOrderCommandHandler(ICustomerRepository customerRepository, IOrderRepository orderRepository, IUnitOfWork unitOfWork)
+        public CancelOrderCommandHandler(ICustomerRepository customerRepository, IOrderRepository orderRepository, IUnitOfWork unitOfWork)
         {
             _customerRepository = customerRepository;
             _orderRepository = orderRepository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result> Handle(UpdateOrderCommand command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(CancelOrderCommand command, CancellationToken cancellationToken)
         {
             var customer = await _customerRepository.GetCustomerWithCartByApplicationUserIdAsync(command.ApplicationUserId, cancellationToken);
 
@@ -29,9 +30,7 @@ namespace BikeShop.Application.Orders.UpdateOrder
             if (order is null)
                 return Result<OrderDetailsDto>.Failure(new Error(ErrorCode.NotFound, $"Order with id = {command.OrderId} not found."));
 
-            order.ChangeDeliveryAddress(command.DeliveryAddress);
-            order.ChangeDeliveryAt(command.DeliveryAt);
-            order.ChangeCustomerPhone(command.CustomerPhone);
+            order.ChangeStatus(OrderStatus.Cancelled);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 

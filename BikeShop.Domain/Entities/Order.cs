@@ -16,9 +16,22 @@ namespace BikeShop.Domain.Entities
     {
         public int Id { get; private set; }
 
-        public OrderStatus Status { get; private set; }
-        public DateTime CreatedAt { get; private set; }
+        public OrderStatus Status { get; private set; } = OrderStatus.Pending;
 
+        //статическая структура данных в памяти, описывающая бизнес-правило.
+        //она не является public Dictionary<...> AllowedTransitions { get; private set; }
+        //то есть не является property Order, которую EF Core мог бы попытаться сохранить.
+        //EF Core интересует примерно вот это: { get; private set;}. Вот эти данные сохраняются в БД.
+        //поэтому можно прям тут сделать:
+        private static readonly Dictionary<OrderStatus, OrderStatus[]> AllowedTransitions = new() {
+            [OrderStatus.Pending] = new[]{ OrderStatus.Paid, OrderStatus.Cancelled },
+            [OrderStatus.Paid] = new[]{ OrderStatus.Shipped, OrderStatus.Cancelled },
+            [OrderStatus.Shipped] = new[]{ OrderStatus.Completed },
+            [OrderStatus.Completed] = Array.Empty<OrderStatus>(),
+            [OrderStatus.Cancelled] = Array.Empty<OrderStatus>()
+        }; //это пример domain knowledge, которое существует только в коде!
+
+        public DateTime CreatedAt { get; private set; }
 
         public DateTime DeliveryAt { get; private set; }
         public string DeliveryAddress { get; private set; }
@@ -51,8 +64,6 @@ namespace BikeShop.Domain.Entities
             Customer = customer;
             _items.AddRange(orderItems);
 
-            ChangeStatus(OrderStatus.Pending);
-
             ChangeDeliveryAddress(deliveryAddress);
             ChangeDeliveryAt(deliveryAt);
             ChangeCustomerPhone(customerPhone);
@@ -63,6 +74,10 @@ namespace BikeShop.Domain.Entities
 
         public void ChangeStatus(OrderStatus status)
         {
+            if (!AllowedTransitions[Status].Contains(status)) {
+                throw new DomainValidationException($"Cannot change order status from {Status} to {status}");
+            }
+
             Status = status;
         }
 
@@ -106,13 +121,3 @@ namespace BikeShop.Domain.Entities
         }
     }
 }
-
-
-//Я бы зафиксировал 5 use cases:
-
-//Use case	Тип	Кто вызывает
-//CreateOrder	Command	Customer +
-//GetOrderById	Query	Customer / возможно Admin+
-//GetCustomerOrders	Query	Customer+
-//UpdateOrder	Command	Customer+
-//CancelOrder	Command	Customer

@@ -17,6 +17,7 @@ using BikeShop.Application.Categories.GetCategories;
 using BikeShop.Application.Categories.GetCategoryDetails;
 using BikeShop.Application.Categories.UpdateCategory;
 using BikeShop.Application.Common.Models;
+using BikeShop.Application.Orders.CancelOrder;
 using BikeShop.Application.Orders.CreateOrder;
 using BikeShop.Application.Orders.DTOs;
 using BikeShop.Application.Orders.GetCustomerOrders;
@@ -74,6 +75,7 @@ namespace BikeShop.Application
             services.AddScoped<IQueryHandler<GetCustomerOrdersQuery, Result<IReadOnlyList<OrderListItemDto>>>, GetCustomerOrdersQueryHandler>();
             services.AddScoped<IQueryHandler<GetOrderDetailsQuery, Result<OrderDetailsDto>>, GetOrderDetailsQueryHandler>();
             services.AddScoped<ICommandHandler<UpdateOrderCommand, Result>, UpdateOrderCommandHandler>();
+            services.AddScoped<ICommandHandler<CancelOrderCommand, Result>, CancelOrderCommandHandler>();
 
             return services;
         }
