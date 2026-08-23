@@ -2,6 +2,7 @@
 using BikeShop.Application.Abstractions.Messaging;
 using BikeShop.Application.Common.Models;
 using BikeShop.Application.Orders.CancelOrder;
+using BikeShop.Application.Orders.ChangeOrderStatus;
 using BikeShop.Application.Orders.CreateOrder;
 using BikeShop.Application.Orders.DTOs;
 using BikeShop.Application.Orders.GetCustomerOrders;
@@ -23,18 +24,21 @@ namespace BikeShop.API.Controllers
         private readonly IQueryHandler<GetOrderDetailsQuery, Result<OrderDetailsDto>> _getOrderDetailsQueryHandler;
         private readonly ICommandHandler<UpdateOrderCommand, Result> _updateOrderCommandHandler;
         private readonly ICommandHandler<CancelOrderCommand, Result> _cancelOrderCommandHandler;
+        private readonly ICommandHandler<ChangeOrderStatusCommand, Result> _changeOrderStatusCommandHandler;
 
         public OrdersController(ICommandHandler<CreateOrderCommand, Result<CreateOrderResultDto>> createOrderCommandHandler,
                                 IQueryHandler<GetCustomerOrdersQuery, Result<IReadOnlyList<OrderListItemDto>>> getCustomerOrdersQueryHandler,
                                 IQueryHandler<GetOrderDetailsQuery, Result<OrderDetailsDto>> getOrderDetailsQueryHandler,
                                 ICommandHandler<UpdateOrderCommand, Result> updateOrderCommandHandler,
-                                ICommandHandler<CancelOrderCommand, Result> cancelOrderCommandHandler)
+                                ICommandHandler<CancelOrderCommand, Result> cancelOrderCommandHandler,
+                                ICommandHandler<ChangeOrderStatusCommand, Result> changeOrderStatusCommandHandler)
         {
             _createOrderCommandHandler = createOrderCommandHandler;
             _getCustomerOrdersQueryHandler = getCustomerOrdersQueryHandler;
             _getOrderDetailsQueryHandler = getOrderDetailsQueryHandler;
             _updateOrderCommandHandler = updateOrderCommandHandler;
             _cancelOrderCommandHandler = cancelOrderCommandHandler;
+            _changeOrderStatusCommandHandler = changeOrderStatusCommandHandler;
         }
 
         [HttpGet]
@@ -116,6 +120,30 @@ namespace BikeShop.API.Controllers
             return Ok();
         }
 
+        [HttpPut("{id}/changestatus")]
+        public async Task<IActionResult> ChangeOrderStatus([FromRoute] int id, ChangeOrderStatusRequest request, CancellationToken cancellationToken)
+        {
+            var userIdResult = GetApplicationUserId();
+            if (userIdResult.IsFailure)
+                return this.ToActionResult(userIdResult.Error!);
+
+            var applicationUserId = userIdResult.Data;
+
+            if (id != request.OrderId) {
+                return this.ToActionResult(new Error(ErrorCode.Validation, "Route id does not match body id."));
+            }
+
+            var result = await _changeOrderStatusCommandHandler.Handle(
+                new ChangeOrderStatusCommand(applicationUserId, request.OrderId, request.OrderStatusDto), 
+                cancellationToken);
+
+            if (result.IsFailure) {
+                return this.ToActionResult(result.Error!);
+            }
+
+            return Ok();
+        }
+
         [HttpPut("{id}/cancel")]
         public async Task<IActionResult> CancelOrder([FromRoute] int id, CancellationToken cancellationToken)
         {
@@ -134,5 +162,7 @@ namespace BikeShop.API.Controllers
 
             return Ok();
         }
+
+
     }
 }

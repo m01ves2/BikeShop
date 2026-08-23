@@ -31,7 +31,7 @@ namespace BikeShop.Application.Orders.GetOrderDetails
 
             var resultData = new OrderDetailsDto( 
                 order.Id,
-                OrderStatusMapper.Map(order.Status),
+                OrderStatusMapper.MapToDto(order.Status),
                 order.CreatedAt,
                 order.DeliveryAt,
                 order.DeliveryAddress,

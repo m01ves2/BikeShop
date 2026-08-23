@@ -28,7 +28,7 @@ namespace BikeShop.Application.Orders.GetCustomerOrders
             
             var resultData = new List<OrderListItemDto>();
             foreach (var order in orders) {
-                var orderDto = new OrderListItemDto(order.Id, OrderStatusMapper.Map(order.Status), order.CreatedAt);
+                var orderDto = new OrderListItemDto(order.Id, OrderStatusMapper.MapToDto(order.Status), order.CreatedAt);
                 resultData.Add(orderDto);
             }
             return Result<IReadOnlyList<OrderListItemDto>>.Success(resultData);
