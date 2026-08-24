@@ -25,21 +25,18 @@ namespace BikeShop.API.Controllers
         private readonly IQueryHandler<GetOrderDetailsQuery, Result<OrderDetailsDto>> _getOrderDetailsQueryHandler;
         private readonly ICommandHandler<UpdateOrderCommand, Result> _updateOrderCommandHandler;
         private readonly ICommandHandler<CancelOrderCommand, Result> _cancelOrderCommandHandler;
-        private readonly ICommandHandler<AdminChangeOrderStatusCommand, Result> _changeOrderStatusCommandHandler;
 
         public OrdersController(ICommandHandler<CreateOrderCommand, Result<CreateOrderResultDto>> createOrderCommandHandler,
                                 IQueryHandler<GetCustomerOrdersQuery, Result<IReadOnlyList<OrderListItemDto>>> getCustomerOrdersQueryHandler,
                                 IQueryHandler<GetOrderDetailsQuery, Result<OrderDetailsDto>> getOrderDetailsQueryHandler,
                                 ICommandHandler<UpdateOrderCommand, Result> updateOrderCommandHandler,
-                                ICommandHandler<CancelOrderCommand, Result> cancelOrderCommandHandler,
-                                ICommandHandler<AdminChangeOrderStatusCommand, Result> changeOrderStatusCommandHandler)
+                                ICommandHandler<CancelOrderCommand, Result> cancelOrderCommandHandler)
         {
             _createOrderCommandHandler = createOrderCommandHandler;
             _getCustomerOrdersQueryHandler = getCustomerOrdersQueryHandler;
             _getOrderDetailsQueryHandler = getOrderDetailsQueryHandler;
             _updateOrderCommandHandler = updateOrderCommandHandler;
             _cancelOrderCommandHandler = cancelOrderCommandHandler;
-            _changeOrderStatusCommandHandler = changeOrderStatusCommandHandler;
         }
 
         [HttpGet]
@@ -112,30 +109,6 @@ namespace BikeShop.API.Controllers
 
             var result = await _updateOrderCommandHandler.Handle(
                 new UpdateOrderCommand(applicationUserId, request.OrderId, request.DeliveryAddress, request.DeliveryAt, request.CustomerPhone ),
-                cancellationToken);
-
-            if (result.IsFailure) {
-                return this.ToActionResult(result.Error!);
-            }
-
-            return Ok();
-        }
-
-        [HttpPut("{id}/changestatus")]
-        public async Task<IActionResult> ChangeOrderStatus([FromRoute] int id, ChangeOrderStatusRequest request, CancellationToken cancellationToken)
-        {
-            var userIdResult = GetApplicationUserId();
-            if (userIdResult.IsFailure)
-                return this.ToActionResult(userIdResult.Error!);
-
-            var applicationUserId = userIdResult.Data;
-
-            if (id != request.OrderId) {
-                return this.ToActionResult(new Error(ErrorCode.Validation, "Route id does not match body id."));
-            }
-
-            var result = await _changeOrderStatusCommandHandler.Handle(
-                new AdminChangeOrderStatusCommand(request.OrderId, request.OrderStatusDto), 
                 cancellationToken);
 
             if (result.IsFailure) {

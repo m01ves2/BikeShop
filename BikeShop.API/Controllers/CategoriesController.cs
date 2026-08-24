@@ -1,8 +1,5 @@
 ﻿using BikeShop.API.Mappers;
 using BikeShop.Application.Abstractions.Messaging;
-using BikeShop.Application.Admin.Categories.CreateCategory;
-using BikeShop.Application.Admin.Categories.DeleteCategory;
-using BikeShop.Application.Admin.Categories.UpdateCategory;
 using BikeShop.Application.Categories.DTOs;
 using BikeShop.Application.Categories.GetCategories;
 using BikeShop.Application.Categories.GetCategoryDetails;
@@ -21,25 +18,14 @@ namespace BikeShop.API.Controllers
         private readonly IQueryHandler<GetProductsByCategoryIdQuery, Result<IReadOnlyList<ProductListItemDto>>> _getProductsbyCategoryIdQueryHandler;
         private readonly IQueryHandler<GetCategoryDetailsQuery, Result<CategoryDetailsDto>> _getCategoryDetailsQueryHandler;
 
-        private readonly ICommandHandler<AdminCreateCategoryCommand, Result> _createCategoryCommandHandler;
-        private readonly ICommandHandler<AdminUpdateCategoryCommand, Result> _updateCategoryCommandHandler;
-        private readonly ICommandHandler<AdminDeleteCategoryCommand, Result> _deleteCategoryCommandHandler;
-
         public CategoriesController(
             IQueryHandler<GetCategoriesQuery, Result<IReadOnlyList<CategoryListItemDto>>> getCategoriesQueryHandler,
             IQueryHandler<GetProductsByCategoryIdQuery, Result<IReadOnlyList<ProductListItemDto>>> getProductsbyCategoryIdQueryHandler,
-            IQueryHandler<GetCategoryDetailsQuery, Result<CategoryDetailsDto>> getCategoryDetailsQueryHandler,
-            ICommandHandler<AdminCreateCategoryCommand, Result> createCategoryCommandHandler,
-            ICommandHandler<AdminUpdateCategoryCommand, Result> updateCategoryCommandHandler,
-            ICommandHandler<AdminDeleteCategoryCommand, Result> deleteCategoryCommandHandler)
+            IQueryHandler<GetCategoryDetailsQuery, Result<CategoryDetailsDto>> getCategoryDetailsQueryHandler)
         {
             _getCategoriesQueryHandler = getCategoriesQueryHandler;
             _getProductsbyCategoryIdQueryHandler = getProductsbyCategoryIdQueryHandler;
             _getCategoryDetailsQueryHandler = getCategoryDetailsQueryHandler;
-
-            _createCategoryCommandHandler = createCategoryCommandHandler;
-            _updateCategoryCommandHandler = updateCategoryCommandHandler;
-            _deleteCategoryCommandHandler = deleteCategoryCommandHandler;
         }
 
         [HttpGet]
@@ -77,51 +63,6 @@ namespace BikeShop.API.Controllers
             }
 
             return Ok(result.Data);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create(AdminCreateCategoryCommand command, CancellationToken cancellationToken)
-        {
-            var result = await _createCategoryCommandHandler.Handle(command, cancellationToken);
-
-
-            if (result.IsFailure) {
-                return this.ToActionResult(result.Error!);
-            }
-
-            return NoContent();
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, AdminUpdateCategoryCommand command, CancellationToken cancellationToken)
-        {
-            if (id != command.Id) {
-                return this.ToActionResult(new Error(ErrorCode.Validation, "Route id does not match body id."));
-            }
-
-            var result = await _updateCategoryCommandHandler.Handle(command, cancellationToken);
-
-            if (result.IsFailure) {
-                return this.ToActionResult(result.Error!);
-            }
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id, AdminDeleteCategoryCommand command, CancellationToken cancellationToken)
-        {
-            if (id != command.Id) {
-                return this.ToActionResult(new Error(ErrorCode.Validation, "Route id does not match body id."));
-            }
-
-            var result = await _deleteCategoryCommandHandler.Handle(command, cancellationToken);
-
-            if (result.IsFailure) {
-                return this.ToActionResult(result.Error!);
-            }
-
-            return NoContent();
         }
 
     }

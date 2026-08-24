@@ -5,11 +5,11 @@ namespace BikeShop.Domain.Entities
 {
     public enum OrderStatus
     {
-        Pending,
-        Paid,
-        Shipped,
-        Completed,
-        Cancelled,
+        Pending = 0,
+        Paid = 1,
+        Shipped = 2,
+        Completed = 3,
+        Cancelled = 4,
     }
 
     public class Order

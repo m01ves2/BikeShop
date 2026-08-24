@@ -1,5 +1,6 @@
 ﻿using BikeShop.Application.Abstractions.Persistence;
 using BikeShop.Domain.Entities;
+using BikeShop.Infrastructure.Identity;
 using BikeShop.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,6 +38,14 @@ namespace BikeShop.Infrastructure.Repositories
             return await _context.Customers.Include(o => o.Orders)
                                .ThenInclude(order => order.Items)
                                .FirstOrDefaultAsync(c => c.ApplicationUserId == applicationUserId, cancellationToken);
+        }
+
+        public async Task<Customer?> GetCustomerWithOrdersByIdAsync(int customerId, CancellationToken cancellationToken)
+        {
+            return await _context.Customers.Include(o => o.Orders)
+                   .ThenInclude(order => order.Items)
+                   .FirstOrDefaultAsync(c => c.Id == customerId, cancellationToken);
+
         }
     }
 }
