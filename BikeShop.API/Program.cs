@@ -124,8 +124,19 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope()) {
     var db = scope.ServiceProvider.GetRequiredService<BikeShopDbContext>();
-
     await db.Database.MigrateAsync();
+
+//добавим роли пользователей - Customer и Admin.
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+
+    if (!await roleManager.RoleExistsAsync("Customer"))
+        await roleManager.CreateAsync(new IdentityRole<int>("Customer"));
+
+    if (!await roleManager.RoleExistsAsync("Admin"))
+        await roleManager.CreateAsync(new IdentityRole<int>("Admin"));
+//добавим роли пользователей - Customer и Admin.
+
+    
     await DbInitializer.InitializeAsync(db);
 }
 

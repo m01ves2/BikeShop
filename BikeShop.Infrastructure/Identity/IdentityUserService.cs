@@ -34,6 +34,14 @@ namespace BikeShop.Infrastructure.Identity
                 return Result<int>.Failure(new Error(ErrorCode.Unexpected, string.Join("; ", errors)));
             }
 
+            var roleResult = await _userManager.AddToRoleAsync(user, "Customer");
+
+            if (!roleResult.Succeeded) {
+                var errors = roleResult.Errors.Select(x => x.Description);
+
+                return Result<int>.Failure( new Error(ErrorCode.Unexpected, string.Join("; ", errors)));
+            }
+
             return Result<int>.Success(user.Id);
         }
 
