@@ -134,9 +134,22 @@ using (var scope = app.Services.CreateScope()) {
 
     if (!await roleManager.RoleExistsAsync("Admin"))
         await roleManager.CreateAsync(new IdentityRole<int>("Admin"));
-//добавим роли пользователей - Customer и Admin.
 
-    
+    //создадим вручную одного админа:
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    var adminEmail = "admin@bikeshop.com";
+    var admin = await userManager.FindByEmailAsync(adminEmail);
+    if (admin is null) {
+        admin = new ApplicationUser{
+            UserName = adminEmail,
+            Email = adminEmail
+        };
+        var createResult = await userManager.CreateAsync(admin, "Admin123!");
+        if (createResult.Succeeded)
+            await userManager.AddToRoleAsync(admin, "Admin");
+    }
+
+    //инициализируем базу начальными продуктами и категориями
     await DbInitializer.InitializeAsync(db);
 }
 
