@@ -2,20 +2,20 @@
 using BikeShop.Application.Abstractions.Persistence;
 using BikeShop.Application.Common.Models;
 
-namespace BikeShop.Application.Categories.UpdateCategory
+namespace BikeShop.Application.Admin.Categories.DeleteCategory
 {
-    public class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategoryCommand, Result>
+    public class AdminDeleteCategoryCommandHandler : ICommandHandler<AdminDeleteCategoryCommand, Result>
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateCategoryCommandHandler(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
+        public AdminDeleteCategoryCommandHandler(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
         {
             _categoryRepository = categoryRepository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result> Handle(UpdateCategoryCommand command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(AdminDeleteCategoryCommand command, CancellationToken cancellationToken)
         {
             var category = await _categoryRepository.GetByIdAsync(command.Id, cancellationToken);
 
@@ -23,7 +23,7 @@ namespace BikeShop.Application.Categories.UpdateCategory
                 return Result.Failure(new Error(ErrorCode.NotFound, $"Not found category id = {command.Id}"));
             }
 
-            category.ChangeName(command.Name);            
+            _categoryRepository.Remove(category);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 

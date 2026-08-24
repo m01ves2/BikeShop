@@ -1,12 +1,12 @@
 ﻿using BikeShop.API.Mappers;
 using BikeShop.Application.Abstractions.Messaging;
+using BikeShop.Application.Admin.Products.CreateProduct;
+using BikeShop.Application.Admin.Products.DeleteProduct;
+using BikeShop.Application.Admin.Products.UpdateProduct;
 using BikeShop.Application.Common.Models;
-using BikeShop.Application.Products.CreateProduct;
-using BikeShop.Application.Products.DeleteProduct;
 using BikeShop.Application.Products.DTOs;
 using BikeShop.Application.Products.GetProductDetails;
 using BikeShop.Application.Products.GetProducts;
-using BikeShop.Application.Products.UpdateProduct;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BikeShop.API.Controllers
@@ -18,16 +18,16 @@ namespace BikeShop.API.Controllers
         private readonly IQueryHandler<GetProductsQuery, Result<IReadOnlyList<ProductListItemDto>>> _getProductsQueryHandler;
         private readonly IQueryHandler<GetProductDetailsQuery, Result<ProductDetailsDto>> _getProductDetailsQueryHandler;
                          
-        private readonly ICommandHandler<CreateProductCommand, Result> _createProductCommandHandler;
-        private readonly ICommandHandler<UpdateProductCommand, Result> _updateProductCommandHandler;
-        private readonly ICommandHandler<DeleteProductCommand, Result> _deleteProductCommandHandler;
+        private readonly ICommandHandler<AdminCreateProductCommand, Result> _createProductCommandHandler;
+        private readonly ICommandHandler<AdminUpdateProductCommand, Result> _updateProductCommandHandler;
+        private readonly ICommandHandler<AdminDeleteProductCommand, Result> _deleteProductCommandHandler;
 
         public ProductsController(
             IQueryHandler<GetProductsQuery, Result<IReadOnlyList<ProductListItemDto>>> getProductsQueryHandler,
             IQueryHandler<GetProductDetailsQuery, Result<ProductDetailsDto>> getProductDetailsQueryHandler,
-            ICommandHandler<CreateProductCommand, Result> createProductCommandHandler,
-            ICommandHandler<UpdateProductCommand, Result> updateProductCommandHandler,
-            ICommandHandler<DeleteProductCommand, Result> deleteProductCommandHandler)
+            ICommandHandler<AdminCreateProductCommand, Result> createProductCommandHandler,
+            ICommandHandler<AdminUpdateProductCommand, Result> updateProductCommandHandler,
+            ICommandHandler<AdminDeleteProductCommand, Result> deleteProductCommandHandler)
         {
             _getProductsQueryHandler = getProductsQueryHandler;
             _getProductDetailsQueryHandler = getProductDetailsQueryHandler;
@@ -60,7 +60,7 @@ namespace BikeShop.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateProductCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(AdminCreateProductCommand command, CancellationToken cancellationToken)
         {
             var result = await _createProductCommandHandler.Handle(command, cancellationToken);
 
@@ -72,7 +72,7 @@ namespace BikeShop.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, UpdateProductCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update([FromRoute] int id, AdminUpdateProductCommand command, CancellationToken cancellationToken)
         {
             if (id != command.Id) {
                 return this.ToActionResult(new Error(ErrorCode.Validation, "Route id does not match body id."));
@@ -88,7 +88,7 @@ namespace BikeShop.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id, DeleteProductCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete([FromRoute] int id, AdminDeleteProductCommand command, CancellationToken cancellationToken)
         {
             if (id != command.Id) {
                 return this.ToActionResult(new Error(ErrorCode.Validation, "Route id does not match body id."));

@@ -1,8 +1,9 @@
 ﻿using BikeShop.API.Mappers;
 using BikeShop.Application.Abstractions.Messaging;
+using BikeShop.Application.Admin.Orders.ChangeOrderStatus;
+using BikeShop.Application.Admin.Requests;
 using BikeShop.Application.Common.Models;
 using BikeShop.Application.Orders.CancelOrder;
-using BikeShop.Application.Orders.ChangeOrderStatus;
 using BikeShop.Application.Orders.CreateOrder;
 using BikeShop.Application.Orders.DTOs;
 using BikeShop.Application.Orders.GetCustomerOrders;
@@ -24,14 +25,14 @@ namespace BikeShop.API.Controllers
         private readonly IQueryHandler<GetOrderDetailsQuery, Result<OrderDetailsDto>> _getOrderDetailsQueryHandler;
         private readonly ICommandHandler<UpdateOrderCommand, Result> _updateOrderCommandHandler;
         private readonly ICommandHandler<CancelOrderCommand, Result> _cancelOrderCommandHandler;
-        private readonly ICommandHandler<ChangeOrderStatusCommand, Result> _changeOrderStatusCommandHandler;
+        private readonly ICommandHandler<AdminChangeOrderStatusCommand, Result> _changeOrderStatusCommandHandler;
 
         public OrdersController(ICommandHandler<CreateOrderCommand, Result<CreateOrderResultDto>> createOrderCommandHandler,
                                 IQueryHandler<GetCustomerOrdersQuery, Result<IReadOnlyList<OrderListItemDto>>> getCustomerOrdersQueryHandler,
                                 IQueryHandler<GetOrderDetailsQuery, Result<OrderDetailsDto>> getOrderDetailsQueryHandler,
                                 ICommandHandler<UpdateOrderCommand, Result> updateOrderCommandHandler,
                                 ICommandHandler<CancelOrderCommand, Result> cancelOrderCommandHandler,
-                                ICommandHandler<ChangeOrderStatusCommand, Result> changeOrderStatusCommandHandler)
+                                ICommandHandler<AdminChangeOrderStatusCommand, Result> changeOrderStatusCommandHandler)
         {
             _createOrderCommandHandler = createOrderCommandHandler;
             _getCustomerOrdersQueryHandler = getCustomerOrdersQueryHandler;
@@ -134,7 +135,7 @@ namespace BikeShop.API.Controllers
             }
 
             var result = await _changeOrderStatusCommandHandler.Handle(
-                new ChangeOrderStatusCommand(applicationUserId, request.OrderId, request.OrderStatusDto), 
+                new AdminChangeOrderStatusCommand(request.OrderId, request.OrderStatusDto), 
                 cancellationToken);
 
             if (result.IsFailure) {

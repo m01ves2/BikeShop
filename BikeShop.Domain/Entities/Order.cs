@@ -119,5 +119,10 @@ namespace BikeShop.Domain.Entities
 
             CourierPhone = phone;
         }
+
+        public IReadOnlyCollection<OrderStatus> GetAllowedStatuses()
+        {
+            return AllowedTransitions[Status];
+        }
     }
 }

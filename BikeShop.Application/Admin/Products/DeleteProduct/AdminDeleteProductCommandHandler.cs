@@ -2,20 +2,20 @@
 using BikeShop.Application.Abstractions.Persistence;
 using BikeShop.Application.Common.Models;
 
-namespace BikeShop.Application.Products.DeleteProduct
+namespace BikeShop.Application.Admin.Products.DeleteProduct
 {
-    public class DeleteProductCommandHandler : ICommandHandler<DeleteProductCommand, Result>
+    public class AdminDeleteProductCommandHandler : ICommandHandler<AdminDeleteProductCommand, Result>
     {
         private readonly IProductRepository _productRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteProductCommandHandler(IProductRepository productRepository, IUnitOfWork unitOfWork)
+        public AdminDeleteProductCommandHandler(IProductRepository productRepository, IUnitOfWork unitOfWork)
         {
             _productRepository = productRepository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(AdminDeleteProductCommand command, CancellationToken cancellationToken)
         {
             var product = await _productRepository.GetByIdAsync(command.Id, cancellationToken);
 

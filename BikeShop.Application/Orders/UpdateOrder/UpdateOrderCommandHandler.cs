@@ -25,7 +25,7 @@ namespace BikeShop.Application.Orders.UpdateOrder
             if (customer == null)
                 return Result<OrderDetailsDto>.Failure(new Error(ErrorCode.NotFound, $"Not found customer with applicationUserId = {command.ApplicationUserId}"));
 
-            var order = await _orderRepository.GetByIdAsync(customer.Id, command.OrderId, cancellationToken);
+            var order = await _orderRepository.GetByIdForCustomerAsync(customer.Id, command.OrderId, cancellationToken);
             if (order is null)
                 return Result<OrderDetailsDto>.Failure(new Error(ErrorCode.NotFound, $"Order with id = {command.OrderId} not found."));
 

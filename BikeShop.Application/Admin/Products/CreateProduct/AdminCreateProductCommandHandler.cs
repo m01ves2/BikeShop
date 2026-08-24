@@ -3,23 +3,23 @@ using BikeShop.Application.Abstractions.Persistence;
 using BikeShop.Application.Common.Models;
 using BikeShop.Domain.Entities;
 
-namespace BikeShop.Application.Products.CreateProduct
+namespace BikeShop.Application.Admin.Products.CreateProduct
 {
-    public class CreateProductCommandHandler : ICommandHandler<CreateProductCommand, Result>
+    public class AdminCreateProductCommandHandler : ICommandHandler<AdminCreateProductCommand, Result>
     {
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUnitOfWork _unitOfWork;
 
 
-        public CreateProductCommandHandler(IProductRepository productRepository, ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
+        public AdminCreateProductCommandHandler(IProductRepository productRepository, ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result> Handle(CreateProductCommand command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(AdminCreateProductCommand command, CancellationToken cancellationToken)
         {
             var category = await _categoryRepository.GetByIdAsync(command.CategoryId, cancellationToken);
 

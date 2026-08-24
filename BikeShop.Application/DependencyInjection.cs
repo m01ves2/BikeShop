@@ -1,4 +1,13 @@
 ﻿using BikeShop.Application.Abstractions.Messaging;
+using BikeShop.Application.Admin.Categories.CreateCategory;
+using BikeShop.Application.Admin.Categories.DeleteCategory;
+using BikeShop.Application.Admin.Categories.UpdateCategory;
+using BikeShop.Application.Admin.DTOs;
+using BikeShop.Application.Admin.Orders.ChangeOrderStatus;
+using BikeShop.Application.Admin.Orders.GetOrderDetails;
+using BikeShop.Application.Admin.Products.CreateProduct;
+using BikeShop.Application.Admin.Products.DeleteProduct;
+using BikeShop.Application.Admin.Products.UpdateProduct;
 using BikeShop.Application.Authentication.DTOs;
 using BikeShop.Application.Authentication.Login;
 using BikeShop.Application.Authentication.Register;
@@ -10,27 +19,20 @@ using BikeShop.Application.Carts.GetCartByCustomerId;
 using BikeShop.Application.Carts.IncreaseItemQuantity;
 using BikeShop.Application.Carts.RemoveItem;
 using BikeShop.Application.Carts.SynchronizeCart;
-using BikeShop.Application.Categories.CreateCategory;
-using BikeShop.Application.Categories.DeleteCategory;
 using BikeShop.Application.Categories.DTOs;
 using BikeShop.Application.Categories.GetCategories;
 using BikeShop.Application.Categories.GetCategoryDetails;
-using BikeShop.Application.Categories.UpdateCategory;
 using BikeShop.Application.Common.Models;
 using BikeShop.Application.Orders.CancelOrder;
-using BikeShop.Application.Orders.ChangeOrderStatus;
 using BikeShop.Application.Orders.CreateOrder;
 using BikeShop.Application.Orders.DTOs;
 using BikeShop.Application.Orders.GetCustomerOrders;
 using BikeShop.Application.Orders.GetOrderDetails;
 using BikeShop.Application.Orders.UpdateOrder;
-using BikeShop.Application.Products.CreateProduct;
-using BikeShop.Application.Products.DeleteProduct;
 using BikeShop.Application.Products.DTOs;
 using BikeShop.Application.Products.GetProductDetails;
 using BikeShop.Application.Products.GetProducts;
 using BikeShop.Application.Products.GetProductsByCategoryId;
-using BikeShop.Application.Products.UpdateProduct;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BikeShop.Application
@@ -47,20 +49,10 @@ namespace BikeShop.Application
             services.AddScoped<IQueryHandler<GetCategoriesQuery, Result<IReadOnlyList<CategoryListItemDto>>>, GetCategoriesQueryHandler>();
             services.AddScoped<IQueryHandler<GetCategoryDetailsQuery, Result<CategoryDetailsDto>>, GetCategoryDetailsQueryHandler>();
 
-            services.AddScoped<ICommandHandler<CreateCategoryCommand, Result>, CreateCategoryCommandHandler>();
-            services.AddScoped<ICommandHandler<UpdateCategoryCommand, Result>, UpdateCategoryCommandHandler>();
-            services.AddScoped<ICommandHandler<DeleteCategoryCommand, Result>, DeleteCategoryCommandHandler>();
-
-
-
             services.AddScoped<IQueryHandler<GetProductsQuery, Result<IReadOnlyList<ProductListItemDto>>>, GetProductsQueryHandler>();
             services.AddScoped<IQueryHandler<GetProductsByCategoryIdQuery, Result<IReadOnlyList<ProductListItemDto>>>, GetProductsByCategoryIdQueryHandler>();
             services.AddScoped<IQueryHandler<GetProductDetailsQuery, Result<ProductDetailsDto>>, GetProductDetailsQueryHandler>();
             
-            services.AddScoped<ICommandHandler<CreateProductCommand, Result>, CreateProductCommandHandler>();
-            services.AddScoped<ICommandHandler<UpdateProductCommand, Result>, UpdateProductCommandHandler>();
-            services.AddScoped<ICommandHandler<DeleteProductCommand, Result>, DeleteProductCommandHandler>();
-
             services.AddScoped<ICommandHandler<RegisterUserCommand, Result>, RegisterUserCommandHandler>();
             services.AddScoped<ICommandHandler<LoginUserCommand, Result<LoginDto>>, LoginUserCommandHandler>();
 
@@ -77,7 +69,18 @@ namespace BikeShop.Application
             services.AddScoped<IQueryHandler<GetOrderDetailsQuery, Result<OrderDetailsDto>>, GetOrderDetailsQueryHandler>();
             services.AddScoped<ICommandHandler<UpdateOrderCommand, Result>, UpdateOrderCommandHandler>();
             services.AddScoped<ICommandHandler<CancelOrderCommand, Result>, CancelOrderCommandHandler>();
-            services.AddScoped<ICommandHandler<ChangeOrderStatusCommand, Result>, ChangeOrderStatusCommandHandler>();
+
+
+            services.AddScoped<ICommandHandler<AdminCreateCategoryCommand, Result>, AdminCreateCategoryCommandHandler>();
+            services.AddScoped<ICommandHandler<AdminUpdateCategoryCommand, Result>, AdminUpdateCategoryCommandHandler>();
+            services.AddScoped<ICommandHandler<AdminDeleteCategoryCommand, Result>, AdminDeleteCategoryCommandHandler>();
+
+            services.AddScoped<ICommandHandler<AdminCreateProductCommand, Result>, AdminCreateProductCommandHandler>();
+            services.AddScoped<ICommandHandler<AdminUpdateProductCommand, Result>, AdminUpdateProductCommandHandler>();
+            services.AddScoped<ICommandHandler<AdminDeleteProductCommand, Result>, AdminDeleteProductCommandHandler>();
+
+            services.AddScoped<IQueryHandler<AdminGetOrderDetailsQuery, Result<AdminOrderDetailsDto>>, AdminGetOrderDetailsQueryHandler>();
+            services.AddScoped<ICommandHandler<AdminChangeOrderStatusCommand, Result>, AdminChangeOrderStatusCommandHandler>();
 
             return services;
         }

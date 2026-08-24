@@ -3,20 +3,20 @@ using BikeShop.Application.Abstractions.Persistence;
 using BikeShop.Application.Common.Models;
 using BikeShop.Domain.Entities;
 
-namespace BikeShop.Application.Categories.CreateCategory
+namespace BikeShop.Application.Admin.Categories.CreateCategory
 {
-    public class CreateCategoryCommandHandler : ICommandHandler<CreateCategoryCommand, Result>
+    public class AdminCreateCategoryCommandHandler : ICommandHandler<AdminCreateCategoryCommand, Result>
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateCategoryCommandHandler(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
+        public AdminCreateCategoryCommandHandler(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
         {
             _categoryRepository = categoryRepository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result> Handle(CreateCategoryCommand command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(AdminCreateCategoryCommand command, CancellationToken cancellationToken)
         {
             var category = new Category(command.Name);
 

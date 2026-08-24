@@ -16,9 +16,14 @@ namespace BikeShop.Infrastructure.Repositories
             await _context.Orders.AddAsync(order);
         }
 
-        public async Task<Order?> GetByIdAsync(int customerId, int orderId,  CancellationToken cancellationToken)
+        public async Task<Order?> GetByIdForCustomerAsync(int customerId, int orderId,  CancellationToken cancellationToken)
         {
             return await _context.Orders.Include(x => x.Items).FirstOrDefaultAsync(x => x.Id == orderId && x.CustomerId == customerId, cancellationToken);
+        }
+
+        public async Task<Order?> GetByIdAsync(int orderId, CancellationToken cancellationToken)
+        {
+            return await _context.Orders.Include(x => x.Items).FirstOrDefaultAsync(x => x.Id == orderId, cancellationToken);
         }
     }
 }

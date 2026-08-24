@@ -1,11 +1,11 @@
 ﻿using BikeShop.API.Mappers;
 using BikeShop.Application.Abstractions.Messaging;
-using BikeShop.Application.Categories.CreateCategory;
-using BikeShop.Application.Categories.DeleteCategory;
+using BikeShop.Application.Admin.Categories.CreateCategory;
+using BikeShop.Application.Admin.Categories.DeleteCategory;
+using BikeShop.Application.Admin.Categories.UpdateCategory;
 using BikeShop.Application.Categories.DTOs;
 using BikeShop.Application.Categories.GetCategories;
 using BikeShop.Application.Categories.GetCategoryDetails;
-using BikeShop.Application.Categories.UpdateCategory;
 using BikeShop.Application.Common.Models;
 using BikeShop.Application.Products.DTOs;
 using BikeShop.Application.Products.GetProductsByCategoryId;
@@ -21,17 +21,17 @@ namespace BikeShop.API.Controllers
         private readonly IQueryHandler<GetProductsByCategoryIdQuery, Result<IReadOnlyList<ProductListItemDto>>> _getProductsbyCategoryIdQueryHandler;
         private readonly IQueryHandler<GetCategoryDetailsQuery, Result<CategoryDetailsDto>> _getCategoryDetailsQueryHandler;
 
-        private readonly ICommandHandler<CreateCategoryCommand, Result> _createCategoryCommandHandler;
-        private readonly ICommandHandler<UpdateCategoryCommand, Result> _updateCategoryCommandHandler;
-        private readonly ICommandHandler<DeleteCategoryCommand, Result> _deleteCategoryCommandHandler;
+        private readonly ICommandHandler<AdminCreateCategoryCommand, Result> _createCategoryCommandHandler;
+        private readonly ICommandHandler<AdminUpdateCategoryCommand, Result> _updateCategoryCommandHandler;
+        private readonly ICommandHandler<AdminDeleteCategoryCommand, Result> _deleteCategoryCommandHandler;
 
         public CategoriesController(
             IQueryHandler<GetCategoriesQuery, Result<IReadOnlyList<CategoryListItemDto>>> getCategoriesQueryHandler,
             IQueryHandler<GetProductsByCategoryIdQuery, Result<IReadOnlyList<ProductListItemDto>>> getProductsbyCategoryIdQueryHandler,
             IQueryHandler<GetCategoryDetailsQuery, Result<CategoryDetailsDto>> getCategoryDetailsQueryHandler,
-            ICommandHandler<CreateCategoryCommand, Result> createCategoryCommandHandler,
-            ICommandHandler<UpdateCategoryCommand, Result> updateCategoryCommandHandler,
-            ICommandHandler<DeleteCategoryCommand, Result> deleteCategoryCommandHandler)
+            ICommandHandler<AdminCreateCategoryCommand, Result> createCategoryCommandHandler,
+            ICommandHandler<AdminUpdateCategoryCommand, Result> updateCategoryCommandHandler,
+            ICommandHandler<AdminDeleteCategoryCommand, Result> deleteCategoryCommandHandler)
         {
             _getCategoriesQueryHandler = getCategoriesQueryHandler;
             _getProductsbyCategoryIdQueryHandler = getProductsbyCategoryIdQueryHandler;
@@ -80,7 +80,7 @@ namespace BikeShop.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateCategoryCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(AdminCreateCategoryCommand command, CancellationToken cancellationToken)
         {
             var result = await _createCategoryCommandHandler.Handle(command, cancellationToken);
 
@@ -93,7 +93,7 @@ namespace BikeShop.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, UpdateCategoryCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update([FromRoute] int id, AdminUpdateCategoryCommand command, CancellationToken cancellationToken)
         {
             if (id != command.Id) {
                 return this.ToActionResult(new Error(ErrorCode.Validation, "Route id does not match body id."));
@@ -109,7 +109,7 @@ namespace BikeShop.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id, DeleteCategoryCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete([FromRoute] int id, AdminDeleteCategoryCommand command, CancellationToken cancellationToken)
         {
             if (id != command.Id) {
                 return this.ToActionResult(new Error(ErrorCode.Validation, "Route id does not match body id."));

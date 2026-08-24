@@ -7,13 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Behaviors\**" />
     <Compile Remove="Customers\**" />
+    <EmbeddedResource Remove="Behaviors\**" />
     <EmbeddedResource Remove="Customers\**" />
+    <None Remove="Behaviors\**" />
     <None Remove="Customers\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Behaviors\" />
   </ItemGroup>
 
   <ItemGroup>
