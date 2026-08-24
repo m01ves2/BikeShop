@@ -72,7 +72,9 @@ namespace BikeShop.Infrastructure.Identity
                 return Result<LoginDto>.Failure(new Error(ErrorCode.Unauthorized, "Invalid email or password"));
             }
 
-            var token = _jwtTokenService.CreateToken(user);
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var token = _jwtTokenService.CreateToken(user, roles);
 
             return Result<LoginDto>.Success(new LoginDto() { Token = token });
         }

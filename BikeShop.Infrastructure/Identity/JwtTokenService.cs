@@ -15,7 +15,7 @@ namespace BikeShop.Infrastructure.Identity
             _configuration = configuration;
         }
 
-        public string CreateToken(ApplicationUser user)
+        public string CreateToken(ApplicationUser user, IEnumerable<string> roles)
         {
             var key = _configuration["Jwt:Key"]!;
             var issuer = _configuration["Jwt:Issuer"]!;
@@ -31,6 +31,10 @@ namespace BikeShop.Infrastructure.Identity
                 new(JwtRegisteredClaimNames.Email, user.Email!),
                 new(ClaimTypes.Name, user.UserName!)
             };
+
+            foreach (var role in roles) {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var token = new JwtSecurityToken(
                 issuer,
