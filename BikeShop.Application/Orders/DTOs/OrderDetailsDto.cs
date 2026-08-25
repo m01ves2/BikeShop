@@ -10,5 +10,7 @@ namespace BikeShop.Application.Orders.DTOs
         string DeliveryAddress, 
         string CustomerPhone, 
         string? CourierPhone,
+        bool CanBeEdited,
+        bool CanBeCancelled,
         IEnumerable<OrderItemDto> items);
 }

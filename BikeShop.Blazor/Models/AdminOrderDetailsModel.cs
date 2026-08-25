@@ -1,6 +1,6 @@
 ﻿namespace BikeShop.Blazor.Models
 {
-    public class OrderDetailsModel
+    public class AdminOrderDetailsModel
     {
         public int Id { get; set; }
         public string Status { get; set; } = string.Empty;
@@ -9,8 +9,7 @@
         public string DeliveryAddress { get; set; } = string.Empty;
         public string CustomerPhone { get; set; } = string.Empty;
         public string? CourierPhone { get; set; }
-        public bool CanBeEdited { get; set; }
-        public bool CanBeCancelled { get; set; }
-        public List<OrderItemModel> Items { get; set; }
+        public List<OrderItemModel> Items { get; set; } = [];
+        public List<string> AllowedStatuses { get; set; } = [];
     }
 }

@@ -97,15 +97,19 @@ else {
             </NavLink>
 
             <div class="d-flex gap-2">
-                <NavLink class="btn btn-primary"
-                         href="@($"/orders/{_order.Id}/edit")">
-                    Edit order
-                </NavLink>
+                @if (_order.CanBeEdited) {
+                    <NavLink class="btn btn-primary"
+                             href="@($"/orders/{_order.Id}/edit")">
+                        Edit order
+                    </NavLink>
+                }
 
-                <button class="btn btn-danger"
-                        @onclick="CancelOrder">
-                    Cancel order
-                </button>
+                @if (_order.CanBeCancelled) {
+                    <button class="btn btn-danger"
+                            @onclick="CancelOrder">
+                        Cancel order
+                    </button>
+                }
             </div>
         </div>
     </div>

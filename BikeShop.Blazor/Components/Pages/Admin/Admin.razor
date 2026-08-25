@@ -1,0 +1,24 @@
+﻿@page "/admin"
+@attribute [Authorize(Roles = "Admin")]
+
+@using Microsoft.AspNetCore.Authorization
+@using BikeShop.Blazor.Components.Shared
+
+<PageTitle>Admin - BikeShop</PageTitle>
+<PageHeader Text="Admin Panel" />
+
+<div class="container">
+    <div class="d-flex gap-3 flex-wrap">
+        <NavLink class="btn btn-outline-primary" href="/admin/orders">
+            Orders
+        </NavLink>
+
+        <NavLink class="btn btn-outline-primary" href="/admin/products">
+            Products
+        </NavLink>
+
+        <NavLink class="btn btn-outline-primary" href="/admin/categories">
+            Categories
+        </NavLink>
+    </div>
+</div>

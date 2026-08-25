@@ -37,6 +37,8 @@ namespace BikeShop.Application.Orders.GetOrderDetails
                 order.DeliveryAddress,
                 order.CustomerPhone,
                 order.CourierPhone,
+                order.CanBeEdited,
+                order.CanBeCancelled,
                 order.Items.Select(i => new OrderItemDto(i.Id, i.ProductName, i.UnitPrice, i.Quantity))
                 );
             return Result<OrderDetailsDto>.Success(resultData);

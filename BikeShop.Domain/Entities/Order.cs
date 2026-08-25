@@ -31,6 +31,9 @@ namespace BikeShop.Domain.Entities
             [OrderStatus.Cancelled] = Array.Empty<OrderStatus>()
         }; //это пример domain knowledge, которое существует только в коде!
 
+        public bool CanBeEdited => Status == OrderStatus.Pending || Status == OrderStatus.Paid;
+        public bool CanBeCancelled => CanChangeStatusTo(OrderStatus.Cancelled);
+
         public DateTime CreatedAt { get; private set; }
 
         public DateTime DeliveryAt { get; private set; }
@@ -72,17 +75,19 @@ namespace BikeShop.Domain.Entities
 
         }
 
-        public void ChangeStatus(OrderStatus status)
+        public void ChangeStatus(OrderStatus newStatus)
         {
-            if (!AllowedTransitions[Status].Contains(status)) {
-                throw new DomainValidationException($"Cannot change order status from {Status} to {status}");
+            if (!CanChangeStatusTo(newStatus)) {
+                throw new DomainValidationException($"Cannot change order status from {Status} to {newStatus}");
             }
 
-            Status = status;
+            Status = newStatus;
         }
 
         public void ChangeDeliveryAddress(string address)
         {
+            EnsureCanBeEdited();
+
             if (string.IsNullOrWhiteSpace(address))
                 throw new DomainValidationException("Delivery address cannot be empty");
 
@@ -91,6 +96,8 @@ namespace BikeShop.Domain.Entities
 
         public void ChangeDeliveryAt(DateTime deliveryAt)
         {
+            EnsureCanBeEdited();
+
             if (Status != OrderStatus.Pending &&
                 Status != OrderStatus.Paid) {
                 throw new DomainValidationException("Delivery time cannot be changed for the current order status");
@@ -106,6 +113,8 @@ namespace BikeShop.Domain.Entities
         }
         public void ChangeCustomerPhone(string phone)
         {
+            EnsureCanBeEdited();
+
             if (string.IsNullOrWhiteSpace(phone))
                 throw new DomainValidationException("Customer phone cannot be empty");
 
@@ -114,6 +123,8 @@ namespace BikeShop.Domain.Entities
 
         public void AssignCourierPhone(string phone)
         {
+            EnsureCanBeEdited();
+
             if (string.IsNullOrWhiteSpace(phone))
                 throw new DomainValidationException("Courier phone cannot be empty");
 
@@ -123,6 +134,20 @@ namespace BikeShop.Domain.Entities
         public IReadOnlyCollection<OrderStatus> GetAllowedStatuses()
         {
             return AllowedTransitions[Status];
+        }
+
+        private void EnsureCanBeEdited()
+        {
+            if (!CanBeEdited) {
+                throw new DomainValidationException(
+                    $"Order with status {Status} cannot be edited");
+            }
+        }
+
+        public bool CanChangeStatusTo(OrderStatus newStatus)
+        {
+            return AllowedTransitions.TryGetValue(Status, out var allowedStatuses)
+                && allowedStatuses.Contains(newStatus);
         }
     }
 }
