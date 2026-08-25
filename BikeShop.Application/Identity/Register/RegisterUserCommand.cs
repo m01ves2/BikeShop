@@ -1,5 +1,4 @@
-﻿using System.Windows.Input;
-using BikeShop.Application.Abstractions.Messaging;
+﻿using BikeShop.Application.Abstractions.Messaging;
 using BikeShop.Application.Common.Models;
 
 namespace BikeShop.Application.Authentication.Register

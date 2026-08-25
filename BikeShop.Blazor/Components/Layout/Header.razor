@@ -22,6 +22,14 @@
             @* <NavLink class="text-dark text-decoration-none fs-5" href="/account">
                 <i class="bi bi-person"></i>
             </NavLink> *@
+            
+            <AuthorizeView Roles="Admin">
+                <Authorized>
+                    <span class="text-danger fw-bold">
+                        ADMIN
+                    </span>
+                </Authorized>
+            </AuthorizeView>
 
             <AuthorizeView>
 

@@ -4,16 +4,16 @@ using BikeShop.Application.Abstractions.Persistence;
 using BikeShop.Application.Common.Models;
 using BikeShop.Domain.Entities;
 
-namespace BikeShop.Application.Authentication.Register
+namespace BikeShop.Application.Admin.Identity.Register
 {
-    public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, Result>
+    public class RegisterAdminCommandHandler : ICommandHandler<RegisterAdminCommand, Result>
     {
         private readonly IUserService _userService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICustomerRepository _customerRepository;
         private readonly ICartRepository _cartRepository;
 
-        public RegisterUserCommandHandler(IUserService userService, IUnitOfWork unitOfWork, ICustomerRepository customerRepository, ICartRepository cartRepository)
+        public RegisterAdminCommandHandler(IUserService userService, IUnitOfWork unitOfWork, ICustomerRepository customerRepository, ICartRepository cartRepository)
         {
             _userService = userService;
             _unitOfWork = unitOfWork;
@@ -21,11 +21,9 @@ namespace BikeShop.Application.Authentication.Register
             _cartRepository = cartRepository;
         }
 
-        public async Task<Result> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(RegisterAdminCommand command, CancellationToken cancellationToken)
         {
-            //return await _userService.RegisterAsync(command.Email, command.Password, cancellationToken);
-
-            var result = await _userService.RegisterAsync(command.Email, command.Password, ["Customer"], cancellationToken);
+            var result = await _userService.RegisterAsync(command.Email, command.Password, ["Customer", "Admin"], cancellationToken);
 
             if (result.IsFailure)
                 return Result.Failure(result.Error);

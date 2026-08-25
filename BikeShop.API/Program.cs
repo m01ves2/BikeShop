@@ -1,6 +1,10 @@
 ﻿using System.Text;
 using System.Text.Json.Serialization;
+using BikeShop.API.Persistence;
 using BikeShop.Application;
+using BikeShop.Application.Abstractions.Messaging;
+using BikeShop.Application.Admin.Identity.Register;
+using BikeShop.Application.Common.Models;
 using BikeShop.Domain.Entities;
 using BikeShop.Infrastructure;
 using BikeShop.Infrastructure.Identity;
@@ -135,19 +139,8 @@ using (var scope = app.Services.CreateScope()) {
     if (!await roleManager.RoleExistsAsync("Admin"))
         await roleManager.CreateAsync(new IdentityRole<int>("Admin"));
 
-    //создадим вручную одного админа:
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-    var adminEmail = "admin@bikeshop.com";
-    var admin = await userManager.FindByEmailAsync(adminEmail);
-    if (admin is null) {
-        admin = new ApplicationUser{
-            UserName = adminEmail,
-            Email = adminEmail
-        };
-        var createResult = await userManager.CreateAsync(admin, "Admin123!");
-        if (createResult.Succeeded)
-            await userManager.AddToRoleAsync(admin, "Admin");
-    }
+    //создадим одного админа:
+    await ApiInitializer.InitializeAsync(app.Services);
 
     //инициализируем базу начальными продуктами и категориями
     await DbInitializer.InitializeAsync(db);

@@ -3,6 +3,7 @@ using BikeShop.Application.Admin.Categories.CreateCategory;
 using BikeShop.Application.Admin.Categories.DeleteCategory;
 using BikeShop.Application.Admin.Categories.UpdateCategory;
 using BikeShop.Application.Admin.DTOs;
+using BikeShop.Application.Admin.Identity.Register;
 using BikeShop.Application.Admin.Orders.ChangeOrderStatus;
 using BikeShop.Application.Admin.Orders.GetOrderDetails;
 using BikeShop.Application.Admin.Products.CreateProduct;
@@ -70,6 +71,8 @@ namespace BikeShop.Application
             services.AddScoped<ICommandHandler<UpdateOrderCommand, Result>, UpdateOrderCommandHandler>();
             services.AddScoped<ICommandHandler<CancelOrderCommand, Result>, CancelOrderCommandHandler>();
 
+
+            services.AddScoped<ICommandHandler<RegisterAdminCommand, Result>, RegisterAdminCommandHandler>();
 
             services.AddScoped<ICommandHandler<AdminCreateCategoryCommand, Result>, AdminCreateCategoryCommandHandler>();
             services.AddScoped<ICommandHandler<AdminUpdateCategoryCommand, Result>, AdminUpdateCategoryCommandHandler>();

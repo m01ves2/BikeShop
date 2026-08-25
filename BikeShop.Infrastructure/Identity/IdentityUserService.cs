@@ -17,8 +17,7 @@ namespace BikeShop.Infrastructure.Identity
             _jwtTokenService = jwtTokenService;
         }
 
-
-        public async Task<Result<int>> RegisterAsync(string email, string password, CancellationToken cancellationToken)
+        public async Task<Result<int>> RegisterAsync(string email, string password, IEnumerable<string> roles, CancellationToken cancellationToken)
         {
             var user = new ApplicationUser
             {
@@ -31,15 +30,19 @@ namespace BikeShop.Infrastructure.Identity
             if (!result.Succeeded) {
                 var errors = result.Errors.Select(x => x.Description);
 
-                return Result<int>.Failure(new Error(ErrorCode.Unexpected, string.Join("; ", errors)));
+                return Result<int>.Failure(
+                    new Error(ErrorCode.Unexpected, string.Join("; ", errors)));
             }
 
-            var roleResult = await _userManager.AddToRoleAsync(user, "Customer");
+            foreach (var role in roles) {
+                var roleResult = await _userManager.AddToRoleAsync(user, role);
 
-            if (!roleResult.Succeeded) {
-                var errors = roleResult.Errors.Select(x => x.Description);
+                if (!roleResult.Succeeded) {
+                    var errors = roleResult.Errors.Select(x => x.Description);
 
-                return Result<int>.Failure( new Error(ErrorCode.Unexpected, string.Join("; ", errors)));
+                    return Result<int>.Failure(
+                        new Error(ErrorCode.Unexpected, string.Join("; ", errors)));
+                }
             }
 
             return Result<int>.Success(user.Id);
@@ -78,5 +81,6 @@ namespace BikeShop.Infrastructure.Identity
 
             return Result<LoginDto>.Success(new LoginDto() { Token = token });
         }
+
     }
 }
