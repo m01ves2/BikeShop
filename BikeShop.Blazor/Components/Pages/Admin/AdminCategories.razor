@@ -3,46 +3,98 @@
 
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
-@using BikeShop.Blazor.Services
 @using BikeShop.Blazor.Services.ApiClients
 @using BikeShop.Blazor.Services.Models
 @using Microsoft.AspNetCore.Authorization
 
-@inject CategoryApiClient ApiClient
+@inject CategoryApiClient CategoryApiClient
+@inject AdminCategoriesApiClient AdminApiClient
+
+<PageTitle>Admin Categories - BikeShop</PageTitle>
 
 <ErrorToast Message="@errorMessage" />
 
-@if (_categories == null) {
-    <PageTitle>BikeShop</PageTitle>
-    <LoadingSpinner />
-}
-else {
-    <PageTitle>Categories - BikeShop</PageTitle>
-    <PageHeader Text="Categories" />
-    <ul>
-        @foreach (var category in _categories) {
-            <li>
-                @category.Name
-            </li>
-        }
-    </ul>
-}
+<PageHeader Text="Categories" />
 
+<div class="container">
+    <div class="mb-4">
+        <NavLink class="btn btn-primary"
+                 href="/admin/categories/create">
+            Create category
+        </NavLink>
+    </div>
+
+    @if (_categories is null) {
+        <LoadingSpinner />
+    }
+    else {
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var category in _categories) {
+                        <tr>
+                            <td>@category.Id</td>
+                            <td>@category.Name</td>
+
+                            <td class="text-end">
+                                <NavLink class="btn btn-outline-primary btn-sm"
+                                         href="@($"/admin/categories/{category.Id}/edit")">
+                                    Edit
+                                </NavLink>
+
+                                <button class="btn btn-danger btn-sm"
+                                        @onclick="() => DeleteCategory(category.Id)">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
 
 @code {
-
     private List<CategoryListItemModel>? _categories;
     private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
-        var (categories, error) = await ApiClient.GetCategoriesAsync();
+        await LoadCategories();
+    }
+
+    private async Task LoadCategories()
+    {
+        var (categories, error) =
+            await CategoryApiClient.GetCategoriesAsync();
+
         if (error is not null) {
             ShowError(error);
             return;
         }
 
         _categories = categories;
+    }
+
+    private async Task DeleteCategory(int id)
+    {
+        var error = await AdminApiClient.DeleteAsync(id);
+
+        if (error is not null) {
+            ShowError(error);
+            return;
+        }
+
+        await LoadCategories();
     }
 
     private void ShowError(ApiErrorResponseModel error)

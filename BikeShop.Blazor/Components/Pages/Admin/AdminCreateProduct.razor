@@ -1,0 +1,117 @@
+﻿@page "/admin/products/create"
+@attribute [Authorize(Roles = "Admin")]
+
+@using BikeShop.Blazor.Components.Shared
+@using BikeShop.Blazor.Models
+@using BikeShop.Blazor.Services.ApiClients
+@using BikeShop.Blazor.Services.Models
+@using Microsoft.AspNetCore.Authorization
+
+@inject AdminProductsApiClient AdminApiClient
+@inject CategoryApiClient CategoryApiClient
+@inject NavigationManager Navigation
+
+<PageTitle>Create Product - BikeShop</PageTitle>
+
+<ErrorToast Message="@errorMessage" />
+
+<PageHeader Text="Create Product" />
+
+<div class="container">
+    @if (_categories is null) {
+        <LoadingSpinner />
+    }
+    else {
+        <EditForm Model="_model" OnValidSubmit="CreateProduct">
+            <DataAnnotationsValidator />
+
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <InputText class="form-control"
+                           @bind-Value="_model.Name" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <InputTextArea class="form-control"
+                               @bind-Value="_model.Description" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Price</label>
+                <InputNumber class="form-control"
+                             @bind-Value="_model.Price" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Stock quantity</label>
+                <InputNumber class="form-control"
+                             @bind-Value="_model.StockQuantity" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Category</label>
+
+                <InputSelect class="form-select"
+                             @bind-Value="_model.CategoryId">
+                    <option value="0">Select category</option>
+
+                    @foreach (var category in _categories) {
+                        <option value="@category.Id">
+                            @category.Name
+                        </option>
+                    }
+                </InputSelect>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary"
+                        type="submit">
+                    Create
+                </button>
+
+                <NavLink class="btn btn-outline-secondary"
+                         href="/admin/products">
+                    Cancel
+                </NavLink>
+            </div>
+        </EditForm>
+    }
+</div>
+
+@code {
+    private readonly CreateProductModel _model = new();
+
+    private List<CategoryListItemModel>? _categories;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var (categories, error) =
+            await CategoryApiClient.GetCategoriesAsync();
+
+        if (error is not null) {
+            ShowError(error);
+            return;
+        }
+
+        _categories = categories;
+    }
+
+    private async Task CreateProduct()
+    {
+        var error = await AdminApiClient.CreateAsync(_model);
+
+        if (error is not null) {
+            ShowError(error);
+            return;
+        }
+
+        Navigation.NavigateTo("/admin/products");
+    }
+
+    private void ShowError(ApiErrorResponseModel error)
+    {
+        errorMessage = error.Message;
+    }
+}

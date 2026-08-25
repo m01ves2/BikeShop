@@ -58,6 +58,10 @@ namespace BikeShop.Blazor
 
             services.AddScoped<AdminOrdersApiClient>();
 
+            services.AddScoped<AdminProductsApiClient>();
+
+            services.AddScoped<AdminCategoriesApiClient>();
+
             return services;
         }
     }
