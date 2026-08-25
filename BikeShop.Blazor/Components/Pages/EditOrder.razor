@@ -1,0 +1,119 @@
+﻿@page "/orders/{Id:int}/edit"
+@attribute [Authorize]
+
+@using BikeShop.Blazor.Components.Shared
+@using BikeShop.Blazor.Models
+@using BikeShop.Blazor.Services.ApiClients
+@using BikeShop.Blazor.Services.Models
+@using Microsoft.AspNetCore.Authorization
+
+@inject OrdersApiClient ApiClient
+@inject NavigationManager Navigation
+
+<ErrorToast Message="@errorMessage" />
+
+<PageTitle>Edit Order - BikeShop</PageTitle>
+<PageHeader Text="Edit Order" />
+
+<div class="container">
+    @if (_model is null) {
+        <LoadingSpinner />
+    }
+    else {
+        <EditForm Model="_model"
+                  OnValidSubmit="UpdateOrderAsync">
+
+            <DataAnnotationsValidator />
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Delivery address
+                </label>
+
+                <InputText class="form-control"
+                           @bind-Value="_model.DeliveryAddress" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Customer phone
+                </label>
+
+                <InputText class="form-control"
+                           @bind-Value="_model.CustomerPhone" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Delivery date
+                </label>
+
+                <InputDate class="form-control"
+                           Type="InputDateType.DateTimeLocal"
+                           @bind-Value="_model.DeliveryAt"
+                           min="@MinDeliveryAt"
+                           max="@MaxDeliveryAt"/>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary"
+                        type="submit">
+                    Save
+                </button>
+
+                <NavLink class="btn btn-outline-secondary"
+                         href="@($"/orders/{Id}")">
+                    Cancel
+                </NavLink>
+            </div>
+
+        </EditForm>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private UpdateOrderModel? _model;
+    private string? errorMessage;
+
+    private string MinDeliveryAt => DateTime.Now.AddHours(1).ToString("yyyy-MM-ddTHH:mm");
+
+    private string MaxDeliveryAt => DateTime.Now.AddDays(7).ToString("yyyy-MM-ddTHH:mm");
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var (order, error) = await ApiClient.GetOrderByIdAsync(Id);
+
+        if (error is not null) {
+            ShowError(error);
+            return;
+        }
+
+        _model = new UpdateOrderModel
+        {
+            OrderId = order!.Id,
+            DeliveryAddress = order.DeliveryAddress,
+            DeliveryAt = order.DeliveryAt,
+            CustomerPhone = order.CustomerPhone
+        };
+    }
+
+    private async Task UpdateOrderAsync()
+    {
+        var error = await ApiClient.UpdateOrderAsync(_model!);
+
+        if (error is not null) {
+            ShowError(error);
+            return;
+        }
+
+        Navigation.NavigateTo($"/orders/{Id}");
+    }
+
+    private void ShowError(ApiErrorResponseModel error)
+    {
+        errorMessage = error.Message;
+    }
+}

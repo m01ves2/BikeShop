@@ -1,0 +1,85 @@
+﻿@page "/orders"
+@attribute [Authorize]
+
+@using BikeShop.Blazor.Components.Shared
+@using BikeShop.Blazor.Models
+@using BikeShop.Blazor.Services.ApiClients
+@using BikeShop.Blazor.Services.Models
+@using Microsoft.AspNetCore.Authorization
+
+@inject OrdersApiClient ApiClient
+
+<ErrorToast Message="@errorMessage" />
+
+<PageTitle>Orders - BikeShop</PageTitle>
+<PageHeader Text="My Orders" />
+
+<div class="container">
+    @if (_orders is null) {
+        <LoadingSpinner />
+    }
+    else if (_orders.Count == 0) {
+        <p>You don't have any orders yet.</p>
+    }
+    else {
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var order in _orders) {
+                        <tr>
+                            <td>
+                                #@order.Id
+                            </td>
+
+                            <td>
+                                @order.CreatedAt.ToString("dd.MM.yyyy HH:mm")
+                            </td>
+
+                            <td>
+                                @order.Status
+                            </td>
+
+                            <td class="text-end">
+                                <NavLink class="btn btn-outline-primary btn-sm"
+                                         href="@($"/orders/{order.Id}")">
+                                    Details
+                                </NavLink>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@code {
+    private List<OrderListItemModel>? _orders;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var (orders, error) = await ApiClient.GetOrdersAsync();
+
+        if (error is not null) {
+            ShowError(error);
+            return;
+        }
+
+        _orders = orders;
+    }
+
+    private void ShowError(ApiErrorResponseModel error)
+    {
+        errorMessage = error.Message;
+    }
+}

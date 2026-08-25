@@ -83,7 +83,10 @@
                         </label>
 
                         <InputDate class="form-control"
-                                   @bind-Value="_model.DeliveryAt" />
+                                   Type="InputDateType.DateTimeLocal"
+                                   @bind-Value="_model.DeliveryAt"
+                                   min="@MinDeliveryAt"
+                                   max="@MaxDeliveryAt"/>
 
                         <ValidationMessage For="@(() => _model.DeliveryAt)" />
                     </div>
@@ -170,6 +173,10 @@
     private string? errorMessage;
 
     private readonly List<string> _adjustments = [];
+
+    private string MinDeliveryAt => DateTime.Now.AddHours(1).ToString("yyyy-MM-ddTHH:mm");
+
+    private string MaxDeliveryAt => DateTime.Now.AddDays(7).ToString("yyyy-MM-ddTHH:mm");
 
 
     protected override async Task OnInitializedAsync()
