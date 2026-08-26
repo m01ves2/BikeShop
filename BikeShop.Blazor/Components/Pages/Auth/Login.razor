@@ -87,9 +87,14 @@
                 return;
             }
 
+            var signedIn = AuthStateProvider.SignIn(response!.Token);
+            if (!signedIn) {
+                errorMessage = "The authentication token is expired or invalid.";
+                return;
+            }
+
             await TokenStorage.SaveTokenAsync(response!.Token); // сохранили токен в localStorage
 
-            AuthStateProvider.SignIn(response.Token);
 
             var (cartSyncResult, errorSync) = await CartService.SynchronizeCartAsync();
 

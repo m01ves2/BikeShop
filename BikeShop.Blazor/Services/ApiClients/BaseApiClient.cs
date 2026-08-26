@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Net;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using BikeShop.Blazor.Identity;
 using BikeShop.Blazor.Services.Models;
@@ -27,6 +28,12 @@ namespace BikeShop.Blazor.Services.ApiClients
 
         protected async Task<ApiErrorResponseModel> ReadErrorAsync(HttpResponseMessage response)
         {
+            if (response.StatusCode == HttpStatusCode.Unauthorized) {
+                await _authStateProvider.SignOutAsync();
+
+                return new ApiErrorResponseModel("Your session has expired. Please log in again.");
+            }
+
             try {
                 var error = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
 

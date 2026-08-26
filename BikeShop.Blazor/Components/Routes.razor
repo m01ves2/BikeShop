@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
+﻿@using BikeShop.Blazor.Components.Shared
+@using Microsoft.AspNetCore.Components.Authorization
 <CascadingAuthenticationState>
 
     <AuthInitializer>
@@ -14,12 +15,12 @@
                 <AuthorizeRouteView RouteData="routeData" 
                                     DefaultLayout="typeof(Layout.MainLayout)">
                     <NotAuthorized>
-                        <p>You are not authorized to view this page.</p>
+                        <RedirectToLogin />
                     </NotAuthorized>
+
                 </AuthorizeRouteView>
 
-                <FocusOnNavigate RouteData="routeData"
-                                 Selector="h1" />
+                <FocusOnNavigate RouteData="routeData" Selector="h1" />
 
             </Found>
 

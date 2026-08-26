@@ -1,6 +1,8 @@
-﻿using System.Security.Claims;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using BikeShop.Blazor.Services.ApiClients;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace BikeShop.Blazor.Identity
 {
@@ -9,6 +11,12 @@ namespace BikeShop.Blazor.Identity
         private ClaimsPrincipal _currentUser = Anonymous().User;
         private string? _token;
         public string? Token => _token;
+        private readonly ITokenStorage _tokenStorage;
+
+        public JwtAuthenticationStateProvider(ITokenStorage tokenStorage)
+        {
+            _tokenStorage = tokenStorage;
+        }
 
         public override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
@@ -22,24 +30,41 @@ namespace BikeShop.Blazor.Identity
                     new ClaimsIdentity()));
         }
 
-        public void SignIn(string token)
+        public bool SignIn(string token)
         {
-            _token = token;
-
             var handler = new JwtSecurityTokenHandler();
             var jwt = handler.ReadJwtToken(token);
 
-            _currentUser = new ClaimsPrincipal(new ClaimsIdentity(jwt.Claims, "jwt"));
+            if (jwt.ValidTo <= DateTime.UtcNow) {
+                SignOut();
+                return false;
+            }
 
-            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+            _token = token;
 
-            //Console.WriteLine(token);
+            _currentUser = new ClaimsPrincipal(
+                new ClaimsIdentity(jwt.Claims, "jwt"));
+
+            NotifyAuthenticationStateChanged( GetAuthenticationStateAsync() );
+
+            return true;
         }
 
         public void SignOut()
         {
             _token = null;
 
+            _currentUser = Anonymous().User;
+
+            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+        }
+
+        //делает полноценный пользовательский logout
+        public async Task SignOutAsync()
+        {
+            await _tokenStorage.RemoveTokenAsync();
+
+            _token = null;
             _currentUser = Anonymous().User;
 
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());

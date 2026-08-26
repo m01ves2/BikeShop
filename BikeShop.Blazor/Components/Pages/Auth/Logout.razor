@@ -12,9 +12,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await TokenStorage.RemoveTokenAsync();
-
-        AuthStateProvider.SignOut();
+        await AuthStateProvider.SignOutAsync();
 
         Navigation.NavigateTo("/");
     }

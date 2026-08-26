@@ -28,11 +28,14 @@ else {
         var token = await TokenStorage.GetTokenAsync();
 
         if (!string.IsNullOrWhiteSpace(token)) {
-            AuthStateProvider.SignIn(token);
+            var signedIn = AuthStateProvider.SignIn(token);
+
+            if (!signedIn) {
+                await TokenStorage.RemoveTokenAsync();
+            }
         }
 
         _initialized = true;
-
         StateHasChanged();
     }
 }
