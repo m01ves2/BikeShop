@@ -7,8 +7,16 @@
 
             <Found Context="routeData">
 
-                <RouteView RouteData="routeData"
-                           DefaultLayout="typeof(Layout.MainLayout)" />
+              @*   <RouteView RouteData="routeData"
+                           DefaultLayout="typeof(Layout.MainLayout)" /> *@
+
+                @* здась начинает учитываться [Authorize] в *.razor *@
+                <AuthorizeRouteView RouteData="routeData" 
+                                    DefaultLayout="typeof(Layout.MainLayout)">
+                    <NotAuthorized>
+                        <p>You are not authorized to view this page.</p>
+                    </NotAuthorized>
+                </AuthorizeRouteView>
 
                 <FocusOnNavigate RouteData="routeData"
                                  Selector="h1" />

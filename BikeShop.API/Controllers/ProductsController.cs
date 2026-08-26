@@ -30,7 +30,7 @@ namespace BikeShop.API.Controllers
             var result = await _getProductsQueryHandler.Handle(new GetProductsQuery(), cancellationToken);
 
             if (result.IsFailure)
-                return BadRequest(result.Error?.Message);
+                return this.ToActionResult(result.Error!);
 
             return Ok(result.Data);
         }
