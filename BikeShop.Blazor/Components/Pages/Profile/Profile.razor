@@ -1,0 +1,54 @@
+﻿@page "/profile"
+
+@using System.Net
+@using BikeShop.Blazor.Components.Shared
+@using BikeShop.Blazor.Models
+@using BikeShop.Blazor.Models.Auth
+@using BikeShop.Blazor.Services.ApiClients
+@using BikeShop.Blazor.Services.ApiClients.Auth
+@using BikeShop.Blazor.Services.Models
+
+@inject AuthApiClient ApiClient
+@inject NavigationManager Navigation
+
+<ErrorToast Message="@errorMessage" />
+
+<PageTitle>Profile</PageTitle>
+<PageHeader Text="Profile" />
+
+
+<div class="container mt-4">
+    @if (model is null || string.IsNullOrEmpty(model.Email)) {
+        <p>Loading...</p>
+    }
+    else {
+        <p>Hello @model.Email</p>
+    }
+</div>
+
+@code
+{
+    private CurrentUserModel? model = new();
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try {
+            var (result, error) = await ApiClient.GetCurrentUserAsync();
+            if (error != null) {
+                ShowError(error);
+                return;
+            }
+
+            model = result!;
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized) {
+            Navigation.NavigateTo("/login");
+        }
+    }
+
+    private void ShowError(ApiErrorResponseModel error)
+    {
+        errorMessage = error.Message;
+    }
+}

@@ -7,7 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Sections\Cart\" />
+    <Compile Remove="Components\Sections\Cart\**" />
+    <Content Remove="Components\Sections\Cart\**" />
+    <EmbeddedResource Remove="Components\Sections\Cart\**" />
+    <None Remove="Components\Sections\Cart\**" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,4 @@
-﻿using BikeShop.Blazor.Models;
+﻿using BikeShop.Blazor.Models.Cart;
 using BikeShop.Blazor.Services.Models;
 
 namespace BikeShop.Blazor.Services

@@ -1,0 +1,160 @@
+﻿@page "/orders/{Id:int}"
+@attribute [Authorize]
+
+@using BikeShop.Blazor.Components.Shared
+@using BikeShop.Blazor.Models
+@using BikeShop.Blazor.Models.Orders
+@using BikeShop.Blazor.Services
+@using BikeShop.Blazor.Services.ApiClients
+@using BikeShop.Blazor.Services.ApiClients.Orders
+@using BikeShop.Blazor.Services.Models
+@using Microsoft.AspNetCore.Authorization
+
+@inject OrdersApiClient ApiClient
+@inject CurrencyFormatter Currency
+
+<ErrorToast Message="@errorMessage" />
+
+@if (_order is null) {
+    <PageTitle>Order - BikeShop</PageTitle>
+    <PageHeader Text="Order" />
+    <LoadingSpinner />
+}
+else {
+    <PageTitle>Order #@_order.Id - BikeShop</PageTitle>
+    <PageHeader Text="@($"Order #{_order.Id}")" />
+
+    <div class="container">
+        <div class="mb-4">
+            <p>
+                <strong>Status:</strong>
+                @_order.Status
+            </p>
+
+            <p>
+                <strong>Created:</strong>
+                @_order.CreatedAt.ToString("dd.MM.yyyy HH:mm")
+            </p>
+
+            <p>
+                <strong>Delivery:</strong>
+                @_order.DeliveryAt.ToString("dd.MM.yyyy HH:mm")
+            </p>
+
+            <p>
+                <strong>Delivery address:</strong>
+                @_order.DeliveryAddress
+            </p>
+
+            <p>
+                <strong>Customer phone:</strong>
+                @_order.CustomerPhone
+            </p>
+
+            @if (!string.IsNullOrWhiteSpace(_order.CourierPhone)) {
+                <p>
+                    <strong>Courier phone:</strong>
+                    @_order.CourierPhone
+                </p>
+            }
+        </div>
+
+        <h2>Items</h2>
+
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in _order.Items) {
+                        <tr>
+                            <td>@item.ProductName</td>
+                            <td>@Currency.Format(item.UnitPrice)</td>
+                            <td>@item.Quantity</td>
+                            <td>@Currency.Format(item.Total)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-end mb-4">
+            <strong>
+                Total:
+                @Currency.Format(_order.Items.Sum(x => x.Total))
+            </strong>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <NavLink class="btn btn-outline-secondary"
+                     href="/orders">
+                Back to orders
+            </NavLink>
+
+            <div class="d-flex gap-2">
+                @if (_order.CanBeEdited) {
+                    <NavLink class="btn btn-primary"
+                             href="@($"/orders/{_order.Id}/edit")">
+                        Edit order
+                    </NavLink>
+                }
+
+                @if (_order.CanBeCancelled) {
+                    <button class="btn btn-danger"
+                            @onclick="CancelOrder">
+                        Cancel order
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private OrderDetailsModel? _order;
+    private string? errorMessage;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadOrder();
+    }
+
+    private async Task LoadOrder()
+    {
+        var (order, error) = await ApiClient.GetOrderByIdAsync(Id);
+
+        if (error is not null) {
+            ShowError(error);
+            return;
+        }
+
+        _order = order;
+    }
+
+    private async Task CancelOrder()
+    {
+        var error = await ApiClient.CancelOrderAsync(Id);
+
+        if (error is not null) {
+            ShowError(error);
+            return;
+        }
+
+        await LoadOrder();
+    }
+
+    private void ShowError(ApiErrorResponseModel error)
+    {
+        errorMessage = error.Message;
+    }
+}

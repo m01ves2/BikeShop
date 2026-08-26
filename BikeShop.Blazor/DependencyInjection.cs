@@ -1,6 +1,13 @@
 ﻿using BikeShop.Blazor.Identity;
 using BikeShop.Blazor.Services;
 using BikeShop.Blazor.Services.ApiClients;
+using BikeShop.Blazor.Services.ApiClients.Admin.Categories;
+using BikeShop.Blazor.Services.ApiClients.Admin.Orders;
+using BikeShop.Blazor.Services.ApiClients.Admin.Products;
+using BikeShop.Blazor.Services.ApiClients.Auth;
+using BikeShop.Blazor.Services.ApiClients.Cart;
+using BikeShop.Blazor.Services.ApiClients.Catalog;
+using BikeShop.Blazor.Services.ApiClients.Orders;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace BikeShop.Blazor

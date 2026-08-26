@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using BikeShop.Blazor.Identity;
-using BikeShop.Blazor.Models;
-using BikeShop.Blazor.Services.ApiClients;
+using BikeShop.Blazor.Models.Cart;
+using BikeShop.Blazor.Services.ApiClients.Cart;
 using BikeShop.Blazor.Services.Models;
 using Microsoft.JSInterop;
 

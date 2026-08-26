@@ -16,10 +16,7 @@ namespace BikeShop.Blazor.Services.ApiClients
         protected void AddAuthorizationHeader()
         {
             if (!string.IsNullOrWhiteSpace(_authStateProvider.Token)) {
-                _http.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue(
-                        "Bearer",
-                        _authStateProvider.Token);
+                _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _authStateProvider.Token);
             }
             else {
                 _http.DefaultRequestHeaders.Authorization = null;

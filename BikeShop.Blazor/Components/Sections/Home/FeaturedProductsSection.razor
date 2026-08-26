@@ -1,8 +1,10 @@
 ﻿@using BikeShop.Blazor.Components.Sections.Product
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
+@using BikeShop.Blazor.Models.Catalog
 @using BikeShop.Blazor.Services
 @using BikeShop.Blazor.Services.ApiClients
+@using BikeShop.Blazor.Services.ApiClients.Catalog
 @using BikeShop.Blazor.Services.Models
 
 @inject ProductApiClient ApiClient
@@ -11,20 +13,15 @@
 
     <SectionTitle Text="Featured Products" />
 
-    @if (_products is null)
-    {
+    @if (_products is null) {
         <LoadingSpinner />
     }
-    else
-    {
+    else {
         <div class="row g-4">
 
-            @foreach (var product in _products)
-            {
+            @foreach (var product in _products) {
                 <div class="col-lg-3 col-md-6">
-
                     <ProductCard Product="product" />
-
                 </div>
             }
 

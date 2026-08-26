@@ -1,0 +1,67 @@
+﻿@page "/category/{CategoryId:int}"
+
+@using BikeShop.Blazor.Components.Sections.Catalog
+@using BikeShop.Blazor.Components.Shared
+@using BikeShop.Blazor.Models
+@using BikeShop.Blazor.Models.Catalog
+@using BikeShop.Blazor.Services
+@using BikeShop.Blazor.Services.ApiClients
+@using BikeShop.Blazor.Services.ApiClients.Catalog
+@using BikeShop.Blazor.Services.Models
+
+@inject CategoryApiClient ApiClient
+@inject BreadcrumbService BreadcrumbService
+
+<ErrorToast Message="@errorMessage" />
+
+@if (model is null) {
+    <PageTitle>BikeShop</PageTitle>
+    <PageHeader Text="Catalog" />
+    <LoadingSpinner />
+}
+else {
+    <PageTitle>@model.Name - BikeShop</PageTitle>
+    <PageHeader Text="@model.Name" />
+    <CatalogProductsSection CategoryId="CategoryId" />
+}
+
+
+@code {
+
+    [Parameter]
+    public int CategoryId { get; set; }
+
+    private CategoryListItemModel? model = new();
+    private string? errorMessage;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var (category, error) = await ApiClient.GetCategoryByIdAsync(CategoryId);
+
+        if (error is not null) {
+            ShowError(error);
+            return;
+        }
+
+        model = category;
+
+        if (model is not null) {
+            BreadcrumbService.SetItems([
+                new()
+            {
+                Text = "Home",
+                Url = "/"
+            },
+            new()
+            {
+                Text = category.Name
+            }
+            ]);
+        }
+    }
+
+    private void ShowError(ApiErrorResponseModel error)
+    {
+        errorMessage = error.Message;
+    }
+}
