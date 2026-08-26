@@ -54,7 +54,7 @@
         {
             Id = 0, //no need
             Quantity = 1,
-            Product = new ProductCartModel(Product.Id, Product.Name, Product.Price, 100),
+            Product = new ProductCartModel(Product.Id, Product.Name, Product.Price, Product.StockQuantity),
         };
 
         await CartService.AddItemAsync(item);

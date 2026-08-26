@@ -34,6 +34,7 @@
                         <th>Product</th>
                         <th>Price</th>
                         <th style="width:150px">Quantity</th>
+                        <th style="width:150px">Stock quantity</th>
                         <th>Total</th>
                         <th></th>
                     </tr>
@@ -73,15 +74,25 @@
                                         -
                                     </button>
 
-                                    <input class="form-control text-center"
-                                           value="@item.Quantity"
-                                           readonly />
+                                    <input class="form-control text-center" value="@item.Quantity" readonly />
 
                                     <button class="btn btn-outline-secondary" @onclick="() => Increase(item)">
                                         +
                                     </button>
 
                                 </div>
+                            </td>
+                            <td>
+                            @if (item.Product.StockQuantity > 0) {
+                                <small class="text-muted">
+                                    In stock: @item.Product.StockQuantity
+                                </small>
+                            }
+                            else {
+                                <small class="text-danger">
+                                    Out of stock
+                                </small>
+                            }
                             </td>
                             <td>
                                 @Currency.Format(item.Total)

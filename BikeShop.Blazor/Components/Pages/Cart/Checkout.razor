@@ -26,7 +26,6 @@
 <div class="container mt-4">
     @if (_orderCreated) {
         <div class="text-center">
-
             <h2>
                 Order created successfully!
             </h2>
@@ -35,10 +34,21 @@
                 Thank you for your order.
             </p>
 
-            <NavLink class="btn btn-primary" href="/">
-                Continue shopping
-            </NavLink>
+            @if (_adjustments.Count > 0) {
+                <div class="alert alert-warning text-start">
+                    <strong>Some cart items were adjusted:</strong>
 
+                    <ul class="mb-0 mt-2">
+                        @foreach (var adjustment in _adjustments) {
+                            <li>@adjustment</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <NavLink class="btn btn-primary" href="/orders">
+                View orders
+            </NavLink>
         </div>
     }
     else if (_loading) {
@@ -82,20 +92,6 @@
 
                         <ValidationMessage For="@(() => _model.DeliveryAt)" />
                     </div>
-
-                    @if (_adjustments.Count > 0) {
-                        <div class="alert alert-warning">
-
-                            <ul class="mb-0">
-                                @foreach (var adjustment in _adjustments) {
-                                    <li>
-                                        @adjustment
-                                    </li>
-                                }
-                            </ul>
-
-                        </div>
-                    }
 
                     <button type="submit" class="btn btn-primary" disabled="@_creating">
                         @(_creating ? "Creating..." : "Create order")
@@ -179,22 +175,30 @@
 
     private async Task CreateOrderAsync()
     {
-        var (result, error) = await OrdersApiClient.CreateOrderAsync(_model);
+        _creating = true;
+        errorMessage = null;
+        _adjustments.Clear();
 
-        if (error is not null) {
-            ShowError(error);
-            return;
+        try {
+            var (result, error) = await OrdersApiClient.CreateOrderAsync(_model);
+
+            if (error is not null) {
+                ShowError(error);
+                return;
+            }
+
+            if (result is not null && result.OrderItemAdjustments.Any()) {
+                _adjustments.AddRange(result.OrderItemAdjustments);
+            }
+
+            await CartService.ClearAsync();
+
+            _cart = new CartModel([]);
+            _orderCreated = true;
         }
-
-        await CartService.ClearAsync();
-
-        // дальше пока просто сообщение
-
-        _cart = new CartModel([]);
-
-        _creating = false;
-
-        _orderCreated = true;
+        finally {
+            _creating = false;
+        }
     }
 
     private void ShowError(ApiErrorResponseModel error)

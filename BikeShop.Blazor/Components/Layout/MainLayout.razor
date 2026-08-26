@@ -1,27 +1,30 @@
 ﻿@using BikeShop.Blazor.Services
+
 @inherits LayoutComponentBase
+@implements IDisposable
 
 @inject BreadcrumbService BreadcrumbService
 
 <div class="layout">
-
     <Header />
-
     <CategoryNavigation />
-
-    <Breadcrumbs Items ="@BreadcrumbService.Items" />
+    <Breadcrumbs Items="@BreadcrumbService.Items" />
 
     <main class="content">
         @Body
     </main>
 
     <Footer />
-
 </div>
 
 @code {
     protected override void OnInitialized()
     {
         BreadcrumbService.Changed += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        BreadcrumbService.Changed -= StateHasChanged;
     }
 }
