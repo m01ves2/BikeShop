@@ -1,0 +1,11 @@
+- Handle expired JWT in Blazor:
+  - validate token expiration on startup
+  - sign out automatically if expired
+  - handle 401 responses gracefully
+  - decide appropriate JWT lifetime
+
+1. Centralized exception handling in API
+2. Defensive error handling in Blazor ApiClients
+3. Expired JWT / 401 handling
+4. JWT lifetime discussion
+5. Remaining UI refactor

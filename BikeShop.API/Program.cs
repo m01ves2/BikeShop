@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json.Serialization;
+using BikeShop.API.Middleware;
 using BikeShop.API.Persistence;
 using BikeShop.Application;
 using BikeShop.Application.Abstractions.Messaging;
@@ -151,6 +152,17 @@ if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// обработка Exceptions от Domain и не только...Потому что middleware должен быть снаружи контроллера!
+//, чтобы вот этот:
+//await _next(context);
+//обернул весь дальнейший pipeline в:
+//try {
+//    ...
+//}
+//catch {
+//}
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
