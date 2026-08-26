@@ -1,5 +1,6 @@
 ﻿@page "/admin/products/create"
 @attribute [Authorize(Roles = "Admin")]
+@inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
@@ -15,10 +16,10 @@
 @inject CategoryApiClient CategoryApiClient
 @inject NavigationManager Navigation
 
+
+<ErrorToast Message="@ErrorMessage" />
+
 <PageTitle>Create Product - BikeShop</PageTitle>
-
-<ErrorToast Message="@errorMessage" />
-
 <PageHeader Text="Create Product" />
 
 <div class="container">
@@ -82,7 +83,6 @@
     private readonly CreateProductModel _model = new();
 
     private List<CategoryListItemModel>? _categories;
-    private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -109,8 +109,4 @@
         Navigation.NavigateTo("/admin/products");
     }
 
-    private void ShowError(ApiErrorResponseModel error)
-    {
-        errorMessage = error.Message;
-    }
 }

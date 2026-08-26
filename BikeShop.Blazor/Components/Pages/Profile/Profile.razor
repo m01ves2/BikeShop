@@ -1,4 +1,5 @@
 ﻿@page "/profile"
+@inherits BikeShopPageBase
 
 @using System.Net
 @using BikeShop.Blazor.Components.Shared
@@ -11,7 +12,7 @@
 @inject AuthApiClient ApiClient
 @inject NavigationManager Navigation
 
-<ErrorToast Message="@errorMessage" />
+<ErrorToast Message="@ErrorMessage" />
 
 <PageTitle>Profile</PageTitle>
 <PageHeader Text="Profile" />
@@ -29,7 +30,6 @@
 @code
 {
     private CurrentUserModel? model = new();
-    private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -47,8 +47,4 @@
         }
     }
 
-    private void ShowError(ApiErrorResponseModel error)
-    {
-        errorMessage = error.Message;
-    }
 }

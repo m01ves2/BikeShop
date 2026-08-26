@@ -1,4 +1,5 @@
 ﻿@page "/register"
+@inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
@@ -11,7 +12,7 @@
 @inject NavigationManager Navigation
 @inject AuthApiClient AuthClient
 
-<ErrorToast Message="@errorMessage" />
+<ErrorToast Message="@ErrorMessage" />
 
 <PageTitle>Register</PageTitle>
 <PageHeader Text="Register" />
@@ -29,9 +30,9 @@
             <InputText class="form-control" type="password" @bind-Value="model.Password" />
         </div>
 
-        @if (!string.IsNullOrEmpty(errorMessage)) {
+        @if (!string.IsNullOrEmpty(ErrorMessage)) {
             <div class="alert alert-danger">
-                @errorMessage
+                @ErrorMessage
             </div>
         }
 
@@ -45,7 +46,12 @@
 @code {
     private RegisterModel model = new();
 
-    private string? errorMessage;
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs(
+            ("Home", "/"),
+            ("Register", null));
+    }
 
     private async Task RegisterUser()
     {
@@ -58,10 +64,5 @@
 
         // success
         Navigation.NavigateTo("/");
-    }
-
-    private void ShowError(ApiErrorResponseModel error)
-    {
-        errorMessage = error.Message;
     }
 }

@@ -1,5 +1,6 @@
 ﻿@page "/admin/categories"
 @attribute [Authorize(Roles = "Admin")]
+@inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
@@ -13,10 +14,10 @@
 @inject CategoryApiClient CategoryApiClient
 @inject AdminCategoriesApiClient AdminApiClient
 
+
+<ErrorToast Message="@ErrorMessage" />
+
 <PageTitle>Admin Categories - BikeShop</PageTitle>
-
-<ErrorToast Message="@errorMessage" />
-
 <PageHeader Text="Categories" />
 
 <div class="container">
@@ -68,7 +69,6 @@
 
 @code {
     private List<CategoryListItemModel>? _categories;
-    private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -100,8 +100,4 @@
         await LoadCategories();
     }
 
-    private void ShowError(ApiErrorResponseModel error)
-    {
-        errorMessage = error.Message;
-    }
 }

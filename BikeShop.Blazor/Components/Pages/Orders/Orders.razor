@@ -1,5 +1,6 @@
 ﻿@page "/orders"
 @attribute [Authorize]
+@inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
@@ -11,7 +12,7 @@
 
 @inject OrdersApiClient ApiClient
 
-<ErrorToast Message="@errorMessage" />
+<ErrorToast Message="@ErrorMessage" />
 
 <PageTitle>Orders - BikeShop</PageTitle>
 <PageHeader Text="My Orders" />
@@ -66,10 +67,13 @@
 
 @code {
     private List<OrderListItemModel>? _orders;
-    private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
+        SetBreadcrumbs(
+            ("Home", "/"), 
+            ("Orders", null));
+
         var (orders, error) = await ApiClient.GetOrdersAsync();
 
         if (error is not null) {
@@ -78,10 +82,5 @@
         }
 
         _orders = orders;
-    }
-
-    private void ShowError(ApiErrorResponseModel error)
-    {
-        errorMessage = error.Message;
     }
 }

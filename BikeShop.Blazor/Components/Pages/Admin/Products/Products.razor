@@ -1,5 +1,6 @@
 ﻿@page "/admin/products"
 @attribute [Authorize(Roles = "Admin")]
+@inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
@@ -15,10 +16,10 @@
 @inject AdminProductsApiClient AdminApiClient
 @inject CurrencyFormatter Currency
 
+
+<ErrorToast Message="@ErrorMessage" />
+
 <PageTitle>Admin Products - BikeShop</PageTitle>
-
-<ErrorToast Message="@errorMessage" />
-
 <PageHeader Text="Products" />
 
 <div class="container">
@@ -74,7 +75,6 @@
 
 @code {
     private List<ProductListItemModel>? _products;
-    private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -106,8 +106,4 @@
         await LoadProducts();
     }
 
-    private void ShowError(ApiErrorResponseModel error)
-    {
-        errorMessage = error.Message;
-    }
 }

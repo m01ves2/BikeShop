@@ -1,4 +1,7 @@
-﻿@using BikeShop.Blazor.Components.Shared
+﻿@inherits BikeShopPageBase
+
+@using BikeShop.Blazor.Components.Pages
+@using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Models.Catalog
 @using BikeShop.Blazor.Services
@@ -38,13 +41,12 @@
 @code
 {
     private IReadOnlyList<CategoryListItemModel>? model;
-    private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
         var (categories, error) = await ApiClient.GetCategoriesAsync();
         if (error is not null) {
-            errorMessage = error.Message;
+            ShowError(error);
             return;
         }
 

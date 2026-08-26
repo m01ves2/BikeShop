@@ -1,4 +1,5 @@
 ﻿@page "/cart"
+@inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Identity
@@ -13,7 +14,7 @@
 @inject JwtAuthenticationStateProvider AuthStateProvider
 @inject NavigationManager Navigation
 
-<ErrorToast Message="@errorMessage" />
+<ErrorToast Message="@ErrorMessage" />
 
 <PageTitle>Cart</PageTitle>
 <PageHeader Text="Cart" />
@@ -140,8 +141,6 @@
     private CartModel model = new CartModel(new List<CartItemModel>());
     private decimal Total => model.Items.Sum(x => x.Total);
 
-    private string? errorMessage;
-
     protected override async Task OnInitializedAsync()
     {
         model = await CartService.GetLocalCartAsync();
@@ -186,8 +185,4 @@
         model = await CartService.GetLocalCartAsync();
     }
 
-    private void ShowError(ApiErrorResponseModel error)
-    {
-        errorMessage = error.Message;
-    }
 }

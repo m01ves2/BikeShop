@@ -1,4 +1,7 @@
-﻿@using BikeShop.Blazor.Components.Sections.Product
+﻿@inherits BikeShopPageBase
+
+@using BikeShop.Blazor.Components.Pages
+@using BikeShop.Blazor.Components.Sections.Product
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Models.Catalog
@@ -9,7 +12,7 @@
 
 @inject ProductApiClient ApiClient
 
-<ErrorToast Message="@errorMessage" />
+<ErrorToast Message="@ErrorMessage" />
 
 @if (_products is null) {
     <LoadingSpinner />
@@ -27,7 +30,6 @@ else {
     public int CategoryId { get; set; }
 
     private List<ProductListItemModel>? _products;
-    private string? errorMessage;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -40,8 +42,4 @@ else {
         _products = products;
     }
 
-    private void ShowError(ApiErrorResponseModel error)
-    {
-        errorMessage = error.Message;
-    }
 }

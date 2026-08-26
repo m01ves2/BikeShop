@@ -1,5 +1,6 @@
 ﻿@page "/checkout"
 @attribute [Authorize]
+@inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Identity
@@ -18,7 +19,7 @@
 @inject NavigationManager Navigation
 @inject JwtAuthenticationStateProvider AuthStateProvider
 
-<ErrorToast Message="@errorMessage" />
+<ErrorToast Message="@ErrorMessage" />
 
 <PageTitle>Checkout</PageTitle>
 <PageHeader Text="Order" />
@@ -143,8 +144,6 @@
     private bool _creating;
     private bool _orderCreated = false;
 
-    private string? errorMessage;
-
     private readonly List<string> _adjustments = [];
 
     private string MinDeliveryAt => DateTime.Now.AddHours(1).ToString("yyyy-MM-ddTHH:mm");
@@ -176,7 +175,7 @@
     private async Task CreateOrderAsync()
     {
         _creating = true;
-        errorMessage = null;
+        ClearError();
         _adjustments.Clear();
 
         try {
@@ -199,10 +198,5 @@
         finally {
             _creating = false;
         }
-    }
-
-    private void ShowError(ApiErrorResponseModel error)
-    {
-        errorMessage = error.Message;
     }
 }

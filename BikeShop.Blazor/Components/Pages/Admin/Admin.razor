@@ -1,8 +1,11 @@
 ﻿@page "/admin"
 @attribute [Authorize(Roles = "Admin")]
+@inherits BikeShopPageBase
 
 @using Microsoft.AspNetCore.Authorization
 @using BikeShop.Blazor.Components.Shared
+
+<ErrorToast Message="@ErrorMessage" />
 
 <PageTitle>Admin - BikeShop</PageTitle>
 <PageHeader Text="Admin Panel" />

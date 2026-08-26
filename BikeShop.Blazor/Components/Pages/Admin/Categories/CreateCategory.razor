@@ -1,5 +1,6 @@
 ﻿@page "/admin/categories/create"
 @attribute [Authorize(Roles = "Admin")]
+@inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
@@ -12,10 +13,9 @@
 @inject AdminCategoriesApiClient AdminApiClient
 @inject NavigationManager Navigation
 
+<ErrorToast Message="@ErrorMessage" />
+
 <PageTitle>Create Category - BikeShop</PageTitle>
-
-<ErrorToast Message="@errorMessage" />
-
 <PageHeader Text="Create Category" />
 
 <div class="container">
@@ -43,7 +43,6 @@
 
 @code {
     private readonly CreateCategoryModel _model = new();
-    private string? errorMessage;
 
     private async Task Create()
     {
@@ -57,8 +56,4 @@
         Navigation.NavigateTo("/admin/categories");
     }
 
-    private void ShowError(ApiErrorResponseModel error)
-    {
-        errorMessage = error.Message;
-    }
 }

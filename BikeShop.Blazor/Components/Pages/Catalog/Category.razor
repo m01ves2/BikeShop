@@ -1,4 +1,5 @@
 ﻿@page "/category/{CategoryId:int}"
+@inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Sections.Catalog
 @using BikeShop.Blazor.Components.Shared
@@ -10,9 +11,8 @@
 @using BikeShop.Blazor.Services.Models
 
 @inject CategoryApiClient ApiClient
-@inject BreadcrumbService BreadcrumbService
 
-<ErrorToast Message="@errorMessage" />
+<ErrorToast Message="@ErrorMessage" />
 
 @if (model is null) {
     <PageTitle>BikeShop</PageTitle>
@@ -32,7 +32,6 @@ else {
     public int CategoryId { get; set; }
 
     private CategoryListItemModel? model = new();
-    private string? errorMessage;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -45,23 +44,12 @@ else {
 
         model = category;
 
+
         if (model is not null) {
-            BreadcrumbService.SetItems([
-                new()
-            {
-                Text = "Home",
-                Url = "/"
-            },
-            new()
-            {
-                Text = category.Name
-            }
-            ]);
+            SetBreadcrumbs(
+                ("Home", "/"),
+                (model.Name, null));
         }
     }
 
-    private void ShowError(ApiErrorResponseModel error)
-    {
-        errorMessage = error.Message;
-    }
 }

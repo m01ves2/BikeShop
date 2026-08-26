@@ -1,5 +1,6 @@
 ﻿@page "/admin/orders/{Id:int}"
 @attribute [Authorize(Roles = "Admin")]
+@inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
@@ -14,7 +15,7 @@
 @inject AdminOrdersApiClient ApiClient
 @inject CurrencyFormatter Currency
 
-<ErrorToast Message="@errorMessage" />
+<ErrorToast Message="@ErrorMessage" />
 
 @if (_order is null) {
     <PageTitle>Admin Order - BikeShop</PageTitle>
@@ -108,7 +109,6 @@ else {
 
     private OrderDetailsModel? _order;
     private string? _selectedStatus;
-    private string? errorMessage;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -149,8 +149,4 @@ else {
         await LoadOrder();
     }
 
-    private void ShowError(ApiErrorResponseModel error)
-    {
-        errorMessage = error.Message;
-    }
 }

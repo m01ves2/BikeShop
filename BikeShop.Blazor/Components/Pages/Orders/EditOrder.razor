@@ -1,5 +1,6 @@
 ﻿@page "/orders/{Id:int}/edit"
 @attribute [Authorize]
+@inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
@@ -12,7 +13,7 @@
 @inject OrdersApiClient ApiClient
 @inject NavigationManager Navigation
 
-<ErrorToast Message="@errorMessage" />
+<ErrorToast Message="@ErrorMessage" />
 
 <PageTitle>Edit Order - BikeShop</PageTitle>
 <PageHeader Text="Edit Order" />
@@ -72,7 +73,6 @@
     public int Id { get; set; }
 
     private UpdateOrderModel? _model;
-    private string? errorMessage;
 
     private string MinDeliveryAt => DateTime.Now.AddHours(1).ToString("yyyy-MM-ddTHH:mm");
 
@@ -108,8 +108,4 @@
         Navigation.NavigateTo($"/orders/{Id}");
     }
 
-    private void ShowError(ApiErrorResponseModel error)
-    {
-        errorMessage = error.Message;
-    }
 }

@@ -1,9 +1,8 @@
 ﻿@page "/"
+@inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Sections.Home
 @using BikeShop.Blazor.Services
-
-@inject BreadcrumbService BreadcrumbService
 
 <PageTitle>BikeShop</PageTitle>
 
@@ -15,5 +14,5 @@
 
 
 @code {
-    protected override async Task OnParametersSetAsync() => BreadcrumbService.SetItems([]);
+    protected override async Task OnParametersSetAsync() => SetBreadcrumbs();
 }

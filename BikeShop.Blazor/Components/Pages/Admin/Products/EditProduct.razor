@@ -1,5 +1,6 @@
 ﻿@page "/admin/products/{Id:int}/edit"
 @attribute [Authorize(Roles = "Admin")]
+@inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models
@@ -16,10 +17,10 @@
 @inject CategoryApiClient CategoryApiClient
 @inject NavigationManager Navigation
 
+
+<ErrorToast Message="@ErrorMessage" />
+
 <PageTitle>Edit Product - BikeShop</PageTitle>
-
-<ErrorToast Message="@errorMessage" />
-
 <PageHeader Text="Edit Product" />
 
 <div class="container">
@@ -85,7 +86,6 @@
 
     private UpdateProductModel? _model;
     private List<CategoryListItemModel>? _categories;
-    private string? errorMessage;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -130,8 +130,4 @@
         Navigation.NavigateTo("/admin/products");
     }
 
-    private void ShowError(ApiErrorResponseModel error)
-    {
-        errorMessage = error.Message;
-    }
 }

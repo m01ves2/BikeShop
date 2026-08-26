@@ -1,4 +1,5 @@
 ﻿@page "/catalog"
+@inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Sections.Product
 @using BikeShop.Blazor.Components.Shared
@@ -8,7 +9,7 @@
 
 @inject ProductApiClient ApiClient
 
-<ErrorToast Message="@errorMessage" />
+<ErrorToast Message="@ErrorMessage" />
 
 <PageTitle>Catalog - BikeShop</PageTitle>
 <PageHeader Text="Catalog" />
@@ -26,15 +27,16 @@
 </div>
 
 @code {
+
     private List<ProductListItemModel>? _products;
-    private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
         var (products, error) = await ApiClient.GetProductsAsync();
 
         if (error is not null) {
-            errorMessage = error.Message;
+
+            ShowError(error);
             return;
         }
 

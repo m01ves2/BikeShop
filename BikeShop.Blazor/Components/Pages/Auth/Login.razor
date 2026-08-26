@@ -1,4 +1,5 @@
 ﻿@page "/login"
+@inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Identity
@@ -15,7 +16,7 @@
 @inject JwtAuthenticationStateProvider AuthStateProvider
 @inject ICartService CartService
 
-<ErrorToast Message="@errorMessage" />
+<ErrorToast Message="@ErrorMessage" />
 
 <PageTitle>Login</PageTitle>
 <PageHeader Text="Login" />
@@ -48,10 +49,6 @@
             <a href="/register">Register</a>
         </div>
 
-        @if (!string.IsNullOrEmpty(errorMessage)) {
-            <div class="alert alert-danger">@errorMessage</div>
-        }
-
         <button class="btn btn-primary" disabled="@isLoading">
             @if (isLoading) {
                 <span class="spinner-border spinner-border-sm"></span>
@@ -70,14 +67,19 @@
 @code {
 
     private LoginModel model = new();
-
-    private string? errorMessage;
     private bool isLoading;
+
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs(
+            ("Home", "/"),
+            ("Login", null));
+    }
 
     private async Task LoginUser()
     {
         isLoading = true;
-        errorMessage = null;
+        ClearError();
 
         try {
             var (response, error) = await AuthClient.LoginAsync(model); // получаем token от сервера, если userManager на сервере нашел login+password
@@ -89,7 +91,7 @@
 
             var signedIn = AuthStateProvider.SignIn(response!.Token);
             if (!signedIn) {
-                errorMessage = "The authentication token is expired or invalid.";
+                ShowError("The authentication token is expired or invalid.");
                 return;
             }
 
@@ -115,10 +117,5 @@
             isLoading = false;
         }
 
-    }
-
-    private void ShowError(ApiErrorResponseModel error)
-    {
-        errorMessage = error.Message;
     }
 }
