@@ -1,67 +1,43 @@
-﻿@page "/category/{CategoryId:int}"
+﻿@page "/catalog"
 
-@using BikeShop.Blazor.Components.Sections.Catalog
+@using BikeShop.Blazor.Components.Sections.Product
 @using BikeShop.Blazor.Components.Shared
-@using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Models.Catalog
-@using BikeShop.Blazor.Services
-@using BikeShop.Blazor.Services.ApiClients
 @using BikeShop.Blazor.Services.ApiClients.Catalog
 @using BikeShop.Blazor.Services.Models
 
-@inject CategoryApiClient ApiClient
-@inject BreadcrumbService BreadcrumbService
+@inject ProductApiClient ApiClient
 
 <ErrorToast Message="@errorMessage" />
 
-@if (model is null) {
-    <PageTitle>BikeShop</PageTitle>
-    <PageHeader Text="Catalog" />
-    <LoadingSpinner />
-}
-else {
-    <PageTitle>@model.Name - BikeShop</PageTitle>
-    <PageHeader Text="@model.Name" />
-    <CatalogProductsSection CategoryId="CategoryId" />
-}
+<PageTitle>Catalog - BikeShop</PageTitle>
+<PageHeader Text="Catalog" />
 
+<div class="container my-5">
+    @if (_products is null) {
+        <LoadingSpinner />
+    }
+    else if (_products.Count == 0) {
+        <p>No products available.</p>
+    }
+    else {
+        <ProductGrid Products="_products" />
+    }
+</div>
 
 @code {
-
-    [Parameter]
-    public int CategoryId { get; set; }
-
-    private CategoryListItemModel? model = new();
+    private List<ProductListItemModel>? _products;
     private string? errorMessage;
 
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnInitializedAsync()
     {
-        var (category, error) = await ApiClient.GetCategoryByIdAsync(CategoryId);
+        var (products, error) = await ApiClient.GetProductsAsync();
 
         if (error is not null) {
-            ShowError(error);
+            errorMessage = error.Message;
             return;
         }
 
-        model = category;
-
-        if (model is not null) {
-            BreadcrumbService.SetItems([
-                new()
-            {
-                Text = "Home",
-                Url = "/"
-            },
-            new()
-            {
-                Text = category.Name
-            }
-            ]);
-        }
-    }
-
-    private void ShowError(ApiErrorResponseModel error)
-    {
-        errorMessage = error.Message;
+        _products = products;
     }
 }
