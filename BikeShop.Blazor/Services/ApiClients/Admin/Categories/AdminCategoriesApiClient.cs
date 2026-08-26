@@ -16,10 +16,11 @@ namespace BikeShop.Blazor.Services.ApiClients.Admin.Categories
             AddAuthorizationHeader();
 
             var response = await _http.PostAsJsonAsync("api/admin/categories", model);
+
             if (response.IsSuccessStatusCode)
                 return null;
 
-            return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            return await ReadErrorAsync(response);
         }
 
         public async Task<ApiErrorResponseModel?> UpdateAsync(UpdateCategoryModel model)
@@ -27,10 +28,11 @@ namespace BikeShop.Blazor.Services.ApiClients.Admin.Categories
             AddAuthorizationHeader();
 
             var response = await _http.PutAsJsonAsync($"api/admin/categories/{model.Id}", model);
+
             if (response.IsSuccessStatusCode)
                 return null;
 
-            return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            return await ReadErrorAsync(response);
         }
 
         public async Task<ApiErrorResponseModel?> DeleteAsync(int id)
@@ -42,7 +44,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Admin.Categories
             if (response.IsSuccessStatusCode)
                 return null;
 
-            return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            return await ReadErrorAsync(response);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Cart
                 return (cart, null);
             }
 
-            var error = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            var error = await ReadErrorAsync(response);
 
             return (null, error);
         }
@@ -41,7 +41,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Cart
             if (response.IsSuccessStatusCode)
                 return null;
 
-            return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            return await ReadErrorAsync(response);
         }
 
         public async Task<ApiErrorResponseModel?> RemoveItemAsync(int productId)
@@ -53,7 +53,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Cart
             if (response.IsSuccessStatusCode)
                 return null;
 
-            return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            return await ReadErrorAsync(response);
         }
 
         public async Task<ApiErrorResponseModel?> ClearCartAsync()
@@ -65,7 +65,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Cart
             if (response.IsSuccessStatusCode)
                 return null;
 
-            return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            return await ReadErrorAsync(response);
         }
 
         public async Task<ApiErrorResponseModel?> IncreaseItemQuantityAsync(int productId, int amount)
@@ -77,7 +77,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Cart
             if (response.IsSuccessStatusCode)
                 return null;
 
-            return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            return await ReadErrorAsync(response);
         }
 
         public async Task<ApiErrorResponseModel?> DecreaseItemQuantityAsync(int productId, int amount)
@@ -89,7 +89,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Cart
             if (response.IsSuccessStatusCode)
                 return null;
 
-            return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            return await ReadErrorAsync(response);
         }
 
         public async Task<(SynchronizeCartResultModel?, ApiErrorResponseModel?)> SynchronizeCartAsync(CartModel localCart)
@@ -104,7 +104,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Cart
                 return (result, null);
             }
 
-            var error = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            var error = await ReadErrorAsync(response);
 
             return (null, error);
         }

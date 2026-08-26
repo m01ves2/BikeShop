@@ -23,7 +23,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Catalog
                 return (categories, null);
             }
 
-            var error = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            var error = await ReadErrorAsync(response);
 
             return (null, error);
         }
@@ -40,7 +40,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Catalog
                 return (category, null);
             }
 
-            var error = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            var error = await ReadErrorAsync(response);
 
             return (null, error);
         }

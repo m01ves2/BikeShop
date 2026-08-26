@@ -20,7 +20,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Admin.Products
             if (response.IsSuccessStatusCode)
                 return null;
 
-            return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            return await ReadErrorAsync(response);
         }
 
         public async Task<ApiErrorResponseModel?> UpdateAsync(UpdateProductModel model)
@@ -32,7 +32,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Admin.Products
             if (response.IsSuccessStatusCode)
                 return null;
 
-            return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            return await ReadErrorAsync(response);
         }
 
         public async Task<ApiErrorResponseModel?> DeleteAsync(int id)
@@ -44,7 +44,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Admin.Products
             if (response.IsSuccessStatusCode)
                 return null;
 
-            return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            return await ReadErrorAsync(response);
         }
     }
 }

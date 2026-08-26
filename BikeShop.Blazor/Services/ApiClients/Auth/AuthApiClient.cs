@@ -19,7 +19,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Auth
                 return null;
             }
 
-            return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            return await ReadErrorAsync(response);
         }
 
         public async Task<(LoginResponseModel? Login, ApiErrorResponseModel? Error)> LoginAsync(LoginModel model)
@@ -32,7 +32,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Auth
                 return (result, null);
             }
 
-            var error = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            var error = await ReadErrorAsync(response);
 
             return (null, error);
         }
@@ -50,7 +50,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Auth
                 return (result, null);
             }
 
-            var error = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            var error = await ReadErrorAsync(response);
 
             return (null, error);
         }

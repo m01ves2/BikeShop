@@ -22,7 +22,8 @@ namespace BikeShop.Blazor.Services.ApiClients.Admin.Orders
                 return (order, null);
             }
 
-            var error = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            var error = await ReadErrorAsync(response);
+
             return (null, error);
         }
 
@@ -35,7 +36,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Admin.Orders
             if (response.IsSuccessStatusCode)
                 return null;
 
-            return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            return await ReadErrorAsync(response);
         }
     }
 }

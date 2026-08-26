@@ -23,7 +23,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Orders
                 return (result, null);
             }
 
-            var error = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            var error = await ReadErrorAsync(response);
 
             return (null, error);
         }
@@ -40,7 +40,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Orders
                 return (orders, null);
             }
 
-            var error = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            var error = await ReadErrorAsync(response);
             return (null, error);
         }
 
@@ -56,7 +56,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Orders
                 return (order, null);
             }
 
-            var error = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            var error = await ReadErrorAsync(response);
             
             return (null, error);
         }
@@ -70,7 +70,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Orders
             if (response.IsSuccessStatusCode)
                 return null;
 
-            return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+            return await ReadErrorAsync(response);
         }
 
         public async Task<ApiErrorResponseModel?> UpdateOrderAsync(UpdateOrderModel model)
@@ -82,10 +82,7 @@ namespace BikeShop.Blazor.Services.ApiClients.Orders
             if (response.IsSuccessStatusCode)
                 return null;
 
-            //return await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
-            var content = await response.Content.ReadAsStringAsync();
-
-            return new ApiErrorResponseModel(content);
+            return await ReadErrorAsync(response);
         }
     }
 }

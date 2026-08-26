@@ -1,5 +1,7 @@
 ﻿using System.Net.Http.Headers;
+using System.Text.Json;
 using BikeShop.Blazor.Identity;
+using BikeShop.Blazor.Services.Models;
 
 namespace BikeShop.Blazor.Services.ApiClients
 {
@@ -21,6 +23,25 @@ namespace BikeShop.Blazor.Services.ApiClients
             else {
                 _http.DefaultRequestHeaders.Authorization = null;
             }
+        }
+
+        protected async Task<ApiErrorResponseModel> ReadErrorAsync(HttpResponseMessage response)
+        {
+            try {
+                var error = await response.Content.ReadFromJsonAsync<ApiErrorResponseModel>();
+
+                if (error is not null)
+                    return error;
+            }
+            catch (JsonException) {
+            }
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            if (!string.IsNullOrWhiteSpace(content))
+                return new ApiErrorResponseModel(content);
+
+            return new ApiErrorResponseModel($"Request failed with status code {(int)response.StatusCode} ({response.StatusCode}).");
         }
     }
 }
