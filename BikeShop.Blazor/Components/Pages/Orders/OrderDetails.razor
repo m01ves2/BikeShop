@@ -23,84 +23,164 @@ else {
     <PageTitle>Order #@_order.Id - BikeShop</PageTitle>
     <PageHeader Text="@($"Order #{_order.Id}")" />
 
-    <div class="container">
-        <div class="mb-4">
-            <p>
-                <strong>Status:</strong>
-                @_order.Status
-            </p>
+    <div class="container my-5">
+        <section class="order-overview card">
+            <div class="order-overview-header">
+                <div>
+                    <span class="order-caption">
+                        Current status
+                    </span>
 
-            <p>
-                <strong>Created:</strong>
-                @_order.CreatedAt.ToString("dd.MM.yyyy HH:mm")
-            </p>
+                    <span class="@GetStatusClass(_order.Status)">
+                        @_order.Status
+                    </span>
+                </div>
 
-            <p>
-                <strong>Delivery:</strong>
-                @_order.DeliveryAt.ToString("dd.MM.yyyy HH:mm")
-            </p>
+                <div class="order-created">
+                    <span class="order-caption">
+                        Created
+                    </span>
 
-            <p>
-                <strong>Delivery address:</strong>
-                @_order.DeliveryAddress
-            </p>
+                    <strong>
+                        @_order.CreatedAt.ToString("dd.MM.yyyy HH:mm")
+                    </strong>
+                </div>
+            </div>
 
-            <p>
-                <strong>Customer phone:</strong>
-                @_order.CustomerPhone
-            </p>
+            <hr />
+
+            <div class="order-information">
+                <div class="information-item">
+                    <span class="information-icon">
+                        <i class="bi bi-calendar-event"></i>
+                    </span>
+
+                    <div>
+                        <span class="order-caption">
+                            Delivery
+                        </span>
+
+                        <strong>
+                            @_order.DeliveryAt.ToString(
+                            "dd.MM.yyyy HH:mm")
+                    </strong>
+                </div>
+            </div>
+
+            <div class="information-item">
+                <span class="information-icon">
+                    <i class="bi bi-telephone"></i>
+                </span>
+
+                <div>
+                    <span class="order-caption">
+                        Customer phone
+                    </span>
+
+                    <strong>@_order.CustomerPhone</strong>
+                </div>
+            </div>
+
+            <div class="information-item">
+                <span class="information-icon">
+                    <i class="bi bi-geo-alt"></i>
+                </span>
+
+                <div>
+                    <span class="order-caption">
+                        Delivery address
+                    </span>
+
+                    <strong>@_order.DeliveryAddress</strong>
+                </div>
+            </div>
 
             @if (!string.IsNullOrWhiteSpace(_order.CourierPhone)) {
-                <p>
-                    <strong>Courier phone:</strong>
-                    @_order.CourierPhone
-                </p>
-            }
-        </div>
+                    <div class="information-item">
+                        <span class="information-icon">
+                            <i class="bi bi-person-badge"></i>
+                        </span>
 
-        <h2>Items</h2>
+                        <div>
+                            <span class="order-caption">
+                                Courier phone
+                            </span>
 
-        <div class="table-responsive">
-            <table class="table align-middle">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
+                            <strong>@_order.CourierPhone</strong>
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
 
-                <tbody>
-                    @foreach (var item in _order.Items) {
+        <section class="order-items card">
+            <div class="order-items-header">
+                <h2>Order items</h2>
+
+                <span>
+                    @_order.Items.Sum(x => x.Quantity) products
+                </span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
                         <tr>
-                            <td>@item.ProductName</td>
-                            <td>@Currency.Format(item.UnitPrice)</td>
-                            <td>@item.Quantity</td>
-                            <td>@Currency.Format(item.Total)</td>
+                            <th>Product</th>
+                            <th class="text-end">Price</th>
+                            <th class="text-center">Quantity</th>
+                            <th class="text-end">Total</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                    </thead>
 
-        <div class="d-flex justify-content-end mb-4">
-            <strong>
-                Total:
-                @Currency.Format(_order.Items.Sum(x => x.Total))
+                    <tbody>
+                        @foreach (var item in _order.Items) {
+                            <tr>
+                                <td>
+                                    <strong>@item.ProductName</strong>
+                                </td>
+
+                                <td class="text-end">
+                                    @Currency.Format(item.UnitPrice)
+                                </td>
+
+                                <td class="text-center">
+                                    @item.Quantity
+                                </td>
+
+                                <td class="text-end">
+                                    <strong>
+                                        @Currency.Format(item.Total)
+                                    </strong>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="order-total">
+                <span>Total</span>
+
+                <strong>
+                    @Currency.Format(
+                    _order.Items.Sum(x => x.Total))
             </strong>
         </div>
+    </section>
 
-        <div class="d-flex justify-content-between">
-            <NavLink class="btn btn-outline-secondary"
-                     href="/orders">
-                Back to orders
-            </NavLink>
+    <div class="order-actions">
+        <NavLink class="btn btn-outline-primary"
+                 href="/orders">
+            <i class="bi bi-arrow-left me-2"></i>
+            Back to orders
+        </NavLink>
 
-            <div class="d-flex gap-2">
-                @if (_order.CanBeEdited) {
+        <div class="d-flex flex-wrap gap-2">
+            @if (_order.CanBeEdited) {
                     <NavLink class="btn btn-primary"
                              href="@($"/orders/{_order.Id}/edit")">
+                        <i class="bi bi-pencil me-2"></i>
                         Edit order
                     </NavLink>
                 }
@@ -108,6 +188,7 @@ else {
                 @if (_order.CanBeCancelled) {
                     <button class="btn btn-danger"
                             @onclick="CancelOrder">
+                        <i class="bi bi-x-circle me-2"></i>
                         Cancel order
                     </button>
                 }
@@ -125,8 +206,9 @@ else {
     protected override async Task OnParametersSetAsync()
     {
         SetBreadcrumbs(
-            ("Home", "/"),
-            ($"Order {Id}", null));
+             ("Home", "/"),
+             ("Orders", "/orders"),
+             ($"Order {Id}", null));
 
         await LoadOrder();
     }
@@ -155,4 +237,8 @@ else {
         await LoadOrder();
     }
 
+    private static string GetStatusClass(string status)
+    {
+        return $"status-badge status-{status.ToLowerInvariant()}";
+    }
 }

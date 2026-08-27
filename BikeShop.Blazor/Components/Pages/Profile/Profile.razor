@@ -12,16 +12,51 @@
 
 <ErrorToast Message="@ErrorMessage" />
 
-<PageTitle>Profile</PageTitle>
-<PageHeader Text="Profile" />
+<PageTitle>Profile - BikeShop</PageTitle>
+<PageHeader Text="My account" />
 
-
-<div class="container mt-4">
+<div class="container my-5">
     @if (model is null || string.IsNullOrEmpty(model.Email)) {
-        <p>Loading...</p>
+        <LoadingSpinner />
     }
     else {
-        <p>Hello @model.Email</p>
+        <section class="profile-card card">
+            <span class="profile-icon">
+                <i class="bi bi-person"></i>
+            </span>
+
+            <div class="profile-heading">
+                <h2>Profile</h2>
+
+                <p>
+                    Your BikeShop account information.
+                </p>
+            </div>
+
+            <div class="profile-field">
+                <span class="profile-label">
+                    Email
+                </span>
+
+                <strong>
+                    @model.Email
+                </strong>
+            </div>
+
+            <div class="profile-actions">
+                <NavLink class="btn btn-primary"
+                         href="/orders">
+                    <i class="bi bi-receipt me-2"></i>
+                    View orders
+                </NavLink>
+
+                <NavLink class="btn btn-outline-primary"
+                         href="/logout">
+                    <i class="bi bi-box-arrow-right me-2"></i>
+                    Log out
+                </NavLink>
+            </div>
+        </section>
     }
 </div>
 

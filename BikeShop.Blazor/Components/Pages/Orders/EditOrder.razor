@@ -16,53 +16,96 @@
 <PageTitle>Edit Order - BikeShop</PageTitle>
 <PageHeader Text="Edit Order" />
 
-<div class="container">
+<div class="container my-5">
     @if (_model is null) {
         <LoadingSpinner />
     }
     else {
-        <EditForm Model="_model" OnValidSubmit="UpdateOrderAsync">
+        <section class="edit-order-card card">
+            <div class="form-heading">
+                <span class="form-icon">
+                    <i class="bi bi-truck"></i>
+                </span>
 
-            <DataAnnotationsValidator />
+                <div>
+                    <h2>Delivery details</h2>
 
-            <div class="mb-3">
-                <label class="form-label">
-                    Delivery address
-                </label>
-
-                <InputText class="form-control" @bind-Value="_model.DeliveryAddress" />
+                    <p>
+                        Update the delivery information for
+                        order #@Id.
+                    </p>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">
-                    Customer phone
-                </label>
+            <EditForm Model="_model"
+                      OnValidSubmit="UpdateOrderAsync">
+                <DataAnnotationsValidator />
 
-                <InputText class="form-control" @bind-Value="_model.CustomerPhone" />
-            </div>
+                <ValidationSummary class="validation-summary" />
 
-            <div class="mb-3">
-                <label class="form-label">
-                    Delivery date
-                </label>
+                <div class="mb-4">
+                    <label class="form-label"
+                           for="delivery-address">
+                        Delivery address
+                    </label>
 
-                <InputDate class="form-control" @bind-Value="_model.DeliveryAt"
-                           Type="InputDateType.DateTimeLocal"
-                           min="@MinDeliveryAt"
-                           max="@MaxDeliveryAt"/>
-            </div>
+                    <InputText id="delivery-address"
+                               class="form-control form-control-lg"
+                               placeholder="City, street, house and apartment"
+                               @bind-Value="_model.DeliveryAddress" />
 
-            <div class="d-flex gap-2">
-                <button class="btn btn-primary" type="submit">
-                    Save
-                </button>
+                    <ValidationMessage For="@(() => _model.DeliveryAddress)" />
+                </div>
 
-                <NavLink class="btn btn-outline-secondary" href="@($"/orders/{Id}")">
-                    Cancel
-                </NavLink>
-            </div>
+                <div class="mb-4">
+                    <label class="form-label"
+                           for="customer-phone">
+                        Customer phone
+                    </label>
 
-        </EditForm>
+                    <InputText id="customer-phone"
+                               class="form-control form-control-lg"
+                               placeholder="+7 (999) 123-45-67"
+                               @bind-Value="_model.CustomerPhone" />
+
+                    <ValidationMessage For="@(() => _model.CustomerPhone)" />
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label"
+                           for="delivery-date">
+                        Delivery date and time
+                    </label>
+
+                    <InputDate id="delivery-date"
+                               class="form-control form-control-lg"
+                               Type="InputDateType.DateTimeLocal"
+                               min="@MinDeliveryAt"
+                               max="@MaxDeliveryAt"
+                               @bind-Value="_model.DeliveryAt" />
+
+                    <div class="form-text">
+                        Delivery is available within the next seven days.
+                    </div>
+
+                    <ValidationMessage For="@(() => _model.DeliveryAt)" />
+                </div>
+
+                <div class="form-actions">
+                    <NavLink class="btn btn-outline-secondary"
+                             href="@($"/orders/{Id}")"
+                             Match="NavLinkMatch.All">
+                        Cancel
+                    </NavLink>
+
+                    <button class="btn btn-primary"
+                            type="submit">
+                        <i class="bi bi-check-lg me-2"></i>
+                        Save changes
+                    </button>
+                </div>
+            </EditForm>
+        </section>
     }
 </div>
 
@@ -80,7 +123,9 @@
     {
         SetBreadcrumbs(
             ("Home", "/"),
-            ($"Order {Id}", null));
+            ("Orders", "/orders"),
+            ($"Order {Id}", $"/orders/{Id}"),
+            ("Edit", null));
 
         var (order, error) = await ApiClient.GetOrderByIdAsync(Id);
 

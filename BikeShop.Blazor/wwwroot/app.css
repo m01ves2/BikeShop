@@ -267,3 +267,38 @@ a {
         padding: 1.5rem;
     }
 }
+
+/* Order status badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.status-pending {
+    color: var(--color-accent-text);
+    background-color: rgb(242 165 68 / 30%);
+}
+
+.status-paid {
+    color: #28517a;
+    background-color: #e5f0fa;
+}
+
+.status-shipped {
+    color: #5d4386;
+    background-color: #eee8f7;
+}
+
+.status-completed {
+    color: var(--color-primary);
+    background-color: var(--color-primary-light);
+}
+
+.status-cancelled {
+    color: var(--color-danger);
+    background-color: rgb(201 76 76 / 12%);
+}

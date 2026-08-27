@@ -66,7 +66,7 @@
 
                                     @if (item.Product.StockQuantity > 0) {
                                         <span class="stock-status in-stock">
-                                            In stock
+                                            @GetStockText(item.Product.StockQuantity)
                                         </span>
                                     }
                                     else {
@@ -92,7 +92,6 @@
 
                                         <button type="button"
                                                 class="quantity-button"
-                                                disabled="@(item.Quantity >= item.Product.StockQuantity)"
                                                 aria-label="Increase quantity"
                                                 @onclick="() => Increase(item)">
                                             <i class="bi bi-plus"></i>
@@ -225,4 +224,8 @@
         model = await CartService.GetLocalCartAsync();
     }
 
+    private static string GetStockText(int stockQuantity)
+    {
+        return stockQuantity == 1 ? "1 unit in stock" : $"{stockQuantity} units in stock";
+    }
 }

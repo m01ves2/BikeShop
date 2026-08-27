@@ -1,0 +1,72 @@
+﻿.edit-order-card {
+    max-width: 48rem;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.form-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.form-icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    color: var(--color-primary);
+    background-color: var(--color-primary-light);
+    border-radius: 50%;
+    font-size: 1.25rem;
+}
+
+.form-heading h2 {
+    margin-bottom: 0.375rem;
+    font-size: 1.25rem;
+}
+
+.form-heading p {
+    margin-bottom: 0;
+    color: var(--color-text-muted);
+}
+
+.validation-summary {
+    margin-bottom: 1.5rem;
+    color: var(--color-danger);
+}
+
+    .validation-summary ul {
+        margin-bottom: 0;
+        padding-left: 1.25rem;
+    }
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+@media (max-width: 575.98px) {
+    .edit-order-card {
+        padding: 1.5rem;
+    }
+
+/*    В HTML сначала находится Cancel, затем Save changes. На desktop они отображаются в этом же порядке слева направо:
+    Cancel | Save changes
+    На телефоне при обычном column сверху оказался бы Cancel. Но главное действие должно быть первым визуально:
+    Save changes
+    Cancel
+    Поэтому колонку разворачиваем через column-reverse.*/
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+        .form-actions .btn {
+            width: 100%;
+        }
+}

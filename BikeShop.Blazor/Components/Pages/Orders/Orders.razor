@@ -15,50 +15,70 @@
 <PageTitle>Orders - BikeShop</PageTitle>
 <PageHeader Text="My Orders" />
 
-<div class="container">
+<div class="container my-5">
     @if (_orders is null) {
         <LoadingSpinner />
     }
     else if (_orders.Count == 0) {
-        <p>You don't have any orders yet.</p>
+        <div class="empty-orders">
+            <span class="empty-orders-icon">
+                <i class="bi bi-receipt"></i>
+            </span>
+
+            <h2>No orders yet</h2>
+
+            <p>
+                Your completed orders will appear here.
+            </p>
+
+            <NavLink class="btn btn-primary"
+                     href="/catalog">
+                Explore catalog
+            </NavLink>
+        </div>
     }
     else {
-        <div class="table-responsive">
-            <table class="table align-middle">
-                <thead>
-                    <tr>
-                        <th>Order</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                        <th></th>
-                    </tr>
-                </thead>
+        <div class="orders-list">
+            @foreach (var order in _orders) {
+                <article class="order-card card">
+                    <div class="row align-items-center g-3">
+                        <div class="col-6 col-md-2">
+                            <span class="order-label">
+                                Order
+                            </span>
 
-                <tbody>
-                    @foreach (var order in _orders) {
-                        <tr>
-                            <td>
+                            <strong class="order-number">
                                 #@order.Id
-                            </td>
+                            </strong>
+                        </div>
 
-                            <td>
-                                @order.CreatedAt.ToString("dd.MM.yyyy HH:mm")
-                            </td>
+                        <div class="col-6 col-md-4">
+                            <span class="order-label">
+                                Created
+                            </span>
 
-                            <td>
-                                @order.Status
-                            </td>
+                            <span class="order-value">
+                                @order.CreatedAt.ToString(
+                                "dd.MM.yyyy HH:mm")
+                    </span>
+                </div>
 
-                            <td class="text-end">
-                                <NavLink class="btn btn-outline-primary btn-sm"
-                                         href="@($"/orders/{order.Id}")">
-                                    Details
-                                </NavLink>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                <div class="col-7 col-md-3">
+                    <span class="@GetStatusClass(order.Status)">
+                        @order.Status
+                    </span>
+                </div>
+
+                <div class="col-5 col-md-3 text-end">
+                    <NavLink class="btn btn-outline-primary"
+                             href="@($"/orders/{order.Id}")">
+                        Details
+                        <i class="bi bi-arrow-right ms-1"></i>
+                    </NavLink>
+                </div>
+            </div>
+        </article>
+                }
         </div>
     }
 </div>
@@ -80,5 +100,10 @@
         }
 
         _orders = orders;
+    }
+
+    private static string GetStatusClass(string status)
+    {
+        return $"status-badge status-{status.ToLowerInvariant()}";
     }
 }
