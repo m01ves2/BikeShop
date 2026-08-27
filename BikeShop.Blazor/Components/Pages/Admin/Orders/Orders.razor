@@ -12,15 +12,58 @@
 <PageTitle>Admin Orders - BikeShop</PageTitle>
 <PageHeader Text="Admin Orders" />
 
-<div class="container">
-    <div class="mb-3">
-        <label class="form-label">Order ID</label>
-        <InputNumber class="form-control" @bind-Value="_orderId" />
+<div class="container my-5">
+    <div class="admin-toolbar">
+        <div class="admin-toolbar-start">
+            <NavLink class="btn btn-outline-secondary"
+                     href="/admin"
+                     Match="NavLinkMatch.All">
+                <i class="bi bi-arrow-left me-2"></i>
+                Back to admin
+            </NavLink>
+
+            <p>
+                Find an order by its identifier.
+            </p>
+        </div>
     </div>
 
-    <button class="btn btn-primary" @onclick="OpenOrder">
-        Open order
-    </button>
+    <section class="order-search card">
+        <div class="admin-form-heading">
+            <span class="admin-form-icon">
+                <i class="bi bi-search"></i>
+            </span>
+
+            <div>
+                <h2>Find order</h2>
+
+                <p>
+                    Enter the order ID to view its details
+                    and update the status.
+                </p>
+            </div>
+        </div>
+
+        <div class="order-search-control">
+            <div class="input-group input-group-lg">
+                <span class="input-group-text">
+                    #
+                </span>
+
+                <InputNumber class="form-control"
+                             placeholder="Order ID"
+                             @bind-Value="_orderId" />
+
+                <button class="btn btn-primary"
+                        type="button"
+                        disabled="@(_orderId <= 0)"
+                        @onclick="OpenOrder">
+                    Open order
+                    <i class="bi bi-arrow-right ms-2"></i>
+                </button>
+            </div>
+        </div>
+    </section>
 </div>
 
 @code {
@@ -30,7 +73,7 @@
     {
         SetBreadcrumbs(
             ("Home", "/"),
-            ("Admin", "/"),
+            ("Admin", "/admin"),
             ("Orders", null));
     }
 

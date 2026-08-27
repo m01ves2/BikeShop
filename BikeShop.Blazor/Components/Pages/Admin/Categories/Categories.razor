@@ -18,10 +18,24 @@
 <PageTitle>Admin Categories - BikeShop</PageTitle>
 <PageHeader Text="Categories" />
 
-<div class="container">
-    <div class="mb-4">
+<div class="container my-5">
+    <div class="admin-toolbar">
+        <div class="admin-toolbar-start">
+            <NavLink class="btn btn-outline-secondary"
+                     href="/admin"
+                     Match="NavLinkMatch.All">
+                <i class="bi bi-arrow-left me-2"></i>
+                Back to admin
+            </NavLink>
+
+            <p>
+                Create and manage product categories.
+            </p>
+        </div>
+
         <NavLink class="btn btn-primary"
                  href="/admin/categories/create">
+            <i class="bi bi-plus-lg me-2"></i>
             Create category
         </NavLink>
     </div>
@@ -29,38 +43,55 @@
     @if (_categories is null) {
         <LoadingSpinner />
     }
+    else if (_categories.Count == 0) {
+        <div class="admin-empty card">
+            <i class="bi bi-tags"></i>
+            <p>No categories have been created yet.</p>
+        </div>
+    }
     else {
-        <div class="table-responsive">
-            <table class="table align-middle">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th></th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @foreach (var category in _categories) {
+        <div class="admin-table-card card">
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
                         <tr>
-                            <td>@category.Id</td>
-                            <td>@category.Name</td>
-
-                            <td class="text-end">
-                                <NavLink class="btn btn-outline-primary btn-sm"
-                                         href="@($"/admin/categories/{category.Id}/edit")">
-                                    Edit
-                                </NavLink>
-
-                                <button class="btn btn-danger btn-sm"
-                                        @onclick="() => DeleteCategory(category.Id)">
-                                    Delete
-                                </button>
-                            </td>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th class="text-end">Actions</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var category in _categories) {
+                            <tr>
+                                <td class="admin-id">
+                                    #@category.Id
+                                </td>
+
+                                <td>
+                                    <strong>@category.Name</strong>
+                                </td>
+
+                                <td>
+                                    <div class="admin-row-actions">
+                                        <NavLink class="btn btn-outline-primary btn-sm"
+                                                 href="@($"/admin/categories/{category.Id}/edit")">
+                                            <i class="bi bi-pencil me-1"></i>
+                                            Edit
+                                        </NavLink>
+
+                                        <button class="btn btn-danger btn-sm"
+                                                @onclick="() => DeleteCategory(category.Id)">
+                                            <i class="bi bi-trash me-1"></i>
+                                            Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     }
 </div>
@@ -71,9 +102,9 @@
     protected override async Task OnInitializedAsync()
     {
         SetBreadcrumbs(
-            ("Home", "/"),
-            ("Admin", "/"),
-            ("Categories", null));
+             ("Home", "/"),
+             ("Admin", "/admin"),
+             ("Categories", null));
 
         await LoadCategories();
     }

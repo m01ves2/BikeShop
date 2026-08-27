@@ -16,27 +16,57 @@
 <PageTitle>Create Category - BikeShop</PageTitle>
 <PageHeader Text="Create Category" />
 
-<div class="container">
-    <EditForm Model="_model" OnValidSubmit="Create">
+<div class="container my-5">
+    <section class="admin-form-card card">
+        <div class="admin-form-heading">
+            <span class="admin-form-icon">
+                <i class="bi bi-tag"></i>
+            </span>
 
-        <DataAnnotationsValidator />
+            <div>
+                <h2>Category information</h2>
 
-        <div class="mb-3">
-            <label class="form-label">Name</label>
-
-            <InputText class="form-control" @bind-Value="_model.Name" />
+                <p>
+                    Create a new category for the product catalog.
+                </p>
+            </div>
         </div>
 
-        <div class="d-flex gap-2">
-            <button class="btn btn-primary" type="submit">
-                Create
-            </button>
+        <EditForm Model="_model"
+                  OnValidSubmit="Create">
+            <DataAnnotationsValidator />
 
-            <NavLink class="btn btn-outline-secondary" href="/admin/categories">
-                Cancel
-            </NavLink>
-        </div>
-    </EditForm>
+            <ValidationSummary class="auth-validation-summary" />
+
+            <div class="mb-4">
+                <label class="form-label"
+                       for="category-name">
+                    Name
+                </label>
+
+                <InputText id="category-name"
+                           class="form-control form-control-lg"
+                           placeholder="Category name"
+                           @bind-Value="_model.Name" />
+
+                <ValidationMessage For="@(() => _model.Name)" />
+            </div>
+
+            <div class="admin-form-actions">
+                <NavLink class="btn btn-outline-secondary"
+                         href="/admin/categories"
+                         Match="NavLinkMatch.All">
+                    Cancel
+                </NavLink>
+
+                <button class="btn btn-primary"
+                        type="submit">
+                    <i class="bi bi-plus-lg me-2"></i>
+                    Create category
+                </button>
+            </div>
+        </EditForm>
+    </section>
 </div>
 
 @code {
@@ -46,8 +76,8 @@
     {
         SetBreadcrumbs(
             ("Home", "/"),
-            ("Admin", "/"),
-            ("Categories", "/"),
+            ("Admin", "/admin"),
+            ("Categories", "/admin/categories"),
             ("Create", null));
     }
 

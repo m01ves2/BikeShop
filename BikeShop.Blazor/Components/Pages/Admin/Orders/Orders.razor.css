@@ -1,0 +1,33 @@
+﻿.order-search {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.order-search-control {
+    max-width: 36rem;
+}
+
+@media (max-width: 575.98px) {
+    .order-search {
+        padding: 1.5rem;
+    }
+
+    .order-search-control .input-group {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+        .order-search-control .input-group > * {
+            width: 100%;
+            border-radius: var(--border-radius-sm);
+        }
+
+    .order-search-control .input-group-text {
+        display: none;
+    }
+
+    .order-search-control .btn {
+        margin-top: 0.75rem;
+    }
+}

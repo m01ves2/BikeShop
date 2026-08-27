@@ -20,10 +20,24 @@
 <PageTitle>Admin Products - BikeShop</PageTitle>
 <PageHeader Text="Products" />
 
-<div class="container">
-    <div class="mb-4">
+<div class="container my-5">
+    <div class="admin-toolbar">
+        <div class="admin-toolbar-start">
+            <NavLink class="btn btn-outline-secondary"
+                     href="/admin"
+                     Match="NavLinkMatch.All">
+                <i class="bi bi-arrow-left me-2"></i>
+                Back to admin
+            </NavLink>
+
+            <p>
+                Create and manage products in the catalog.
+            </p>
+        </div>
+
         <NavLink class="btn btn-primary"
                  href="/admin/products/create">
+            <i class="bi bi-plus-lg me-2"></i>
             Create product
         </NavLink>
     </div>
@@ -31,42 +45,81 @@
     @if (_products is null) {
         <LoadingSpinner />
     }
+    else if (_products.Count == 0) {
+        <div class="admin-empty card">
+            <i class="bi bi-bicycle"></i>
+            <p>No products have been created yet.</p>
+        </div>
+    }
     else {
-        <div class="table-responsive">
-            <table class="table align-middle">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Price</th>
-                        <th></th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @foreach (var product in _products) {
+        <div class="admin-table-card card">
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
                         <tr>
-                            <td>@product.Id</td>
-                            <td>@product.Name</td>
-                            <td>@product.CategoryName</td>
-                            <td>@Currency.Format(product.Price)</td>
-
-                            <td class="text-end">
-                                <NavLink class="btn btn-outline-primary btn-sm"
-                                         href="@($"/admin/products/{product.Id}/edit")">
-                                    Edit
-                                </NavLink>
-
-                                <button class="btn btn-danger btn-sm"
-                                        @onclick="() => DeleteProduct(product.Id)">
-                                    Delete
-                                </button>
-                            </td>
+                            <th>Id</th>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th class="text-end">Price</th>
+                            <th class="text-center">Stock</th>
+                            <th class="text-end">Actions</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var product in _products) {
+                            <tr>
+                                <td class="admin-id">
+                                    #@product.Id
+                                </td>
+
+                                <td>
+                                    <strong>@product.Name</strong>
+                                </td>
+
+                                <td>
+                                    @product.CategoryName
+                                </td>
+
+                                <td class="text-end">
+                                    <strong>
+                                        @Currency.Format(product.Price)
+                                    </strong>
+                                </td>
+
+                                <td class="text-center">
+                                    @if (product.StockQuantity > 0) {
+                                        <span class="admin-stock">
+                                            @product.StockQuantity
+                                        </span>
+                                    }
+                                    else {
+                                        <span class="admin-stock admin-stock-empty">
+                                            0
+                                        </span>
+                                    }
+                                </td>
+
+                                <td>
+                                    <div class="admin-row-actions">
+                                        <NavLink class="btn btn-outline-primary btn-sm"
+                                                 href="@($"/admin/products/{product.Id}/edit")">
+                                            <i class="bi bi-pencil me-1"></i>
+                                            Edit
+                                        </NavLink>
+
+                                        <button class="btn btn-danger btn-sm"
+                                                @onclick="() => DeleteProduct(product.Id)">
+                                            <i class="bi bi-trash me-1"></i>
+                                            Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     }
 </div>
@@ -78,7 +131,7 @@
     {
         SetBreadcrumbs(
             ("Home", "/"),
-            ("Admin", "/"),
+            ("Admin", "/admin"),
             ("Products", null));
 
         await LoadProducts();

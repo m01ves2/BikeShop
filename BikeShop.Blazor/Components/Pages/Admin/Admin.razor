@@ -8,24 +8,76 @@
 <ErrorToast Message="@ErrorMessage" />
 
 <PageTitle>Admin - BikeShop</PageTitle>
-<PageHeader Text="Admin Panel" />
+<PageHeader Text="Admin panel" />
 
-<div class="container">
-    <div class="d-flex gap-3 flex-wrap">
-        <NavLink class="btn btn-outline-primary" href="/admin/orders">
-            Orders
+<div class="container my-5">
+    <section class="admin-welcome card">
+        <span class="admin-welcome-icon">
+            <i class="bi bi-speedometer2"></i>
+        </span>
+
+        <div>
+            <h2>BikeShop administration</h2>
+
+            <p>
+                Manage the catalog and process customer orders.
+            </p>
+        </div>
+    </section>
+
+    <div class="admin-grid">
+        <NavLink class="admin-card card"
+                 href="/admin/orders">
+            <span class="admin-card-icon">
+                <i class="bi bi-receipt"></i>
+            </span>
+
+            <div>
+                <h3>Orders</h3>
+
+                <p>
+                    Find orders and update their processing status.
+                </p>
+            </div>
+
+            <i class="bi bi-arrow-right admin-card-arrow"></i>
         </NavLink>
 
-        <NavLink class="btn btn-outline-primary" href="/admin/products">
-            Products
+        <NavLink class="admin-card card"
+                 href="/admin/products">
+            <span class="admin-card-icon">
+                <i class="bi bi-bicycle"></i>
+            </span>
+
+            <div>
+                <h3>Products</h3>
+
+                <p>
+                    Create products and manage catalog information.
+                </p>
+            </div>
+
+            <i class="bi bi-arrow-right admin-card-arrow"></i>
         </NavLink>
 
-        <NavLink class="btn btn-outline-primary" href="/admin/categories">
-            Categories
+        <NavLink class="admin-card card"
+                 href="/admin/categories">
+            <span class="admin-card-icon">
+                <i class="bi bi-tags"></i>
+            </span>
+
+            <div>
+                <h3>Categories</h3>
+
+                <p>
+                    Organize products into catalog categories.
+                </p>
+            </div>
+
+            <i class="bi bi-arrow-right admin-card-arrow"></i>
         </NavLink>
     </div>
 </div>
-
 
 @code {
 

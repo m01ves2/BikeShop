@@ -14,88 +14,252 @@
 
 <ErrorToast Message="@ErrorMessage" />
 
-@if (_order is null) {
+@if (_loading) {
     <PageTitle>Admin Order - BikeShop</PageTitle>
     <PageHeader Text="Admin Order" />
     <LoadingSpinner />
+}
+else if (_order is null) {
+    <PageTitle>Order not found - Admin</PageTitle>
+    <PageHeader Text="Order not found" />
+
+    <div class="container my-5">
+        <div class="order-not-found card">
+            <span class="not-found-icon">
+                <i class="bi bi-search"></i>
+            </span>
+
+            <h2>Order could not be loaded</h2>
+
+            <p>
+                Check the order ID and try again.
+            </p>
+
+            <NavLink class="btn btn-primary"
+                     href="/admin/orders">
+                Back to order search
+            </NavLink>
+        </div>
+    </div>
 }
 else {
     <PageTitle>Order #@_order.Id - Admin</PageTitle>
     <PageHeader Text="@($"Order #{_order.Id}")" />
 
-    <div class="container">
-        <div class="mb-4">
-            <p><strong>Status:</strong> @_order.Status</p>
-            <p><strong>Created:</strong> @_order.CreatedAt.ToString("dd.MM.yyyy HH:mm")</p>
-            <p><strong>Delivery:</strong> @_order.DeliveryAt.ToString("dd.MM.yyyy HH:mm")</p>
-            <p><strong>Address:</strong> @_order.DeliveryAddress</p>
-            <p><strong>Customer phone:</strong> @_order.CustomerPhone</p>
+    <div class="container my-5">
+        <div class="admin-toolbar">
+            <div class="admin-toolbar-start">
+                <NavLink class="btn btn-outline-secondary"
+                         href="/admin/orders"
+                         Match="NavLinkMatch.All">
+                    <i class="bi bi-arrow-left me-2"></i>
+                    Back to orders
+                </NavLink>
 
-            @if (!string.IsNullOrWhiteSpace(_order.CourierPhone)) {
-                <p><strong>Courier phone:</strong> @_order.CourierPhone</p>
-            }
-        </div>
-
-        <h2>Items</h2>
-
-        <table class="table align-middle">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @foreach (var item in _order.Items) {
-                    <tr>
-                        <td>@item.ProductName</td>
-                        <td>@Currency.Format(item.UnitPrice)</td>
-                        <td>@item.Quantity</td>
-                        <td>@Currency.Format(item.Total)</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
-        <div class="d-flex justify-content-end mb-4">
-            <strong>
-                Total:
-                @Currency.Format(_order.Items.Sum(x => x.Total))
-            </strong>
-        </div>
-
-        @if (_order.AllowedStatuses.Count > 0) {
-            <div class="mb-3">
-                <label class="form-label">Change status</label>
-
-                <InputSelect class="form-select"
-                             @bind-Value="_selectedStatus">
-                    @foreach (var status in _order.AllowedStatuses) {
-                        <option value="@status">
-                            @status
-                        </option>
-                    }
-                </InputSelect>
+                <p>
+                    Review the order and manage its processing status.
+                </p>
             </div>
+        </div>
 
-            <button class="btn btn-primary"
-                    @onclick="ChangeStatus">
-                Change status
-            </button>
-        }
-        else {
-            <p class="text-muted">
-                No status transitions available.
-            </p>
-        }
+        <div class="row align-items-start g-4">
+            <div class="col-lg-8">
+                <section class="order-information-card card">
+                    <h2>Delivery information</h2>
 
-        <div class="mt-4">
-            <NavLink class="btn btn-outline-secondary" href="/admin/orders">
-                Back
-            </NavLink>
+                    <div class="order-information">
+                        <div class="information-item">
+                            <span class="information-icon">
+                                <i class="bi bi-calendar-plus"></i>
+                            </span>
+
+                            <div>
+                                <span class="information-label">
+                                    Created
+                                </span>
+
+                                <strong>
+                                    @_order.CreatedAt.ToString(
+                                    "dd.MM.yyyy HH:mm")
+                            </strong>
+                        </div>
+                    </div>
+
+                    <div class="information-item">
+                        <span class="information-icon">
+                            <i class="bi bi-calendar-event"></i>
+                        </span>
+
+                        <div>
+                            <span class="information-label">
+                                Delivery
+                            </span>
+
+                            <strong>
+                                @_order.DeliveryAt.ToString(
+                                                                "dd.MM.yyyy HH:mm")
+                            </strong>
+                        </div>
+                    </div>
+
+                    <div class="information-item">
+                        <span class="information-icon">
+                            <i class="bi bi-geo-alt"></i>
+                        </span>
+
+                        <div>
+                            <span class="information-label">
+                                Address
+                            </span>
+
+                            <strong>
+                                @_order.DeliveryAddress
+                            </strong>
+                        </div>
+                    </div>
+
+                    <div class="information-item">
+                        <span class="information-icon">
+                            <i class="bi bi-telephone"></i>
+                        </span>
+
+                        <div>
+                            <span class="information-label">
+                                Customer phone
+                            </span>
+
+                            <strong>
+                                @_order.CustomerPhone
+                            </strong>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(_order.CourierPhone)) {
+                            <div class="information-item">
+                                <span class="information-icon">
+                                    <i class="bi bi-person-badge"></i>
+                                </span>
+
+                                <div>
+                                    <span class="information-label">
+                                        Courier phone
+                                    </span>
+
+                                    <strong>
+                                        @_order.CourierPhone
+                                    </strong>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </section>
+
+                <section class="order-items-card card">
+                    <div class="order-items-heading">
+                        <h2>Order items</h2>
+
+                        <span>
+                            @_order.Items.Sum(x => x.Quantity) products
+                        </span>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="text-end">Price</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in _order.Items) {
+                                    <tr>
+                                        <td>
+                                            <strong>
+                                                @item.ProductName
+                                            </strong>
+                                        </td>
+
+                                        <td class="text-end">
+                                            @Currency.Format(item.UnitPrice)
+                                        </td>
+
+                                        <td class="text-center">
+                                            @item.Quantity
+                                        </td>
+
+                                        <td class="text-end">
+                                            <strong>
+                                                @Currency.Format(item.Total)
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="order-total">
+                        <span>Total</span>
+
+                        <strong>
+                            @Currency.Format(
+                            _order.Items.Sum(x => x.Total))
+                    </strong>
+                </div>
+            </section>
+        </div>
+
+        <div class="col-lg-4">
+            <aside class="status-panel card">
+                <span class="information-label">
+                    Current status
+                </span>
+
+                <span class="@GetStatusClass(_order.Status)">
+                    @_order.Status
+                </span>
+
+                <hr />
+
+                @if (_order.AllowedStatuses.Count > 0) {
+                        <label class="form-label"
+                               for="order-status">
+                            Change status
+                        </label>
+
+                        <InputSelect id="order-status"
+                                     class="form-select mb-3"
+                                     @bind-Value="_selectedStatus">
+                            @foreach (var status in _order.AllowedStatuses) {
+                                <option value="@status">
+                                    @status
+                                </option>
+                            }
+                        </InputSelect>
+
+                        <button class="btn btn-primary w-100"
+                                disabled="@string.IsNullOrWhiteSpace(_selectedStatus)"
+                                @onclick="ChangeStatus">
+                            <i class="bi bi-arrow-repeat me-2"></i>
+                            Update status
+                        </button>
+                    }
+                    else {
+                        <div class="status-complete">
+                            <i class="bi bi-check-circle"></i>
+
+                            <p>
+                                No status transitions are available
+                                for this order.
+                            </p>
+                        </div>
+                    }
+                </aside>
+            </div>
         </div>
     </div>
 }
@@ -106,29 +270,39 @@ else {
 
     private OrderDetailsModel? _order;
     private string? _selectedStatus;
+    private bool _loading = true;
 
     protected override async Task OnParametersSetAsync()
     {
         SetBreadcrumbs(
             ("Home", "/"),
-            ("Admin", "/"),
-            ("Orders", "/"),
-            ($"{Id}", null));
+            ("Admin", "/admin"),
+            ("Orders", "/admin/orders"),
+            ($"Order {Id}", null));
 
         await LoadOrder();
     }
 
     private async Task LoadOrder()
     {
-        var (order, error) = await ApiClient.GetOrderByIdAsync(Id);
+        _loading = true;
 
-        if (error is not null) {
-            ShowError(error);
-            return;
+        try {
+            var (order, error) = await ApiClient.GetOrderByIdAsync(Id);
+
+            if (error is not null) {
+                _order = null;
+                _selectedStatus = null;
+                ShowError(error);
+                return;
+            }
+
+            _order = order;
+            _selectedStatus = _order?.AllowedStatuses.FirstOrDefault();
         }
-
-        _order = order;
-        _selectedStatus = _order?.AllowedStatuses.FirstOrDefault();
+        finally {
+            _loading = false;
+        }
     }
 
     private async Task ChangeStatus()
@@ -150,6 +324,11 @@ else {
         }
 
         await LoadOrder();
+    }
+
+    private static string GetStatusClass(string status)
+    {
+        return $"status-badge status-{status.ToLowerInvariant()}";
     }
 
 }
