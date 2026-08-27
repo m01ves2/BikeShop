@@ -12,32 +12,89 @@
 <ErrorToast Message="@ErrorMessage" />
 
 <PageTitle>Register</PageTitle>
-<PageHeader Text="Register" />
 
-<div class="container my-5">
-    <EditForm Model="model" OnValidSubmit="RegisterUser">
+<div class="auth-page container">
+    <section class="auth-card card">
+        <span class="auth-icon">
+            <i class="bi bi-person-plus"></i>
+        </span>
 
-        <div class="mb-3">
-            <label>Email</label>
-            <InputText class="form-control" @bind-Value="model.Email" />
+        <div class="auth-heading">
+            <h1>Create account</h1>
+
+            <p>
+                Register to place orders and track their status.
+            </p>
         </div>
 
-        <div class="mb-3">
-            <label>Password</label>
-            <InputText class="form-control" type="password" @bind-Value="model.Password" />
-        </div>
+        <EditForm Model="model"
+                  OnValidSubmit="RegisterUser">
+            <DataAnnotationsValidator />
 
-        @if (!string.IsNullOrEmpty(ErrorMessage)) {
-            <div class="alert alert-danger">
-                @ErrorMessage
+            <ValidationSummary class="auth-validation-summary" />
+
+            <div class="mb-4">
+                <label class="form-label"
+                       for="register-email">
+                    Email
+                </label>
+
+                <InputText id="register-email"
+                           class="form-control form-control-lg"
+                           type="email"
+                           autocomplete="email"
+                           placeholder="you@example.com"
+                           @bind-Value="model.Email" />
+
+                <ValidationMessage For="@(() => model.Email)" />
             </div>
-        }
 
-        <button class="btn btn-primary">
-            Register
-        </button>
+            <div class="mb-4">
+                <label class="form-label"
+                       for="register-password">
+                    Password
+                </label>
 
-    </EditForm>
+                <InputText id="register-password"
+                           class="form-control form-control-lg"
+                           type="password"
+                           autocomplete="new-password"
+                           placeholder="Create a password"
+                           @bind-Value="model.Password" />
+
+                <ValidationMessage For="@(() => model.Password)" />
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label"
+                       for="confirm-password">
+                    Confirm password
+                </label>
+
+                <InputText id="confirm-password"
+                           class="form-control form-control-lg"
+                           type="password"
+                           autocomplete="new-password"
+                           placeholder="Repeat your password"
+                           @bind-Value="model.ConfirmPassword" />
+
+                <ValidationMessage For="@(() => model.ConfirmPassword)" />
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary btn-lg w-100">
+                Create account
+            </button>
+        </EditForm>
+
+        <div class="auth-alternative">
+            Already have an account?
+
+            <NavLink href="/login">
+                Log in
+            </NavLink>
+        </div>
+    </section>
 </div>
 
 @code {

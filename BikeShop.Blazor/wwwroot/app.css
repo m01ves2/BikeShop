@@ -195,3 +195,75 @@ a {
         content: "An unexpected error has occurred.";
     }
 
+/* Login and registration pages */
+.auth-page {
+    display: flex;
+    justify-content: center;
+    padding-top: 3rem;
+    padding-bottom: 5rem;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 32rem;
+    padding: 2.5rem;
+}
+
+.auth-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto 1.5rem;
+    color: var(--color-primary);
+    background-color: var(--color-primary-light);
+    border-radius: 50%;
+    font-size: 1.5rem;
+}
+
+.auth-heading {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+    .auth-heading h1 {
+        margin-bottom: 0.75rem;
+        font-size: 2rem;
+    }
+
+    .auth-heading p {
+        margin-bottom: 0;
+        color: var(--color-text-muted);
+    }
+
+.auth-validation-summary {
+    margin-bottom: 1.5rem;
+    color: var(--color-danger);
+}
+
+    .auth-validation-summary ul {
+        margin-bottom: 0;
+        padding-left: 1.25rem;
+    }
+
+.auth-alternative {
+    margin-top: 1.5rem;
+    color: var(--color-text-muted);
+    text-align: center;
+}
+
+    .auth-alternative a {
+        font-weight: 600;
+    }
+
+@media (max-width: 575.98px) {
+    .auth-page {
+        padding-top: 1.5rem;
+        padding-bottom: 3rem;
+    }
+
+    .auth-card {
+        padding: 1.5rem;
+    }
+}

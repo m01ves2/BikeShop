@@ -1,6 +1,7 @@
 ﻿using BikeShop.Blazor.Identity;
 using BikeShop.Blazor.Models.Auth;
 using BikeShop.Blazor.Services.Models;
+using System.Net;
 
 namespace BikeShop.Blazor.Services.ApiClients.Auth
 {
@@ -30,6 +31,10 @@ namespace BikeShop.Blazor.Services.ApiClients.Auth
                 var result = await response.Content.ReadFromJsonAsync<LoginResponseModel>();
 
                 return (result, null);
+            }
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized) {
+                return (null, new ApiErrorResponseModel("Invalid email or password."));
             }
 
             var error = await ReadErrorAsync(response);
