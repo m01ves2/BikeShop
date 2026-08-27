@@ -1,0 +1,108 @@
+﻿.hero-section {
+    padding: 5rem 0;
+    background: linear-gradient( 135deg, var(--color-primary-light), var(--color-background) );
+}
+
+.hero-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    padding: 0.5rem 0.75rem;
+    color: var(--color-primary);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.hero-title {
+    max-width: 40rem;
+    margin-bottom: 1.5rem;
+    font-size: clamp(2.75rem, 6vw, 4.75rem);
+    /* clamp -   Она задаёт адаптивный размер между минимумом и максимумом letter-spacing: -0.04em;
+    минимум       желаемый размер       максимум
+     2.75rem            6vw              4.75rem
+
+6vw — 6% ширины окна браузера.
+*/
+    letter-spacing: -0.04em;
+}
+
+.hero-title-accent {
+    display: block;
+    width: fit-content;
+    color: var(--color-primary);
+}
+
+.hero-description {
+    max-width: 36rem;
+    margin-bottom: 2rem;
+    color: var(--color-text-muted);
+    font-size: 1.125rem;
+}
+
+.hero-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 24rem;
+    overflow: hidden;
+    color: var(--color-primary);
+    background-color: rgb(255 255 255 / 55%);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.hero-bicycle {
+    font-size: 11rem;
+    transform: rotate(-5deg);
+}
+
+.hero-image-note {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    padding: 0.5rem 0.75rem;
+    color: var(--color-text-muted);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    font-size: 0.75rem;
+}
+
+
+@media (max-width: 991.98px) {
+    .hero-section {
+        padding: 4rem 0;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+    }
+
+    .hero-visual {
+        min-height: 20rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .hero-section {
+        padding: 3rem 0;
+    }
+
+    .hero-title {
+        font-size: 2.75rem;
+    }
+
+    .hero-visual {
+        min-height: 16rem;
+    }
+
+    .hero-bicycle {
+        font-size: 8rem;
+    }
+}

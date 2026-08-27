@@ -6,7 +6,7 @@
 .category-list {
     gap: 0.5rem;
     padding: 0.5rem 0;
-    overflow-x: auto;
+
 }
 
 /*::deep позволяет изолированному CSS родительского Blazor-компонента стилизовать HTML, созданный дочерним компонентом.
@@ -30,9 +30,3 @@
         color: var(--color-primary);
         background-color: var(--color-primary-light);
     }
-
-@media (max-width: 767.98px) {
-    .category-list {
-        justify-content: flex-start !important;
-    }
-}
