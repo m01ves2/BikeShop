@@ -5,7 +5,7 @@
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models.Catalog
 @using BikeShop.Blazor.Services.ApiClients.Catalog
-@using BikeShop.Blazor.Services.Models
+
 
 @inject ProductApiClient ApiClient
 
@@ -32,6 +32,10 @@
 
     protected override async Task OnInitializedAsync()
     {
+        SetBreadcrumbs(
+            ("Home", "/"),
+            ("Catalog", null));
+
         var (products, error) = await ApiClient.GetProductsAsync();
 
         if (error is not null) {
@@ -41,5 +45,6 @@
         }
 
         _products = products;
+
     }
 }

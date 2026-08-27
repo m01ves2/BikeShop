@@ -3,12 +3,10 @@
 @inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Shared
-@using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Models.Admin.Categories
-@using BikeShop.Blazor.Services.ApiClients
 @using BikeShop.Blazor.Services.ApiClients.Admin.Categories
-@using BikeShop.Blazor.Services.Models
 @using Microsoft.AspNetCore.Authorization
+
 
 @inject AdminCategoriesApiClient AdminApiClient
 @inject NavigationManager Navigation
@@ -43,6 +41,15 @@
 
 @code {
     private readonly CreateCategoryModel _model = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        SetBreadcrumbs(
+            ("Home", "/"),
+            ("Admin", "/"),
+            ("Categories", "/"),
+            ("Create", null));
+    }
 
     private async Task Create()
     {

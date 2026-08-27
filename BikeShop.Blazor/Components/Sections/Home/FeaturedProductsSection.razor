@@ -1,13 +1,11 @@
 ﻿@using BikeShop.Blazor.Components.Sections.Product
 @using BikeShop.Blazor.Components.Shared
-@using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Models.Catalog
-@using BikeShop.Blazor.Services
-@using BikeShop.Blazor.Services.ApiClients
 @using BikeShop.Blazor.Services.ApiClients.Catalog
-@using BikeShop.Blazor.Services.Models
 
 @inject ProductApiClient ApiClient
+
+<ErrorToast Message="@_errorMessage" />
 
 <section class="container py-5">
 
@@ -33,13 +31,13 @@
 @code 
 {
     private IReadOnlyList<ProductListItemModel>? _products;
-    private ApiErrorResponseModel? _error;
+    private string? _errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
         var (products, error) = (await ApiClient.GetProductsAsync());
         if (error != null) {
-            _error = error;
+            _errorMessage = error.Message;
             return;
         }
 

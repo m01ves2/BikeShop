@@ -26,6 +26,14 @@
 @code {
     private int _orderId;
 
+    protected override async Task OnInitializedAsync()
+    {
+        SetBreadcrumbs(
+            ("Home", "/"),
+            ("Admin", "/"),
+            ("Orders", null));
+    }
+
     private void OpenOrder()
     {
         if (_orderId <= 0)

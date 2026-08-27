@@ -3,11 +3,10 @@
 
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Identity
-@using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Models.Cart
 @using BikeShop.Blazor.Services
-@using BikeShop.Blazor.Services.Models
 @using Microsoft.AspNetCore.Components.Authorization
+
 
 @inject ICartService CartService
 @inject CurrencyFormatter Currency
@@ -20,9 +19,6 @@
 <PageHeader Text="Cart" />
 
 <div class="container mt-4">
-    <div class="mb-4">
-        <h1>Shopping Cart</h1>
-    </div>
 
     @if (model.Items.Count == 0) {
         <p>Your cart is empty.</p>
@@ -143,6 +139,10 @@
 
     protected override async Task OnInitializedAsync()
     {
+        SetBreadcrumbs(
+            ("Home", "/"),
+            ("Cart", null));
+
         model = await CartService.GetLocalCartAsync();
     }
 

@@ -3,13 +3,11 @@
 @inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Shared
-@using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Models.Admin.Categories
-@using BikeShop.Blazor.Services.ApiClients
 @using BikeShop.Blazor.Services.ApiClients.Admin.Categories
 @using BikeShop.Blazor.Services.ApiClients.Catalog
-@using BikeShop.Blazor.Services.Models
 @using Microsoft.AspNetCore.Authorization
+
 
 @inject CategoryApiClient CategoryApiClient
 @inject AdminCategoriesApiClient AdminApiClient
@@ -68,6 +66,13 @@
             Id = category!.Id,
             Name = category.Name
         };
+
+        SetBreadcrumbs(
+            ("Home", "/"),
+            ("Admin", "/"),
+            ("Categories", "/"),
+            ($"{category.Name}", null),
+            ("Edit", null));
     }
 
     private async Task UpdateCategory()

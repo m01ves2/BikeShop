@@ -3,14 +3,12 @@
 @inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Shared
-@using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Models.Admin.Products
 @using BikeShop.Blazor.Models.Catalog
-@using BikeShop.Blazor.Services.ApiClients
 @using BikeShop.Blazor.Services.ApiClients.Admin.Products
 @using BikeShop.Blazor.Services.ApiClients.Catalog
-@using BikeShop.Blazor.Services.Models
 @using Microsoft.AspNetCore.Authorization
+
 
 @inject AdminProductsApiClient AdminApiClient
 @inject CategoryApiClient CategoryApiClient
@@ -86,8 +84,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var (categories, error) =
-            await CategoryApiClient.GetCategoriesAsync();
+        SetBreadcrumbs(
+            ("Home", "/"),
+            ("Admin", "/"),
+            ("Products", "/"),
+            ("Create", null));
+
+        var (categories, error) = await CategoryApiClient.GetCategoriesAsync();
 
         if (error is not null) {
             ShowError(error);

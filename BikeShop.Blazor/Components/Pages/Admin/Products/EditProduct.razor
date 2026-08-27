@@ -3,14 +3,12 @@
 @inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Shared
-@using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Models.Admin.Products
 @using BikeShop.Blazor.Models.Catalog
-@using BikeShop.Blazor.Services.ApiClients
 @using BikeShop.Blazor.Services.ApiClients.Admin.Products
 @using BikeShop.Blazor.Services.ApiClients.Catalog
-@using BikeShop.Blazor.Services.Models
 @using Microsoft.AspNetCore.Authorization
+
 
 @inject ProductApiClient ProductApiClient
 @inject AdminProductsApiClient AdminApiClient
@@ -89,16 +87,14 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        var (product, productError) =
-            await ProductApiClient.GetProductDetailsAsync(Id);
+        var (product, productError) = await ProductApiClient.GetProductDetailsAsync(Id);
 
         if (productError is not null) {
             ShowError(productError);
             return;
         }
 
-        var (categories, categoryError) =
-            await CategoryApiClient.GetCategoriesAsync();
+        var (categories, categoryError) = await CategoryApiClient.GetCategoriesAsync();
 
         if (categoryError is not null) {
             ShowError(categoryError);
@@ -116,6 +112,13 @@
             StockQuantity = product.StockQuantity,
             CategoryId = product.CategoryId
         };
+
+        SetBreadcrumbs(
+            ("Home", "/"),
+            ("Admin", "/"),
+            ("Products", "/"),
+            ($"{product.Name}", null),
+            ("Edit", null));
     }
 
     private async Task UpdateProduct()

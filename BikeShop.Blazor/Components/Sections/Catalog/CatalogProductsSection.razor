@@ -1,18 +1,11 @@
-﻿@inherits BikeShopPageBase
-
-@using BikeShop.Blazor.Components.Pages
-@using BikeShop.Blazor.Components.Sections.Product
+﻿@using BikeShop.Blazor.Components.Sections.Product
 @using BikeShop.Blazor.Components.Shared
-@using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Models.Catalog
-@using BikeShop.Blazor.Services
-@using BikeShop.Blazor.Services.ApiClients
 @using BikeShop.Blazor.Services.ApiClients.Catalog
-@using BikeShop.Blazor.Services.Models
 
 @inject ProductApiClient ApiClient
 
-<ErrorToast Message="@ErrorMessage" />
+<ErrorToast Message="@_errorMessage" />
 
 @if (_products is null) {
     <LoadingSpinner />
@@ -30,12 +23,13 @@ else {
     public int CategoryId { get; set; }
 
     private List<ProductListItemModel>? _products;
+    private string? _errorMessage;
 
     protected override async Task OnParametersSetAsync()
     {
         var (products, error) =  await ApiClient.GetProductsByCategoryAsync(CategoryId);
         if (error != null) {
-            ShowError(error);
+            _errorMessage = error.Message;
             return;
         }
 

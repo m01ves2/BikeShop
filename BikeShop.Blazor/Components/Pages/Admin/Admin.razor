@@ -25,3 +25,14 @@
         </NavLink>
     </div>
 </div>
+
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        SetBreadcrumbs(
+            ("Home", "/"),
+            ("Admin", null));
+    }
+}

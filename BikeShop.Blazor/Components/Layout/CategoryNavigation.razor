@@ -1,14 +1,10 @@
-﻿@inherits BikeShopPageBase
-
-@using BikeShop.Blazor.Components.Pages
-@using BikeShop.Blazor.Components.Shared
-@using BikeShop.Blazor.Models
+﻿@using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Models.Catalog
-@using BikeShop.Blazor.Services
-@using BikeShop.Blazor.Services.ApiClients
 @using BikeShop.Blazor.Services.ApiClients.Catalog
 
 @inject CategoryApiClient ApiClient
+
+<ErrorToast Message="@_errorMessage" />
 
 <nav class="border-bottom bg-white">
 
@@ -41,12 +37,13 @@
 @code
 {
     private IReadOnlyList<CategoryListItemModel>? model;
+    private string? _errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
         var (categories, error) = await ApiClient.GetCategoriesAsync();
         if (error is not null) {
-            ShowError(error);
+            _errorMessage = error.Message;
             return;
         }
 

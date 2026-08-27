@@ -4,14 +4,12 @@
 
 @using BikeShop.Blazor.Components.Shared
 @using BikeShop.Blazor.Identity
-@using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Models.Cart
 @using BikeShop.Blazor.Models.Orders
 @using BikeShop.Blazor.Services
-@using BikeShop.Blazor.Services.ApiClients
 @using BikeShop.Blazor.Services.ApiClients.Orders
-@using BikeShop.Blazor.Services.Models
 @using Microsoft.AspNetCore.Authorization
+
 
 @inject ICartService CartService
 @inject OrdersApiClient OrdersApiClient
@@ -153,6 +151,10 @@
 
     protected override async Task OnInitializedAsync()
     {
+        SetBreadcrumbs(
+            ("Home", "/"),
+            ("Cart", null));
+
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
 
         if (!authState.User.Identity!.IsAuthenticated) {

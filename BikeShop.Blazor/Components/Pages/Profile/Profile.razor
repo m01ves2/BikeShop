@@ -1,13 +1,11 @@
 ﻿@page "/profile"
 @inherits BikeShopPageBase
 
-@using System.Net
 @using BikeShop.Blazor.Components.Shared
-@using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Models.Auth
-@using BikeShop.Blazor.Services.ApiClients
 @using BikeShop.Blazor.Services.ApiClients.Auth
-@using BikeShop.Blazor.Services.Models
+@using System.Net
+
 
 @inject AuthApiClient ApiClient
 @inject NavigationManager Navigation
@@ -34,6 +32,10 @@
     protected override async Task OnInitializedAsync()
     {
         try {
+            SetBreadcrumbs(
+                ("Home", "/"),
+                ("Profile", null));
+
             var (result, error) = await ApiClient.GetCurrentUserAsync();
             if (error != null) {
                 ShowError(error);
@@ -41,6 +43,7 @@
             }
 
             model = result!;
+
         }
         catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized) {
             Navigation.NavigateTo("/login");

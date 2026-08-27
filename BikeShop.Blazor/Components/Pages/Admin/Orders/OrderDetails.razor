@@ -3,14 +3,11 @@
 @inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Shared
-@using BikeShop.Blazor.Models
-@using BikeShop.Blazor.Models.Admin
 @using BikeShop.Blazor.Models.Admin.Orders
 @using BikeShop.Blazor.Services
-@using BikeShop.Blazor.Services.ApiClients
 @using BikeShop.Blazor.Services.ApiClients.Admin.Orders
-@using BikeShop.Blazor.Services.Models
 @using Microsoft.AspNetCore.Authorization
+
 
 @inject AdminOrdersApiClient ApiClient
 @inject CurrencyFormatter Currency
@@ -112,6 +109,12 @@ else {
 
     protected override async Task OnParametersSetAsync()
     {
+        SetBreadcrumbs(
+            ("Home", "/"),
+            ("Admin", "/"),
+            ("Orders", "/"),
+            ($"{Id}", null));
+
         await LoadOrder();
     }
 

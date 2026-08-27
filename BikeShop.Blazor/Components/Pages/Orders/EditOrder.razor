@@ -3,12 +3,10 @@
 @inherits BikeShopPageBase
 
 @using BikeShop.Blazor.Components.Shared
-@using BikeShop.Blazor.Models
 @using BikeShop.Blazor.Models.Orders
-@using BikeShop.Blazor.Services.ApiClients
 @using BikeShop.Blazor.Services.ApiClients.Orders
-@using BikeShop.Blazor.Services.Models
 @using Microsoft.AspNetCore.Authorization
+
 
 @inject OrdersApiClient ApiClient
 @inject NavigationManager Navigation
@@ -80,6 +78,10 @@
 
     protected override async Task OnParametersSetAsync()
     {
+        SetBreadcrumbs(
+            ("Home", "/"),
+            ($"Order {Id}", null));
+
         var (order, error) = await ApiClient.GetOrderByIdAsync(Id);
 
         if (error is not null) {
@@ -94,6 +96,7 @@
             DeliveryAt = order.DeliveryAt,
             CustomerPhone = order.CustomerPhone
         };
+
     }
 
     private async Task UpdateOrderAsync()
