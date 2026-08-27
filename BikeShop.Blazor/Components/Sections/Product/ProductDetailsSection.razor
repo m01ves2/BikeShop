@@ -3,47 +3,86 @@
 @using BikeShop.Blazor.Models.Catalog
 @using BikeShop.Blazor.Services
 
-
 @inject CurrencyFormatter Currency
 @inject ICartService CartService
 
-@if (Product is null)
-{
+@if (Product is null) {
     <LoadingSpinner />
 }
-else
-{
-    <div class="row">
+else {
+    <section class="product-details">
+        <div class="row align-items-start g-5">
+            @* изображение занимает 7/12, а информация 5/12 *@
+            <div class="col-lg-7">
+                <div class="product-image">
+                    <div class="product-placeholder">
+                        <i class="bi bi-bicycle"></i>
+                        <span>Product image</span>
+                    </div>
+                </div>
+            </div>
 
-        <div class="col-lg-6">
-            <div class="border rounded bg-light d-flex justify-content-center align-items-center" style="height:350px;">
-                <span class="text-muted">
-                    Product Image
-                </span>
+            <div class="col-lg-5">
+                <NavLink class="product-category"
+                         href="@($"/category/{Product.CategoryId}")">
+                    @Product.CategoryName
+                </NavLink>
+
+                <h1 class="product-name">
+                    @Product.Name
+                </h1>
+
+                <div class="product-price">
+                    @Currency.Format(Product.Price)
+                </div>
+
+                @if (Product.StockQuantity > 0) {
+                    <div class="availability in-stock">
+                        <i class="bi bi-check-circle-fill"></i>
+                        In stock
+                    </div>
+                }
+                else {
+                    <div class="availability out-of-stock">
+                        <i class="bi bi-exclamation-circle-fill"></i>
+                        Out of stock
+                    </div>
+                }
+
+                <hr class="product-divider" />
+
+                <div class="product-description">
+                    <h2>Description</h2>
+
+                    <p>
+                        @Product.Description
+                    </p>
+                </div>
+
+                @if (Product.StockQuantity > 0) {
+                    <p class="stock-quantity">
+                        Available: @Product.StockQuantity
+                    </p>
+                }
+
+                <button class="product-button btn btn-primary btn-lg w-100"
+                        disabled="@(Product.StockQuantity <= 0)"
+                        @onclick="AddToCart">
+                    <i class="bi bi-cart-plus me-2"></i>
+
+                    @if (Product.StockQuantity > 0) {
+                        <span>Add to cart</span>
+                    }
+                    else {
+                        <span>Out of stock</span>
+                    }
+                </button>
             </div>
         </div>
-
-        <div class="col-lg-6">
-            <h3 class="text-primary">
-                @Currency.Format(Product.Price)
-            </h3>
-            <p>
-                @Product.Description
-            </p>
-            <p>
-                <strong>In stock:</strong>
-                @Product.StockQuantity
-            </p>
-            <button class="btn btn-primary btn-lg" @onclick="AddToCart">
-                Add to Cart
-            </button>
-        </div>
-
-    </div>
+    </section>
 }
 
 @code {
-
     [Parameter]
     public ProductDetailsModel? Product { get; set; }
 
@@ -51,9 +90,13 @@ else
     {
         var item = new CartItemModel
         {
-            Id = 0, //no need
+            Id = 0,
             Quantity = 1,
-            Product = new ProductCartModel(Product.Id, Product.Name, Product.Price, Product.StockQuantity),
+            Product = new ProductCartModel(
+                Product!.Id,
+                Product.Name,
+                Product.Price,
+                Product.StockQuantity),
         };
 
         await CartService.AddItemAsync(item);
