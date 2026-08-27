@@ -7,7 +7,6 @@
 @using BikeShop.Blazor.Services
 @using Microsoft.AspNetCore.Components.Authorization
 
-
 @inject ICartService CartService
 @inject CurrencyFormatter Currency
 @inject JwtAuthenticationStateProvider AuthStateProvider
@@ -15,119 +14,160 @@
 
 <ErrorToast Message="@ErrorMessage" />
 
-<PageTitle>Cart</PageTitle>
-<PageHeader Text="Cart" />
+<PageTitle>Cart - BikeShop</PageTitle>
+<PageHeader Text="Your cart" />
 
-<div class="container mt-4">
-
+<div class="container my-5">
     @if (model.Items.Count == 0) {
-        <p>Your cart is empty.</p>
+        <div class="empty-cart">
+            <span class="empty-cart-icon">
+                <i class="bi bi-cart3"></i>
+            </span>
+
+            <h2>Your cart is empty</h2>
+
+            <p>
+                Explore our catalog and find something
+                for your next ride.
+            </p>
+
+            <NavLink class="btn btn-primary"
+                     href="/catalog">
+                Explore catalog
+            </NavLink>
+        </div>
     }
     else {
-        <div class="table-responsive">
-            <table class="table align-middle">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th style="width:150px">Quantity</th>
-                        <th style="width:150px">Stock quantity</th>
-                        <th>Total</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-
+        <div class="row align-items-start g-4">
+            <div class="col-lg-8">
+                <div class="cart-items">
                     @foreach (var item in model.Items) {
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
+                        <article class="cart-item card">
+                            <div class="row align-items-center g-3">
+                                <div class="col-4 col-md-3">
+                                    <NavLink href="@($"/product/{item.Product.Id}")"
+                                             class="product-image-link">
+                                        <div class="product-image">
+                                            <i class="bi bi-bicycle"></i>
+                                        </div>
+                                    </NavLink>
+                                </div>
 
-                                    @* @if (!string.IsNullOrEmpty(item.ImageUrl)) {
-                                        <img src="@item.ImageUrl"
-                                             width="80"
-                                             height="80"
-                                             class="me-3 rounded" />
+                                <div class="col-8 col-md-4">
+                                    <NavLink href="@($"/product/{item.Product.Id}")"
+                                             class="product-name">
+                                        @item.Product.Name
+                                    </NavLink>
+
+                                    <div class="unit-price">
+                                        @Currency.Format(item.Product.Price)
+                                        each
+                                    </div>
+
+                                    @if (item.Product.StockQuantity > 0) {
+                                        <span class="stock-status in-stock">
+                                            In stock
+                                        </span>
                                     }
                                     else {
-                                        <div class="bg-light"
-                                             style="width:80px;height:80px">
-                                        </div>
-                                    } *@
-
-                                    <span>
-                                        @item.Product.Name
-                                    </span>
-
+                                        <span class="stock-status out-of-stock">
+                                            Out of stock
+                                        </span>
+                                    }
                                 </div>
-                            </td>
-                            <td>
-                                @Currency.Format(item.Product.Price)
-                            </td>
-                            <td>
-                                <div class="input-group">
 
-                                    <button class="btn btn-outline-secondary" @onclick="() => Decrease(item)">
-                                        -
-                                    </button>
+                                <div class="col-7 col-md-3">
+                                    <div class="quantity-control">
+                                        <button type="button"
+                                                class="quantity-button"
+                                                disabled="@(item.Quantity <= 1)"
+                                                aria-label="Decrease quantity"
+                                                @onclick="() => Decrease(item)">
+                                            <i class="bi bi-dash"></i>
+                                        </button>
 
-                                    <input class="form-control text-center" value="@item.Quantity" readonly />
+                                        <span class="quantity-value">
+                                            @item.Quantity
+                                        </span>
 
-                                    <button class="btn btn-outline-secondary" @onclick="() => Increase(item)">
-                                        +
-                                    </button>
-
+                                        <button type="button"
+                                                class="quantity-button"
+                                                disabled="@(item.Quantity >= item.Product.StockQuantity)"
+                                                aria-label="Increase quantity"
+                                                @onclick="() => Increase(item)">
+                                            <i class="bi bi-plus"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                            </td>
-                            <td>
-                            @if (item.Product.StockQuantity > 0) {
-                                <small class="text-muted">
-                                    In stock: @item.Product.StockQuantity
-                                </small>
-                            }
-                            else {
-                                <small class="text-danger">
-                                    Out of stock
-                                </small>
-                            }
-                            </td>
-                            <td>
-                                @Currency.Format(item.Total)
-                            </td>
-                            <td>
-                                <button class="btn btn-danger" @onclick="() => Remove(item.Product.Id)">Remove</button>
-                            </td>
-                        </tr>
+
+                                <div class="col-5 col-md-2 text-end">
+                                    <strong class="item-total">
+                                        @Currency.Format(item.Total)
+                                    </strong>
+
+                                    <button type="button"
+                                            class="remove-button"
+                                            title="Remove product"
+                                            aria-label="Remove product"
+                                            @onclick="() => Remove(item.Product.Id)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
                     }
-                </tbody>
-            </table>
-        </div>
-        <div class="d-flex justify-content-end">
-            <h4>
-                Total:
-                @Currency.Format(Total)
-            </h4>
-        </div>
+                </div>
+            </div>
 
-        <div class="d-flex justify-content-between mt-4">
-            <a class="btn btn-outline-secondary" href="/">
-                Continue Shopping
-            </a>
+            <div class="col-lg-4">
+                <aside class="cart-summary card">
+                    <h2>Order summary</h2>
 
-            <AuthorizeView>
-                <Authorized>
-                    <NavLink class="btn btn-primary" href="/checkout">
-                        Checkout
+                    <div class="summary-row">
+                        <span>Products</span>
+                        <span>@model.Items.Sum(x => x.Quantity)</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span>@Currency.Format(Total)</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Delivery</span>
+                        <span>Calculated at checkout</span>
+                    </div>
+
+                    <hr />
+
+                    <div class="summary-total">
+                        <span>Total</span>
+                        <strong>@Currency.Format(Total)</strong>
+                    </div>
+
+                    <AuthorizeView>
+                        <Authorized>
+                            <NavLink class="btn btn-primary btn-lg w-100"
+                                     href="/checkout">
+                                Proceed to checkout
+                            </NavLink>
+                        </Authorized>
+
+                        <NotAuthorized>
+                            <NavLink class="btn btn-primary btn-lg w-100"
+                                     href="/login">
+                                Log in to checkout
+                            </NavLink>
+                        </NotAuthorized>
+                    </AuthorizeView>
+
+                    <NavLink class="continue-link"
+                             href="/catalog">
+                        <i class="bi bi-arrow-left"></i>
+                        Continue shopping
                     </NavLink>
-                </Authorized>
-
-                <NotAuthorized>
-                    <NavLink class="btn btn-primary" href="/login">
-                        Login to checkout
-                    </NavLink>
-                </NotAuthorized>
-            </AuthorizeView>
-
+                </aside>
+            </div>
         </div>
     }
 </div>
