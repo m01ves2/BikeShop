@@ -19,25 +19,31 @@
 
 <ErrorToast Message="@ErrorMessage" />
 
-<PageTitle>Checkout</PageTitle>
-<PageHeader Text="Order" />
+<PageTitle>Checkout - BikeShop</PageTitle>
+<PageHeader Text="Checkout" />
 
-<div class="container mt-4">
+<div class="container my-5">
     @if (_orderCreated) {
-        <div class="text-center">
-            <h2>
-                Order created successfully!
-            </h2>
+        <div class="checkout-result card">
+            <span class="result-icon">
+                <i class="bi bi-check-lg"></i>
+            </span>
+
+            <h2>Order created successfully!</h2>
 
             <p>
-                Thank you for your order.
+                Thank you for your order. You can track its
+                status in your order history.
             </p>
 
             @if (_adjustments.Count > 0) {
-                <div class="alert alert-warning text-start">
-                    <strong>Some cart items were adjusted:</strong>
+                <div class="adjustments">
+                    <div class="adjustments-title">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Some cart items were adjusted
+                    </div>
 
-                    <ul class="mb-0 mt-2">
+                    <ul class="mb-0">
                         @foreach (var adjustment in _adjustments) {
                             <li>@adjustment</li>
                         }
@@ -45,90 +51,172 @@
                 </div>
             }
 
-            <NavLink class="btn btn-primary" href="/orders">
+            <NavLink class="btn btn-primary"
+                     href="/orders">
                 View orders
             </NavLink>
         </div>
     }
     else if (_loading) {
-        <p>Loading...</p>
+        <LoadingSpinner />
     }
     else if (_cart is null || !_cart.Items.Any()) {
-        <p>Your cart is empty.</p>
-    }
-    else {
-        <div class="row">
-            <div class="col-md-7">
-                <EditForm Model="_model" OnValidSubmit="CreateOrderAsync">
-                    <DataAnnotationsValidator />
+        <div class="empty-checkout">
+            <span class="empty-icon">
+                <i class="bi bi-cart3"></i>
+            </span>
 
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Delivery address
-                        </label>
-                        <InputText class="form-control" @bind-Value="_model.DeliveryAddress" />
-                        <ValidationMessage For="@(() => _model.DeliveryAddress)" />
-                    </div>
+            <h2>Your cart is empty</h2>
 
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Customer phone
-                        </label>
-                        <InputText class="form-control" @bind-Value="_model.CustomerPhone" />
-                        <ValidationMessage For="@(() => _model.CustomerPhone)" />
-                    </div>
+            <p>
+                Add products to your cart before proceeding
+                to checkout.
+            </p>
 
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Delivery date and time
-                        </label>
-
-                        <InputDate class="form-control"
-                                   Type="InputDateType.DateTimeLocal"
-                                   @bind-Value="_model.DeliveryAt"
-                                   min="@MinDeliveryAt"
-                                   max="@MaxDeliveryAt"/>
-
-                        <ValidationMessage For="@(() => _model.DeliveryAt)" />
-                    </div>
-
-                    <button type="submit" class="btn btn-primary" disabled="@_creating">
-                        @(_creating ? "Creating..." : "Create order")
-                    </button>
-
-                </EditForm>
-
-            </div>
-
-
-            <div class="col-md-5">
-                <h3>
-                    Order
-                </h3>
-                @foreach (var item in _cart.Items) {
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>
-                            @item.Product.Name × @item.Quantity
-                        </span>
-                        <span>
-                            @CurrencyFormatter.Format(item.Total)
-                        </span>
-                    </div>
-                }
-
-                <hr />
-
-                <div class="d-flex justify-content-between fw-bold">
-                    <span>
-                        Total
-                    </span>
-                    <span>
-                        @CurrencyFormatter.Format(_cart.Items.Sum(x => x.Total))
-                    </span>
-                </div>
-            </div>
+            <NavLink class="btn btn-primary"
+                     href="/catalog">
+                Explore catalog
+            </NavLink>
         </div>
     }
+    else {
+        <div class="row align-items-start g-4">
+            <div class="col-lg-7">
+                <section class="checkout-form card">
+                    <div class="section-heading">
+                        <span class="section-icon">
+                            <i class="bi bi-truck"></i>
+                        </span>
+
+                        <div>
+                            <h2>Delivery details</h2>
+                            <p>
+                                Tell us where and when to deliver
+                                your order.
+                            </p>
+                        </div>
+                    </div>
+
+                    <EditForm Model="_model"
+                              OnValidSubmit="CreateOrderAsync">
+                        <DataAnnotationsValidator />
+
+                        <div class="mb-4">
+                            <label class="form-label">
+                                Delivery address
+                            </label>
+
+                            <InputText class="form-control form-control-lg"
+                                       placeholder="City, street, house and apartment"
+                                       @bind-Value="_model.DeliveryAddress" />
+
+                            <ValidationMessage For="@(() => _model.DeliveryAddress)" />
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">
+                                Customer phone
+                            </label>
+
+                            <InputText class="form-control form-control-lg"
+                                       placeholder="+7 (999) 123-45-67"
+                                       @bind-Value="_model.CustomerPhone" />
+
+                            <ValidationMessage For="@(() => _model.CustomerPhone)" />
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">
+                                Delivery date and time
+                            </label>
+
+                            <InputDate class="form-control form-control-lg"
+                                       Type="InputDateType.DateTimeLocal"
+                                       @bind-Value="_model.DeliveryAt"
+                                       min="@MinDeliveryAt"
+                                       max="@MaxDeliveryAt" />
+
+                            <div class="form-text">
+                                Delivery is available within the next seven days.
+                            </div>
+
+                            <ValidationMessage For="@(() => _model.DeliveryAt)" />
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-primary btn-lg w-100"
+                                disabled="@_creating">
+                            @if (_creating) {
+                                <span class="spinner-border spinner-border-sm me-2"
+                                      aria-hidden="true">
+                                </span>
+
+                                <span>Creating order...</span>
+                            }
+                            else {
+                                <span>Create order</span>
+                            }
+                        </button>
+                    </EditForm>
+                </section>
+            </div>
+
+            <div class="col-lg-5">
+                <aside class="order-summary card">
+                    <h2>Your order</h2>
+
+                    <div class="order-items">
+                        @foreach (var item in _cart.Items) {
+                            <div class="order-item">
+                                <div>
+                                    <span class="order-item-name">
+                                        @item.Product.Name
+                                    </span>
+
+                                    <span class="order-item-quantity">
+                                        × @item.Quantity
+                                    </span>
+                                </div>
+
+                                <strong>
+                                    @CurrencyFormatter.Format(item.Total)
+                                </strong>
+                            </div>
+                        }
+                    </div>
+
+                    <hr />
+
+                    <div class="summary-row">
+                        <span>Products</span>
+                        <span>@_cart.Items.Sum(x => x.Quantity)</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Delivery</span>
+                        <span>Included</span>
+                    </div>
+
+                    <hr />
+
+                    <div class="summary-total">
+                        <span>Total</span>
+
+                        <strong>
+                            @CurrencyFormatter.Format(
+                            _cart.Items.Sum(x => x.Total))
+                    </strong>
+                </div>
+
+                <NavLink class="back-to-cart"
+                         href="/cart">
+                    <i class="bi bi-arrow-left"></i>
+                    Back to cart
+                </NavLink>
+            </aside>
+        </div>
+    </div>
+        }
 </div>
 
 
@@ -153,7 +241,8 @@
     {
         SetBreadcrumbs(
             ("Home", "/"),
-            ("Cart", null));
+            ("Cart", "/cart"),
+            ("Checkout", null));
 
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
 

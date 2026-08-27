@@ -98,6 +98,15 @@ a {
         border-color: var(--color-primary-dark);
     }
 
+    .btn-primary:disabled,
+    .btn-primary.disabled {
+        color: #ffffff;
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+        opacity: 0.6;
+        transform: none;
+    }
+
 .btn-outline-primary {
     color: var(--color-primary);
     border-color: var(--color-primary);
