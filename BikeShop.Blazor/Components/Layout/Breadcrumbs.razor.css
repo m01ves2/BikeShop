@@ -1,0 +1,23 @@
+﻿.breadcrumbs {
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.breadcrumb {
+    font-size: 0.875rem;
+}
+
+::deep .breadcrumb-link {
+    color: var(--color-text-muted);
+    text-decoration: none;
+}
+
+    ::deep .breadcrumb-link:hover {
+        color: var(--color-primary);
+        text-decoration: underline;
+    }
+
+.breadcrumb-current {
+    color: var(--color-text);
+    font-weight: 600;
+}

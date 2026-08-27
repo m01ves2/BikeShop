@@ -2,90 +2,88 @@
 @using Microsoft.AspNetCore.Components.Authorization
 
 @implements IDisposable
+
 @inject ICartService CartService
 
-<header class="sticky-top border-top border-bottom bg-white shadow-sm">
+<header class="site-header sticky-top">
+    <nav class="navbar container py-3">
+        <NavLink class="navbar-brand d-flex align-items-center gap-2 fw-bold m-0"
+                 href="/"
+                 Match="NavLinkMatch.All">
+            <span class="brand-icon">
+                <i class="bi bi-bicycle"></i>
+            </span>
 
-    <nav class="navbar container">
-
-        <NavLink class="navbar-brand fw-bold" href="/">
-            <i class="bi bi-bicycle"></i>
             BikeShop
         </NavLink>
 
-        <div class="d-flex align-items-center gap-3">
-
-            @* <NavLink class="text-dark text-decoration-none fs-5" href="/search">
-                <i class="bi bi-search"></i>
-            </NavLink> *@
-
-            @* <NavLink class="text-dark text-decoration-none fs-5" href="/account">
-                <i class="bi bi-person"></i>
-            </NavLink> *@
-
+        <div class="d-flex align-items-center gap-2">
             <AuthorizeView Roles="Admin">
                 <Authorized>
-                    <NavLink class="text-dark text-decoration-none fs-5" href="/admin">
-                        <i class="bi bi-gear-fill"></i>
+                    <NavLink class="btn btn-light"
+                             href="/admin"
+                             title="Admin panel">
+                        <i class="bi bi-gear"></i>
+                        <span class="d-none d-lg-inline ms-1">
+                            Admin
+                        </span>
                     </NavLink>
                 </Authorized>
             </AuthorizeView>
 
             <AuthorizeView>
-
                 <Authorized>
-
-                    <span class="me-2">
-                        Hello, @context.User.Identity?.Name
-                    </span>
-
-                    <NavLink class="text-dark text-decoration-none fs-5" href="/orders">
+                    <NavLink class="btn btn-light"
+                             href="/orders"
+                             title="Orders">
                         <i class="bi bi-receipt"></i>
+                        <span class="d-none d-lg-inline ms-1">
+                            Orders
+                        </span>
                     </NavLink>
 
-                    <NavLink class="text-dark text-decoration-none fs-5" href="/logout">
+                    <NavLink class="btn btn-light"
+                             href="/profile"
+                             title="Profile">
+                        <i class="bi bi-person"></i>
+                        <span class="d-none d-lg-inline ms-1">
+                            Profile
+                        </span>
+                    </NavLink>
+
+                    <NavLink class="btn btn-light"
+                             href="/logout"
+                             title="Log out">
                         <i class="bi bi-box-arrow-right"></i>
-                    </NavLink>
-
-                    <NavLink class="text-dark text-decoration-none fs-5" href="/profile">
-                        <i class="bi bi-person-fill"></i>
                     </NavLink>
                 </Authorized>
 
                 <NotAuthorized>
-
-                    <NavLink class="text-dark text-decoration-none fs-5"
+                    <NavLink class="btn btn-outline-primary"
                              href="/register">
-                        <i class="bi bi-person-plus"></i>
+                        Register
                     </NavLink>
 
-                    <NavLink class="text-dark text-decoration-none fs-5 ms-2"
+                    <NavLink class="btn btn-primary"
                              href="/login">
-                        <i class="bi bi-box-arrow-in-right"></i>
+                        Log in
                     </NavLink>
-
                 </NotAuthorized>
-
             </AuthorizeView>
 
-            <NavLink class="cart-link text-dark text-decoration-none" href="/cart">
+            <NavLink class="btn cart-button d-flex align-items-center gap-2"
+                     href="/cart"
+                     title="Cart">
+                <i class="bi bi-cart3"></i>
 
-                <i class="bi bi-cart3 fs-5"></i>
-
-                <span class="cart-badge badge rounded-pill bg-danger">
-                    @if (cartCount > 0) {
-                        <span>
-                            (@cartCount)
-                        </span>
-                    }
-                </span>
-
+                @if (cartCount > 0) {
+                    <span class="cart-count">
+                        @cartCount
+                    </span>
+                }
             </NavLink>
-
         </div>
-
     </nav>
-
 </header>
 
 

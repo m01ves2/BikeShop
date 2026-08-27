@@ -6,32 +6,24 @@
 
 <ErrorToast Message="@_errorMessage" />
 
-<nav class="border-bottom bg-white">
-
+<nav class="category-navigation">
     <div class="container">
-
         @if (model is null) {
-            @* <div class="text-center py-2">
-                <div class="spinner-border spinner-border-sm"></div>
-            </div> *@
             <LoadingSpinner />
         }
         else {
-            <ul class="nav justify-content-center flex-wrap py-2">
-
+            <ul class="category-list nav justify-content-center flex-nowrap">
                 @foreach (var category in model) {
                     <li class="nav-item">
-                        <NavLink class="nav-link" href="@($"/category/{category.Id}")">
+                        <NavLink class="category-link nav-link"
+                                 href="@($"/category/{category.Id}")">
                             @category.Name
                         </NavLink>
                     </li>
                 }
-
             </ul>
         }
-
     </div>
-
 </nav>
 
 @code
