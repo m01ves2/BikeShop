@@ -2,9 +2,11 @@
 @using BikeShop.Blazor.Models.Cart
 @using BikeShop.Blazor.Models.Catalog
 @using BikeShop.Blazor.Services
+@using BikeShop.Blazor.Services.ProductImages
 
 @inject CurrencyFormatter Currency
 @inject ICartService CartService
+@inject ProductImageService ProductImages
 
 @if (Product is null) {
     <LoadingSpinner />
@@ -15,11 +17,33 @@ else {
             @* изображение занимает 7/12, а информация 5/12 *@
             <div class="col-lg-7">
                 <div class="product-image">
-                    <div class="product-placeholder">
-                        <i class="bi bi-bicycle"></i>
-                        <span>Product image</span>
-                    </div>
+                    @if (_selectedImageUrl is not null) {
+                        <img src="@_selectedImageUrl"
+                             alt="@Product.Name" />
+                    }
+                    else {
+                        <div class="product-placeholder">
+                            <i class="bi bi-bicycle"></i>
+                            <span>Product image</span>
+                        </div>
+                    }
                 </div>
+
+                @if (_imageUrls.Count > 1) {
+                    <div class="product-thumbnails">
+                        @for (var index = 0; index < _imageUrls.Count; index++) {
+                            var imageUrl = _imageUrls[index];
+                            var imageNumber = index + 1;
+
+                            <button class="product-thumbnail @(_selectedImageUrl == imageUrl ? "active" : "")"
+                                    type="button"
+                                    @onclick="@(() => SelectImage(imageUrl))">
+                                <img src="@imageUrl"
+                                     alt="@($"{Product.Name}, image {imageNumber}")" />
+                            </button>
+                        }
+                    </div>
+                }
             </div>
 
             <div class="col-lg-5">
@@ -86,6 +110,10 @@ else {
     [Parameter]
     public ProductDetailsModel? Product { get; set; }
 
+    private IReadOnlyList<string> _imageUrls = [];
+    private string? _selectedImageUrl;
+    private int? _loadedProductId;
+
     private async Task AddToCart()
     {
         var item = new CartItemModel
@@ -100,5 +128,20 @@ else {
         };
 
         await CartService.AddItemAsync(item);
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (Product is null || Product.Id == _loadedProductId)
+            return;
+
+        _loadedProductId = Product.Id;
+        _imageUrls = ProductImages.GetImageUrls(Product.Id);
+        _selectedImageUrl = _imageUrls.FirstOrDefault();
+    }
+
+    private void SelectImage(string imageUrl)
+    {
+        _selectedImageUrl = imageUrl;
     }
 }

@@ -5,12 +5,14 @@
 @using BikeShop.Blazor.Identity
 @using BikeShop.Blazor.Models.Cart
 @using BikeShop.Blazor.Services
+@using BikeShop.Blazor.Services.ProductImages
 @using Microsoft.AspNetCore.Components.Authorization
 
 @inject ICartService CartService
 @inject CurrencyFormatter Currency
 @inject JwtAuthenticationStateProvider AuthStateProvider
 @inject NavigationManager Navigation
+@inject ProductImageService ProductImages
 
 <ErrorToast Message="@ErrorMessage" />
 
@@ -42,13 +44,24 @@
             <div class="col-lg-8">
                 <div class="cart-items">
                     @foreach (var item in model.Items) {
+                        var imageUrl = ProductImages.GetImageUrls(item.Product.Id).FirstOrDefault();
+
                         <article class="cart-item card">
                             <div class="row align-items-center g-3">
                                 <div class="col-4 col-md-3">
                                     <NavLink href="@($"/product/{item.Product.Id}")"
                                              class="product-image-link">
                                         <div class="product-image">
-                                            <i class="bi bi-bicycle"></i>
+
+                                            @if (imageUrl is not null) {
+                                                <img src="@imageUrl" alt="@item.Product.Name" />
+                                            }
+                                            else {
+                                                <div class="product-placeholder">
+                                                    <i class="bi bi-bicycle"></i>
+                                                </div>
+                                            }
+
                                         </div>
                                     </NavLink>
                                 </div>
