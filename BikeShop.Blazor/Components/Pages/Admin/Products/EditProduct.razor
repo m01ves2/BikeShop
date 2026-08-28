@@ -7,6 +7,7 @@
 @using BikeShop.Blazor.Models.Catalog
 @using BikeShop.Blazor.Services.ApiClients.Admin.Products
 @using BikeShop.Blazor.Services.ApiClients.Catalog
+@using BikeShop.Blazor.Services.ProductImages
 @using Microsoft.AspNetCore.Authorization
 
 
@@ -14,7 +15,7 @@
 @inject AdminProductsApiClient AdminApiClient
 @inject CategoryApiClient CategoryApiClient
 @inject NavigationManager Navigation
-
+@inject ProductImageService ProductImages
 
 <ErrorToast Message="@ErrorMessage" />
 
@@ -39,6 +40,94 @@
                         Update product #@_model.Id.
                     </p>
                 </div>
+            </div>
+
+            <div class="product-images-editor">
+                <div class="product-images-heading">
+                    <div>
+                        <h3>Product images</h3>
+                        <p>
+                            The first available image is used as the main image.
+                            You can store up to 8 WebP images, 5 MB each.
+                        </p>
+                    </div>
+
+                    <label class="btn btn-outline-primary">
+                        <i class="bi bi-plus-lg me-2"></i>
+                        Add images
+
+                        <InputFile class="visually-hidden"
+                                   accept="image/webp,.webp"
+                                   multiple
+                                   OnChange="SelectImages" />
+                    </label>
+                </div>
+
+                @if (_imageUrls.Count == 0 && _newImages.Count == 0) {
+                    <div class="product-images-empty">
+                        <i class="bi bi-bicycle"></i>
+                        <span>No product images</span>
+                    </div>
+                }
+                else {
+                    <div class="product-images-grid">
+                        @foreach (var imageUrl in _imageUrls) {
+                            var isDeleted = _deletedImageUrls.Contains(imageUrl);
+
+                            <article class="product-image-item @(isDeleted ? "deleted" : "")">
+                                <div class="product-image-box">
+                                    <img src="@imageUrl"
+                                         alt="@_model.Name" />
+
+                                    @if (isDeleted) {
+                                        <span class="delete-overlay">
+                                            Will be deleted
+                                        </span>
+                                    }
+                                </div>
+
+                                <button class="btn @(isDeleted
+                                                                                    ? "btn-outline-secondary"
+                                                                                    : "btn-outline-danger")"
+                            type="button"
+                            @onclick="@(() => ToggleImageDeletion(imageUrl))">
+                        @if (isDeleted) {
+                                        <i class="bi bi-arrow-counterclockwise me-1"></i>
+                                        <span>Restore</span>
+                                    }
+                                    else {
+                                        <i class="bi bi-trash me-1"></i>
+                                        <span>Delete</span>
+                                    }
+                                </button>
+                            </article>
+                        }
+
+                        @foreach (var pendingImage in _newImages) {
+                            <article class="product-image-item new">
+                                <div class="product-image-box">
+                                    <img src="@pendingImage.PreviewUrl"
+                                         alt="@pendingImage.File.Name" />
+
+                                    <span class="new-image-label">
+                                        New
+                                    </span>
+                                </div>
+
+                                <button class="btn btn-outline-danger"
+                                        type="button"
+                                        @onclick="@(() => RemoveNewImage(pendingImage))">
+                                    <i class="bi bi-trash me-1"></i>
+                                    Remove
+                                </button>
+                            </article>
+                        }
+                    </div>
+                }
+
+                <p class="product-images-note">
+                    Image changes will be applied after you click Save changes.
+                </p>
             </div>
 
             <EditForm Model="_model"
@@ -155,6 +244,13 @@
     private UpdateProductModel? _model;
     private List<CategoryListItemModel>? _categories;
 
+    private const int MaxImageCount = 8;
+    private const long MaxImageSize = 5 * 1024 * 1024;
+
+    private List<string> _imageUrls = [];
+    private readonly HashSet<string> _deletedImageUrls = [];
+    private readonly List<PendingImage> _newImages = [];
+
     protected override async Task OnParametersSetAsync()
     {
         var (product, productError) = await ProductApiClient.GetProductDetailsAsync(Id);
@@ -183,6 +279,13 @@
             CategoryId = product.CategoryId
         };
 
+        _imageUrls = ProductImages
+            .GetImageUrls(_model.Id)
+            .ToList();
+
+        _deletedImageUrls.Clear();
+        _newImages.Clear();
+
         SetBreadcrumbs(
             ("Home", "/"),
             ("Admin", "/admin"),
@@ -199,7 +302,89 @@
             return;
         }
 
+        try {
+            ProductImages.DeleteImages(
+                _model!.Id,
+                _deletedImageUrls);
+
+            await ProductImages.SaveImagesAsync(
+                _model.Id,
+                _newImages.Select(image => image.File));
+        }
+        catch (InvalidOperationException exception) {
+            ShowError(exception.Message);
+            return;
+        }
+        catch (IOException) {
+            ShowError("The product was updated, but the image changes could not be saved.");
+            return;
+        }
+
         Navigation.NavigateTo("/admin/products");
     }
+
+    private async Task SelectImages(InputFileChangeEventArgs eventArgs)
+    {
+        IReadOnlyList<IBrowserFile> selectedImages;
+
+        try {
+            selectedImages = eventArgs.GetMultipleFiles(MaxImageCount);
+        }
+        catch (InvalidOperationException) {
+            ShowError($"You can select no more than {MaxImageCount} images at once.");
+            return;
+        }
+
+        var remainingExistingImages =
+            _imageUrls.Count - _deletedImageUrls.Count;
+
+        if (remainingExistingImages +
+            _newImages.Count +
+            selectedImages.Count > MaxImageCount) {
+            ShowError($"A product can have no more than {MaxImageCount} images.");
+            return;
+        }
+
+        foreach (var image in selectedImages) {
+            if (!image.ContentType.Equals(
+                    "image/webp",
+                    StringComparison.OrdinalIgnoreCase)) {
+                ShowError($"File \"{image.Name}\" is not a WebP image.");
+                return;
+            }
+
+            if (image.Size > MaxImageSize) {
+                ShowError($"File \"{image.Name}\" exceeds the 5 MB limit.");
+                return;
+            }
+
+            await using var stream =
+                image.OpenReadStream(MaxImageSize);
+
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+
+            var previewUrl =
+                $"data:{image.ContentType};base64," +
+                Convert.ToBase64String(memoryStream.ToArray());
+
+            _newImages.Add(new PendingImage(image, previewUrl));
+        }
+    }
+
+    private void ToggleImageDeletion(string imageUrl)
+    {
+        if (!_deletedImageUrls.Add(imageUrl))
+            _deletedImageUrls.Remove(imageUrl);
+    }
+
+    private void RemoveNewImage(PendingImage image)
+    {
+        _newImages.Remove(image);
+    }
+
+    private sealed record PendingImage(
+        IBrowserFile File,
+        string PreviewUrl);
 
 }

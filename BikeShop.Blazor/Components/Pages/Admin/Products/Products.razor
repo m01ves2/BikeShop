@@ -7,13 +7,14 @@
 @using BikeShop.Blazor.Services
 @using BikeShop.Blazor.Services.ApiClients.Admin.Products
 @using BikeShop.Blazor.Services.ApiClients.Catalog
+@using BikeShop.Blazor.Services.ProductImages
 @using Microsoft.AspNetCore.Authorization
 
 
 @inject ProductApiClient ProductApiClient
 @inject AdminProductsApiClient AdminApiClient
 @inject CurrencyFormatter Currency
-
+@inject ProductImageService ProductImages
 
 <ErrorToast Message="@ErrorMessage" />
 
@@ -57,6 +58,7 @@
                 <table class="table align-middle">
                     <thead>
                         <tr>
+                            <th>Image</th>
                             <th>Id</th>
                             <th>Product</th>
                             <th>Category</th>
@@ -68,7 +70,19 @@
 
                     <tbody>
                         @foreach (var product in _products) {
+                            var imageUrl = ProductImages.GetImageUrls(product.Id).FirstOrDefault();
                             <tr>
+                                <td>
+                                    <div class="admin-product-image">
+                                        @if (imageUrl is not null) {
+                                            <img src="@imageUrl"
+                                                 alt="@product.Name" />
+                                        }
+                                        else {
+                                            <i class="bi bi-bicycle"></i>
+                                        }
+                                    </div>
+                                </td>
                                 <td class="admin-id">
                                     #@product.Id
                                 </td>
