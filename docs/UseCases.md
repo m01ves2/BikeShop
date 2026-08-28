@@ -1,188 +1,174 @@
 # Use Cases
 
+
 ## UC-1 Browse Catalog
-Primary Actor: Customer, Guest
-Trigger: Customer opens the catalog.
-Preconditions: None.
 
-Main Flow:
-1. The system displays product categories.
-2. Customer selects a category.
-3. The system displays products from the selected category.
-Extensions:
-2a. The selected category contains no products.
-    2a-1. The system displays a message that no products are available.
-    2a-2. The customer selects another category.
-    2a-3. Return to step 2.
+**Actors:** Guest, Customer
 
-Success Guarantee: The customer views the selected products.
+**Main Flow:**
+
+1. The user opens the home page or a category page.
+2. The system displays product categories and products.
+3. The user selects a product.
+4. The system displays product details, availability, and images.
+
+**Result:**  
+The user can view products before adding them to a cart.
 
 
+## UC-2 Manage Guest Cart
 
-# UC-2 View Product Details
-Primary Actor: Customer, Guest
-Trigger: Customer selects a product.
-Preconditions: None
+**Actor:** Guest
 
-Main Flow:
-1. Customer selects product
-2. The system displays the product details.
-Extensions:
-2a. No product found
-    2a-1. The system displays a message that no product found
-    2a-2. The customer pushes button "return to catalog"
-    2a-3. The system redirects the customer to the catalog page.
+**Main Flow:**
 
-Success Guarantee: The customer views the selected product.
+1. The Guest adds a product to the cart.
+2. The system stores the cart in browser local storage.
+3. The Guest can change quantity or remove an item.
+4. The system updates the cart summary.
+
+**Result:**  
+The Guest can prepare a cart before registration or login.
 
 
+## UC-3 Register and Log In
 
-# UC-3 Register Account
-Primary Actor: Guest
-Trigger: Customer opens the register page
-Preconditions: Customer is not authenticated
+**Actor:** Guest
 
-Main flow:
-1. Customer opens the register page.
-2. Customer enters credentials.
-3. Customer submits the form.
-4. The system registers the customer.
-5. The system redirects the customer to the home page.
-Extensions:
-4a. Registration data is invalid.
-    4a-1. The system displays an error message.
-    4a-2. The system returns to the register form.
-    4a-3. Resume at step 2.
-4b. Customer already exists in system.
-    4a-1. The system informs the customer that the account already exists.
-    4a-2. Resume at step 2.
+**Main Flow:**
 
-Success Guarantee: The customer succesfully registered
+1. The Guest opens the registration or login page.
+2. The Guest enters valid credentials.
+3. The system creates an account or authenticates the user.
+4. The system creates a JWT session.
+5. The user becomes an authenticated Customer.
+
+**Extensions:**
+
+- The email is already registered.
+- The credentials are invalid.
+- The entered data does not pass validation.
+
+**Result:**  
+The user can access customer features.
 
 
+## UC-4 Synchronize Cart After Login
 
-# UC-4 Log In
-Primary Actor: Guest
-Trigger: Customer opens the log in page
-Preconditions: Customer is not authenticated 
+**Actor:** Customer
 
-Main Flow:
-1. Customer opens the log in page.
-2. Customer enters credentials.
-3. Customer submits the form.
-4. The system authenticates the customer.
-5. The system redirects the customer to the home page.
-Extensions:
-4a. Invalid credentials.
-    4a-1. The system displays an error message.
-    4a-2. The system returns to the login form.
-    4a-3. Resume at step 2.
+**Precondition:**  
+The Customer has a local cart created before login.
 
-Success Guarantee: The customer succesfully logged in
+**Main Flow:**
+
+1. The Customer logs in.
+2. Blazor sends the local cart to the API.
+3. The system merges the local cart with the server cart.
+4. The system removes products that are no longer available.
+5. The system updates the local cart with the result.
+
+**Result:**  
+The Customer has one current server cart.
 
 
+## UC-5 Create Order
 
-# UC-5 Add Product to Cart
-Primary Actor: Customer, Guest
-Trigger: Customer selects "Add to Cart" for a product.
-Preconditions: The selected product is available for purchase.
+**Actor:** Customer
 
-Main Flow:
-1. Customer initiates adding the product to the shopping cart.
-2. The system adds the selected product to the shopping cart.
-3. The system updates the shopping cart.
-4. The system confirms that the product has been added.
-Extensions:
+**Preconditions:**
 
-Success Guarantee: The product appeared in shopping cart
+- The Customer is authenticated.
+- The server cart is not empty.
 
+**Main Flow:**
 
+1. The Customer opens the checkout page.
+2. The system displays the order summary.
+3. The Customer enters delivery information.
+4. The Customer confirms the order.
+5. The system validates the cart and product stock.
+6. The system creates an order.
+7. The system clears the server cart.
 
-# UC-6 Remove Product from Cart
-Primary Actor: Customer, Guest
-Trigger: Customer initiates the removal of a product from the shopping cart.
-Preconditions: Shopping cart contains the selected product.
+**Extensions:**
 
-MainFlow
-1. Customer opens the shopping cart.
-2. Customer chooses to remove a product.
-3. The system removes the selected product.
-4. The system updates the shopping cart.
-5. The system displays the updated shopping cart.
-Extensions:
-2a. Customer decreases the product quantity to zero.
-    2a-1. The system removes the product from the shopping cart.
-    2a-2. The system updates the shopping cart.
-    2a-3. Resume at step 5.
+- The cart is empty.
+- A product is no longer available.
+- The requested quantity is higher than the available stock.
+- Delivery information is invalid.
+
+**Result:**  
+A new order is created with status `Pending`.
 
 
+## UC-6 Manage Personal Orders
 
-# UC-7 View Shopping Cart, Guest
-Primary Actor: Customer
-Trigger: Customer selects "Shopping cart"
-Preconditions: None
+**Actor:** Customer
 
-Main Flow:
-1. System opens the shopping cart.
-2. The system shows the actual list of added products
-3. Customer can change quantity of products
-4. Customer can initiate creation of order
-Extensions:
+**Main Flow:**
 
-Success Guarantee: Customer sees the actual shopping cart 
+1. The Customer opens the orders page.
+2. The system displays the Customer's orders.
+3. The Customer opens an order.
+4. The system displays order details.
+5. If the order allows it, the Customer can edit delivery information or cancel the order.
 
-
-
-# UC-8 Checkout
-Primary Actor: Customer
-Trigger: Customer selects "Checkout".
-Preconditions:
-- Customer is authenticated.
-- Shopping cart is not empty.
-
-Main Flow:
-1. Customer opens the checkout page.
-2. System displays order summary.
-3. Customer enters shipping information.
-4. Customer confirms the order.
-5. System validates the data.
-6. System creates the order.
-7. System clears the cart.
-8. System displays confirmation.
-Extensions:
-
-5a. Shipping information is invalid.
-    5a-1. The system displays validation errors.
-    5a-2. The customer corrects the information.
-    5a-3. Resume at step 4.
-6a. Order creation fails.
-    6a-1. The system displays an error message.
-    6a-2. The customer may retry the operation.
-
-Success Guarantee: Order has been created.
+**Result:**  
+The Customer can track and manage eligible personal orders.
 
 
-# UC-9 View Orders History
-Primary Actor: Customer
-Trigger: Customer selects "Orders History" in his account.
-Preconditions: Customer is authenticated.
+## UC-7 Manage Categories and Products
 
-Main Flow:
-1. Customer opens his account settings
-2. System shows menu of options
-3. Customer chooses "Orders History"
-4. System shows actial list of orders
+**Actor:** Administrator
 
-Success Guarantee: Orders history shown to Customer
+**Main Flow:**
 
-# UC-10 Log Out
-Primary Actor: Customer
-Trigger: Customer chooses the log out control
-Preconditions: Customer is authenticated 
+1. The Administrator opens the administration area.
+2. The Administrator creates, edits, or deletes a category or product.
+3. The system validates the data.
+4. The system saves the changes.
+5. The updated catalog becomes available to users.
 
-Main Flow
-1. The system ends the authenticated session.
-2. The customer is redirected to the home page.
-Extensions:
+**Result:**  
+The Administrator can maintain the product catalog.
 
-Success Guarantee: The customer succesfully logged out
+
+## UC-8 Manage Product Images
+
+**Actor:** Administrator
+
+**Precondition:**  
+The product already exists.
+
+**Main Flow:**
+
+1. The Administrator opens the product editor.
+2. The system displays existing product images.
+3. The Administrator selects new WebP images or marks existing images for deletion.
+4. The Administrator saves product changes.
+5. The system deletes marked files and saves new files.
+
+**Result:**  
+The product gallery is updated.
+
+
+## UC-9 Process Customer Order
+
+**Actor:** Administrator
+
+**Main Flow:**
+
+1. The Administrator enters an order ID.
+2. The system displays order details.
+3. The Administrator selects an allowed new status.
+4. The system validates the status change.
+5. The system saves the new status.
+
+**Extensions:**
+
+- The order does not exist.
+- The selected status transition is not allowed.
+
+**Result:**  
+The order status is updated according to domain rules.

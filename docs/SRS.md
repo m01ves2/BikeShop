@@ -1,239 +1,121 @@
-# Software Requirements Specification v1.0
-===============================================================================
+# Software Requirements Specification
 
-1. Introduction
-    1.1 Purpose
-    1.2 Scope
-    1.3 Definitions
-    1.4 References
+## 1. Scope
 
-===============================================================================
+BikeShop is a small online bicycle store.
 
-2. Overall Description
-    2.1 Product Perspective
-    2.2 Product Functions
-    2.3 User Classes
-    2.4 Operating Environment
-    2.5 Design Constraints
-    2.6 Assumptions and Dependencies
+The system supports three actors:
 
-===============================================================================
+- Guest
+- Customer
+- Administrator
 
-3. Functional Requirements
+Guests can browse products and use a local cart. Customers can create and manage orders. Administrators can manage catalog data and process orders.
 
-     # FR-1 Product Catalog
-    Derived from: URS-1
+## 2. Functional Requirements
 
-    ## FR-1.1 Display Products
-    The system shall display all available products.
+### FR-1 Catalog
 
-    ## FR-1.2 Product Categories
-    The system shall organize products into categories.
+- The system shall display product categories.
+- The system shall display products in the catalog.
+- The system shall allow Guests and Customers to browse products by category.
+- The system shall display product details, availability, and images.
 
-    ## FR-1.3 Browse by Category
-    The system shall allow users to browse products by category.
+### FR-2 Authentication
 
+- The system shall allow Guests to register an account.
+- The system shall allow registered users to log in and log out.
+- The system shall use JWT authentication for protected API requests.
+- The system shall support Customer and Admin roles.
 
+### FR-3 Cart
 
-    # FR-2 Product Discovery
-    Derived from: URS-2
-    
-    ## FR-2.1 Search Products
-    The system shall allow users to search products by name.
+- The system shall allow Guests to use a cart stored in browser local storage.
+- The system shall provide a server cart for authenticated Customers.
+- The system shall allow users to add products, change quantity, and remove items from a cart.
+- The system shall synchronize the Guest cart with the Customer server cart after login.
+- The system shall inform the user when unavailable products are removed during synchronization.
 
-    ## FR-2.2 Filter Products
-    The system shall allow users to filter products by available product attributes.
+### FR-4 Checkout
 
-    ## FR-2.3 Sort Products
-    The system shall allow users to sort products using predefined criteria.
+- The system shall allow authenticated Customers to create an order from the server cart.
+- The system shall collect delivery date, delivery address, customer phone number, and payment method.
+- The system shall validate product stock during order creation.
+- The system shall adjust requested quantities when stock is lower than requested.
+- The system shall clear the server cart after successful order creation.
 
-    ## FR-2.4 Paginate Results
-    The system shall display search results using pagination.
+### FR-5 Customer Orders
 
+- The system shall allow Customers to view their own order history.
+- The system shall allow Customers to view their own order details.
+- The system shall allow Customers to edit delivery information when the order can be edited.
+- The system shall allow Customers to cancel an order when cancellation is allowed.
 
-    # FR-3 Product Details
-    Derived from: URS-3
+### FR-6 Category Management
 
-    ## FR-3.1 Display Product Information
-    The system shall display detailed information about a selected product.
+- The system shall allow Administrators to create categories.
+- The system shall allow Administrators to edit categories.
+- The system shall allow Administrators to delete categories.
 
-    ## FR-3.2 Display Product Availability
-    The system shall display product availability status.
+### FR-7 Product and Image Management
 
+- The system shall allow Administrators to create, edit, and delete products.
+- The system shall display product image previews in administration pages.
+- The system shall allow Administrators to add WebP images to an existing product.
+- The system shall allow Administrators to remove product images.
 
-    # FR-4 Customer Accounts 
-    Derived from: USR-4
+### FR-8 Order Management
 
-    ## FR-4.1 Register User
-    The system shall allow users to create a personal account.
+- The system shall allow Administrators to find an order by ID.
+- The system shall allow Administrators to view order details.
+- The system shall allow Administrators to change order status.
+- The system shall reject status changes that are not allowed by the domain model.
 
-    ## FR-4.2 Authenticate User
-    The system shall allow users to log in to their account.
+## 3. Access Control Rules
 
-    ## FR-4.3 Logout User
-    The system shall allow users to log out of their account.
+- Guests can browse the catalog and use a local cart.
+- Only authenticated Customers can create orders and view personal orders.
+- Customers can access only their own orders.
+- Only Administrators can access administration pages and endpoints.
+- Administrators cannot bypass order status rules.
 
-    ## FR-4.4 Password Recovery
-    The system shall allow users to recover their password.
+## 4. Business Rules
 
-    ## FR-4.5 Profile Management
-    The system shall allow authenticated users to view and update their profile information.
+- A product belongs to one category.
+- An authenticated Customer has one server cart.
+- A cart cannot contain duplicate items for the same product.
+- An order contains one or more order items.
+- An order item stores the product price at the time of order creation.
+- Stock is validated when an order is created.
+- Completed and cancelled orders cannot be edited or cancelled.
+- Order status changes must follow the allowed transitions.
 
-    ## FR-4.6 Credential Management
-    The system shall allow users to change account credentials such as password.
+## 5. Non-Functional Requirements
 
+### Security
 
-    # FR-5 Shopping Cart
-    Derived from: URS-5 
-    
-    ## FR-5.1 Add Products to Cart
-    The system shall allow users to add products to the shopping cart.
+- Passwords are managed by ASP.NET Core Identity.
+- Protected endpoints require JWT authentication.
+- Admin endpoints and pages require the Admin role.
 
-    ## FR-5.2 Update Product Quantity
-    The system shall allow users to change the quantity of products in the shopping cart.
+### Maintainability
 
-    ## FR-5.3 Calculate Item Total Price
-    The system shall calculate and display the total price for each product based on quantity.
+- The system shall use a layered architecture.
+- Business rules shall not depend on EF Core, HTTP controllers, or Blazor components.
 
-    ## FR-5.4 Calculate Cart Total Price
-    The system shall calculate and display the total price of all items in the cart.
+### Usability
 
-    ## FR-5.5 Remove Products from Cart
-    The system shall allow users to remove products from the shopping cart.
+- The UI shall work on desktop, tablet, and mobile screen sizes.
+- The UI shall show loading states and error messages for failed operations.
 
+## 6. Future Features
 
-    # FR-6 Checkout
-    Dericed from: USR-6
+The following features are outside the BikeShop MVP:
 
-    ## FR-6.1 Initiate Checkout
-    The system shall allow users to initiate the checkout process.
-
-    ## FR-6.2 Collect Shipping Information
-    The system shall collect shipping information from the user.
-
-    ## FR-6.3 Validate Cart
-    The system shall validate the shopping cart before order creation.
-
-    ## FR-6.4 Create Order
-    The system shall create an order from the shopping cart.
-
-
-    # FR-7 Orders
-    Dericed from: URS-7
-
-    ## FR-7.1 View Orders
-    The system shall allow users to view their orders.
-
-    ## FR-7.2 View Order Details
-    The system shall display detailed information about a selected order.
-
-    ## FR-7.3 View Order Status
-    The system shall display the current status of an order.
-
-    ## FR-7.4 Cancel Order
-    The system shall allow users to cancel eligible orders.
- 
-    
-
-    # FR-8 Administration
-    Dericed from: URS-8
-    
-    ## FR-8.1 Product Management
-    The system shall allow administrators to create, update, deactivate, and delete products.
-
-    ## FR-8.2 Category Management
-    The system shall allow administrators to create, update, and delete categories.
-
-    ## FR-8.3 Order Management
-    The system shall allow administrators to view, update, and manage customer orders.
-
-    ## FR-8.4 Customer Management
-    The system shall allow administrators to view and manage customer accounts.
-
-===============================================================================
-
-4.  Access Control Rules
-    # ACR-1
-    Only authenticated users shall be allowed to access shopping cart functionality.
-
-    # ACR-2
-    Only authenticated users shall be allowed to perform checkout operations.
-
-    # ACR-3
-    Only authenticated users shall be allowed to view and manage orders.
-
-    # ACR-4
-    Only administrators shall be allowed to access product, category, order, and customer management features.
-
-    # ACR-5
-    Unauthenticated users shall be allowed to browse product catalog and view product details.
-
-===============================================================================
-
-5. Non-Functional Requirements
-    # NFR-1 Performance
-    The system shall load product catalog pages within 2 seconds under normal load.
-
-    # NFR-2 Security
-    The system shall store user passwords using secure hashing algorithms.
-    The system shall protect sensitive user data from unauthorized access.
-
-    # NFR-3 Reliability
-    The system shall ensure that no confirmed order is lost in case of system failure.
-
-    # NFR-4 Maintainability
-    The system shall be structured in a layered architecture to allow independent evolution of components.
-
-    # NFR-5 Usability
-    The system shall provide a simple and consistent user interface for browsing and purchasing products.
-
-    # NFR-6 Scalability
-    The system shall be designed to support increasing numbers of users and products without architectural changes.
-
-===============================================================================
-
-6. Business Rules
-    # BR-1
-    A Product shall belong to exactly one Category.
-
-    # BR-2
-    A Customer shall own exactly one active Shopping Cart.
-
-    # BR-3
-    A Shopping Cart shall contain zero or more CartItems.
-
-    # BR-4
-    A CartItem shall reference exactly one Product.
-
-    # BR-5
-    An Order shall contain one or more OrderItems.
-
-    # BR-6
-    An OrderItem shall store the product price at the time of order creation.
-
-    # BR-7
-    An Order shall be immutable after cancellation or completion.
-
-===============================================================================
-
-7. Future Enhancements
-    - Payment integration (Stripe, PayPal)
-    - Order shipment tracking
-    - Product reviews and ratings
-    - Discounts and coupon system
-    - Return and refund management
-    - Email notifications
-
-===============================================================================
-
-8. Glossary:
-    # Checkout
-    The process of converting the contents of a shopping cart into a customer order by collecting required information and confirming the purchase.
-
-    # Order
-    A confirmed purchase created from a shopping cart after successful checkout.
-
-    # Shopping Cart
-    A temporary collection of products selected by a customer before order creation.
-
-===============================================================================
+- Product search, filters, sorting, and pagination.
+- Online payments.
+- Discounts and coupons.
+- Reviews and ratings.
+- Password recovery.
+- Email notifications.
+- Production-grade image storage.

@@ -1,47 +1,54 @@
 # Actors
 
 ## Guest
-Description:
-A person who visits the online store to browse products without being authenticated.
+
+A visitor who uses the store without an account.
 
 Permissions:
-- Browse Catalog
-- View Product Details
-- Add Product to Cart
-- Remove Product from Cart
-- View Shopping Cart
-Restrictions:
-- Cannot place orders
-- Cannot view order history
-- Cannot log out
 
+- Browse categories and products.
+- View product details and images.
+- Add products to a local cart.
+- Change quantities, remove items, and clear the local cart.
+
+Restrictions:
+
+- Cannot create an order.
+- Cannot view customer orders.
+- Cannot access administration pages.
 
 ## Customer
-Description:
-A person who visits the online store to browse products and purchase bicycles.
 
-Role:
-Primary Actor
+A registered and authenticated user who can buy products.
 
 Permissions:
-- All Guest permissions
-- Place orders
-- View order history
-- Log out
+
+- All Guest permissions.
+- Synchronize the local cart with the server cart after login.
+- Use a server cart.
+- Create an order.
+- View personal order history and order details.
+- Edit delivery information for eligible orders.
+- Cancel eligible orders.
+- Log out.
 
 Restrictions:
-- None
 
----
+- Cannot access administration pages.
+- Cannot view or change another customer's orders.
 
+## Administrator
 
-## Store Owner
-Description:
-The owner of the online store who provides products and receives customer orders.
+An authenticated user with the Admin role.
 
-Role:
-Business Actor
+Permissions:
 
-Goals:
-- Present products online
-- Receive customer orders
+- Create, edit, and delete categories.
+- Create, edit, and delete products.
+- Add and remove product images.
+- Find and view customer orders.
+- Change order statuses according to the allowed transitions.
+
+Restrictions:
+
+- Cannot bypass the order status rules defined by the domain model.

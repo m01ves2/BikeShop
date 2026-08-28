@@ -1,132 +1,114 @@
 # Domain Model
-Entities
 
-## Product
-Represents a product available for purchase, such as a bicycle, bicycle part, or accessory.
-
-Examples:
-Bicycles
-Components
-Accessories
-
-Responsibilities:
-- Stores product information.
-- Belongs to a category.
-- Can be added to a shopping cart.
-- Can appear in order items.
-
-
-Relationships:
-- Belongs to one Category.
-- Can be referenced by many CartItems.
-- Can be referenced by many OrderItems.
-
+This document describes the main business objects in BikeShop. Database mapping and EF Core configuration are described in `Database.md`.
 
 ## Category
-Represents a logical group of products used for organizing the catalog.
 
-Examples:
-Mountain Bikes
-Road Bikes
-Gravel Bikes
-City Bikes
-BMX
-Electric Bikes
-Kids Bikes
+A Category groups products in the catalog.
 
-Responsibilities:
-- Organizes products.
-- Provides navigation through the catalog.
+A category has a name and contains many products.
 
-Relationships:
-- Contains many Products.
+## Product
 
-## Cart
-Description:
-Represents the customer's current shopping cart.
+A Product is an item that customers can buy.
 
-Responsibilities:
-- Belongs to one Customer.
-- Contains CartItems.
-- Calculates the total price.
-- Can be converted into an Order.
+Main data:
 
+- Name
+- Description
+- Price
+- Stock quantity
+- Category
 
-## CartItem
-Description:
-Represents a product stored in a shopping cart.
-
-Responsibilities:
-- References one product.
-- Stores the selected quantity.
-- Calculates the subtotal.
-
-Relationships:
-- Belongs to one Cart.
-- References one Product.
-
-## Order
-Description:
-Represents a completed purchase created by a customer.
-
-Examples:
-- Order 1001
-- Order 1002
-
-Responsibilities:
-- Belongs to one Customer.
-- Contains purchased items.
-- Stores shipping information.
-- Stores the total order price.
-- Represents a completed checkout.
-
-Relationships:
-- Belongs to one Customer.
-- Contains many OrderItems.
-
-## OrderItem
-Description:
-Represents a product included in an order.
-
-Responsibilities:
-- References one Product.
-- Stores the purchased quantity.
-- Stores the product price at the time of purchase.
-- Calculates the subtotal.
-
-Relationships:
-- Belongs to one Order.
-- References one Product.
+A product belongs to one category. It can appear in cart items and order items.
 
 ## Customer
-Description:
-Represents a registered customer of the online store who performs purchases.
 
-Responsibilities:
-- Browses the product catalog.
-- Adds products to the shopping cart.
-- Places orders.
-- Views order history.
+A Customer represents a registered store user in the business model.
 
-Relationships:
-- Owns one Cart.
-- Can place many Orders.
-- Associated with an Identity account (authentication handled externally by infrastructure layer).
+A customer is linked to an ASP.NET Core Identity account through `ApplicationUserId`. Each customer has one server cart and can create many orders.
 
-Notes:
-- Customer is a domain concept and is independent from authentication/authorization system.
-- Roles such as Administrator or Owner are not part of this entity and belong to system infrastructure.
+## Cart
 
+A Cart represents the current server-side cart of one customer.
 
-```Mermaid
+A cart can:
+
+- Add products.
+- Change product quantities.
+- Remove products.
+- Clear all items.
+- Calculate the total price.
+
+A guest cart is stored separately in browser local storage. After login, it can be synchronized with the customer's server cart.
+
+## CartItem
+
+A CartItem represents one product in a cart.
+
+It stores:
+
+- Product
+- Quantity
+- Current product price
+
+A cart item belongs to one cart and references one product.
+
+## Order
+
+An Order represents a purchase created from a customer's cart.
+
+It stores:
+
+- Customer
+- Order items
+- Status
+- Creation date
+- Delivery date
+- Delivery address
+- Customer phone number
+- Payment method
+- Optional courier phone number
+
+An order can change its delivery information only when its current status allows editing.
+
+Order statuses:
+
+- Pending
+- Paid
+- Shipped
+- Completed
+- Cancelled
+
+The Order entity controls allowed status changes. Completed and cancelled orders cannot be edited or cancelled.
+
+## OrderItem
+
+An OrderItem represents one product in an order.
+
+It stores:
+
+- Product reference
+- Quantity
+- Unit price at the time of order creation
+
+The unit price is stored as a snapshot. Later product price changes do not change existing orders.
+
+## Relationships
+
+```mermaid
 flowchart TD
-
-Customer -->|owns| Cart
-Cart --> CartItem
-CartItem -->|for| Product
-
-Category --> Product
-Customer -->|places| Order
-Order --> OrderItem
-OrderItem --> Product
+    Category -->|contains| Product
+    Customer -->|owns| Cart
+    Cart -->|contains| CartItem
+    CartItem -->|references| Product
+    Customer -->|places| Order
+    Order -->|contains| OrderItem
+    OrderItem -->|references| Product
 ```
+
+## Notes
+
+- Authentication and roles are handled by ASP.NET Core Identity.
+- The Customer entity is a business concept. It is not the same as an Identity user.
+- Product images are not domain entities in BikeShop. They are stored as WebP files in the Blazor application's `wwwroot` folder.

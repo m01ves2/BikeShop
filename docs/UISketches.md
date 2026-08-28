@@ -1,5 +1,21 @@
 # UI Sketches
 
+> Note  
+> These wireframes were created during the planning phase. They describe the initial UI direction for BikeShop and were used as a guide during implementation.
+>
+> The final UI follows the same main structure, but some planned features were moved to a future Marketplace project:
+>
+> - Search, filters, sorting, and pagination.
+> - Customer profile and password management.
+> - Customer management in the admin area.
+>
+> The final BikeShop UI also added:
+>
+> - Product image galleries.
+> - Guest cart and cart synchronization after login.
+> - Customer order details, editing, and cancellation.
+> - Product image management in the admin area.
+
 ## 1. Home Page
 Purpose
 
