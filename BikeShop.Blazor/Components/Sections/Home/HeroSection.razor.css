@@ -45,33 +45,24 @@
 
 .hero-visual {
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 24rem;
+    width: 100%;
+    aspect-ratio: 16 / 10;
     overflow: hidden;
-    color: var(--color-primary);
-    background-color: rgb(255 255 255 / 55%);
+    background-color: var(--color-primary-light);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-md);
 }
 
-.hero-bicycle {
-    font-size: 11rem;
-    transform: rotate(-5deg);
-}
 
-.hero-image-note {
+.hero-image {
     position: absolute;
-    right: 1rem;
-    bottom: 1rem;
-    padding: 0.5rem 0.75rem;
-    color: var(--color-text-muted);
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 999px;
-    font-size: 0.75rem;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
 
@@ -84,9 +75,6 @@
         font-size: 3.5rem;
     }
 
-    .hero-visual {
-        min-height: 20rem;
-    }
 }
 
 @media (max-width: 575.98px) {
@@ -98,11 +86,4 @@
         font-size: 2.75rem;
     }
 
-    .hero-visual {
-        min-height: 16rem;
-    }
-
-    .hero-bicycle {
-        font-size: 8rem;
-    }
 }
