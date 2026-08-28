@@ -8,6 +8,7 @@ using BikeShop.Blazor.Services.ApiClients.Auth;
 using BikeShop.Blazor.Services.ApiClients.Cart;
 using BikeShop.Blazor.Services.ApiClients.Catalog;
 using BikeShop.Blazor.Services.ApiClients.Orders;
+using BikeShop.Blazor.Services.ProductImages;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace BikeShop.Blazor
@@ -68,6 +69,8 @@ namespace BikeShop.Blazor
             services.AddScoped<AdminProductsApiClient>();
 
             services.AddScoped<AdminCategoriesApiClient>();
+
+            services.AddSingleton<ProductImageService>();
 
             return services;
         }

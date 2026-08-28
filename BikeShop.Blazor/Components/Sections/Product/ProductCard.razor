@@ -1,9 +1,11 @@
 ﻿@using BikeShop.Blazor.Models.Cart
 @using BikeShop.Blazor.Models.Catalog
 @using BikeShop.Blazor.Services
+@using BikeShop.Blazor.Services.ProductImages
 
 @inject CurrencyFormatter Currency
 @inject ICartService CartService
+@inject ProductImageService ProductImages
 
 <div class="product-card card h-100">
     <NavLink href="@($"/product/{Product.Id}")"
@@ -16,10 +18,16 @@
                 </span>
             }
 
-            <div class="product-placeholder">
-                <i class="bi bi-bicycle"></i>
-                <span>Product image</span>
-            </div>
+            @if (_imageUrls.Count > 0) {
+                <img src="@_imageUrls[0]"
+                     alt="@Product.Name" />
+            }
+            else {
+                <div class="product-placeholder">
+                    <i class="bi bi-bicycle"></i>
+                    <span>Product image</span>
+                </div>
+            }
         </div>
 
         <div class="card-body d-flex flex-column">
@@ -70,6 +78,7 @@
 {
     [Parameter]
     public required ProductListItemModel Product { get; set; }
+    private IReadOnlyList<string> _imageUrls = [];
 
     private async Task AddToCart()
     {
@@ -81,5 +90,10 @@
         };
 
         await CartService.AddItemAsync(item);
+    }
+
+    protected override void OnParametersSet()
+    {
+        _imageUrls = ProductImages.GetImageUrls(Product.Id);
     }
 }
